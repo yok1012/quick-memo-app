@@ -9,9 +9,13 @@ class DataManager: ObservableObject {
 
     @Published var memos: [QuickMemo] = []
     @Published var categories: [Category] = []
+    
+    private let purchaseManager = PurchaseManager.shared
 
     private let memosKey = "quick_memos"
     private let categoriesKey = "categories"
+    private let widgetCategoriesKey = "widget_categories"
+    private let isProVersionKey = "is_pro_version"
 
     // App Group identifier for widget data sharing
     private let appGroupIdentifier = "group.yokAppDev.quickMemoApp"
@@ -310,5 +314,75 @@ class DataManager: ObservableObject {
     func canDeleteCategory(_ category: Category) -> Bool {
         // その他カテゴリーは削除不可
         return category.name != "その他"
+    }
+    
+    // MARK: - Purchase Validation
+    
+    @MainActor
+    func canAddMemo() -> Bool {
+        return purchaseManager.canCreateMoreMemos(currentCount: memos.count)
+    }
+    
+    @MainActor
+    func canAddCategory() -> Bool {
+        return purchaseManager.canCreateMoreCategories(currentCount: categories.count)
+    }
+    
+    @MainActor
+    func canUseAdvancedTags() -> Bool {
+        return purchaseManager.canUseAdvancedFeatures()
+    }
+    
+    @MainActor
+    func canUseCalendarIntegration() -> Bool {
+        return purchaseManager.canUseAdvancedFeatures()
+    }
+    
+    @MainActor
+    func canUseDeepLinks() -> Bool {
+        return purchaseManager.canUseAdvancedFeatures()
+    }
+    
+    @MainActor
+    func getRemainingMemoCount() -> Int? {
+        if purchaseManager.isProVersion {
+            return nil // Unlimited
+        }
+        return max(0, 50 - memos.count)
+    }
+    
+    @MainActor
+    func getRemainingCategoryCount() -> Int? {
+        if purchaseManager.isProVersion {
+            return nil // Unlimited
+        }
+        return max(0, 3 - categories.count)
+    }
+
+    // MARK: - Widget Management
+
+    func getWidgetCategories() -> [String] {
+        // Get selected widget categories from UserDefaults
+        if let data = userDefaults.data(forKey: widgetCategoriesKey),
+           let categories = try? JSONDecoder().decode([String].self, from: data) {
+            return categories
+        }
+        // Default to first 4 categories
+        return Array(categories.prefix(4).map { $0.name })
+    }
+
+    @MainActor
+    func saveWidgetCategories(_ categoryNames: [String]) {
+        if let data = try? JSONEncoder().encode(categoryNames) {
+            userDefaults.set(data, forKey: widgetCategoriesKey)
+            // Save Pro status for widget
+            userDefaults.set(purchaseManager.isProVersion, forKey: isProVersionKey)
+            notifyWidgetUpdate()
+        }
+    }
+
+    @MainActor
+    func canCustomizeWidgetCategories() -> Bool {
+        return purchaseManager.canCustomizeWidget()
     }
 }

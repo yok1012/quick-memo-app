@@ -66,12 +66,36 @@ struct QuickMemoProvider: TimelineProvider {
 
     private func loadCategories() -> [Category] {
         let appGroupIdentifier = "group.yokAppDev.quickMemoApp"
-        guard let userDefaults = UserDefaults(suiteName: appGroupIdentifier),
-              let data = userDefaults.data(forKey: "categories"),
-              let categories = try? JSONDecoder().decode([Category].self, from: data) else {
+        guard let userDefaults = UserDefaults(suiteName: appGroupIdentifier) else {
             return sampleCategories()
         }
-        return categories.sorted(by: { $0.order < $1.order }).prefix(4).map { $0 }
+
+        // Check if user is Pro version
+        let isProVersion = userDefaults.bool(forKey: "is_pro_version")
+
+        // Load selected widget categories if Pro, otherwise use default
+        if isProVersion,
+           let selectedData = userDefaults.data(forKey: "widget_categories"),
+           let selectedCategoryNames = try? JSONDecoder().decode([String].self, from: selectedData),
+           let categoriesData = userDefaults.data(forKey: "categories"),
+           let allCategories = try? JSONDecoder().decode([Category].self, from: categoriesData) {
+            // Return selected categories in order
+            return selectedCategoryNames.compactMap { name in
+                allCategories.first { $0.name == name }
+            }
+        }
+
+        // For free users or fallback: return default categories
+        if let data = userDefaults.data(forKey: "categories"),
+           let categories = try? JSONDecoder().decode([Category].self, from: data) {
+            // Free users get the default categories they currently have
+            let defaultNames = ["仕事", "プライベート", "アイデア", "その他"]
+            return defaultNames.compactMap { name in
+                categories.first { $0.name == name }
+            }.prefix(4).map { $0 }
+        }
+
+        return sampleCategories()
     }
 
     private func sampleCategories() -> [Category] {

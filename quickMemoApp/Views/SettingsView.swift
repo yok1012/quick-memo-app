@@ -3,6 +3,7 @@ import EventKit
 
 struct SettingsView: View {
     @StateObject private var calendarService = CalendarService.shared
+    @StateObject private var purchaseManager = PurchaseManager.shared
     @State private var isTestingConnection = false
     @State private var showTestResult = false
     @State private var testResultMessage = ""
@@ -10,11 +11,90 @@ struct SettingsView: View {
     @State private var showingPermissionRequest = false
     @State private var showingCalendarDebug = false
     @State private var showingForceSyncAlert = false
+    @State private var showingPurchase = false
+    @State private var showingWidgetSettings = false
     @AppStorage("calendar_sync_mode") private var syncMode = "normal"
 
     var body: some View {
         NavigationStack {
             List {
+                // Pro版セクション
+                if !purchaseManager.isProVersion {
+                    Section {
+                        Button(action: {
+                            showingPurchase = true
+                        }) {
+                            HStack {
+                                VStack(alignment: .leading, spacing: 4) {
+                                    HStack {
+                                        Image(systemName: "star.fill")
+                                            .foregroundColor(.yellow)
+                                        Text("QuickMemo Pro")
+                                            .font(.headline)
+                                            .fontWeight(.semibold)
+                                    }
+                                    Text("すべての機能をアンロック")
+                                        .font(.caption)
+                                        .foregroundColor(.secondary)
+                                }
+                                Spacer()
+                                Image(systemName: "chevron.right")
+                                    .font(.caption)
+                                    .foregroundColor(.secondary)
+                            }
+                        }
+                        .foregroundColor(.primary)
+                    } header: {
+                        Label("アップグレード", systemImage: "star")
+                    }
+                } else {
+                    Section {
+                        HStack {
+                            Image(systemName: "checkmark.circle.fill")
+                                .foregroundColor(.green)
+                            Text("Pro版をご利用中")
+                                .font(.headline)
+                            Spacer()
+                        }
+                    } header: {
+                        Label("Pro版", systemImage: "star.fill")
+                    }
+                }
+                
+                // 使用状況セクション
+                Section {
+                    usageStatsView
+                } header: {
+                    Label("使用状況", systemImage: "chart.bar")
+                }
+
+                // ウィジェット設定セクション
+                Section {
+                    Button(action: {
+                        showingWidgetSettings = true
+                    }) {
+                        HStack {
+                            Image(systemName: "square.grid.2x2")
+                                .foregroundColor(.blue)
+                            Text("ウィジェットカテゴリー設定")
+                            Spacer()
+                            if !purchaseManager.isProVersion {
+                                Text("Pro限定")
+                                    .font(.caption)
+                                    .foregroundColor(.orange)
+                            }
+                            Image(systemName: "chevron.right")
+                                .font(.caption)
+                                .foregroundColor(.secondary)
+                        }
+                    }
+                } header: {
+                    Label("ウィジェット", systemImage: "apps.iphone")
+                } footer: {
+                    Text(purchaseManager.isProVersion ? "ウィジェットに表示するカテゴリーを選択できます" : "Pro版では表示するカテゴリーをカスタマイズできます")
+                        .font(.system(size: 12))
+                }
+                
                 // カレンダー設定セクション
                 Section {
                     connectionStatusView
@@ -119,6 +199,18 @@ struct SettingsView: View {
                 }
             }
             .navigationTitle("設定")
+            .sheet(isPresented: $showingPermissionRequest) {
+                CalendarPermissionView()
+            }
+            .sheet(isPresented: $showingCalendarDebug) {
+                CalendarDebugView()
+            }
+            .sheet(isPresented: $showingPurchase) {
+                PurchaseView()
+            }
+            .sheet(isPresented: $showingWidgetSettings) {
+                WidgetCategorySettingsView()
+            }
             .alert("接続テスト結果", isPresented: $showTestResult) {
                 Button("OK") {
                     showTestResult = false
@@ -394,6 +486,93 @@ struct SettingsView: View {
         } else {
             return "未設定"
         }
+    }
+
+    // MARK: - Usage Stats View
+
+    private var usageStatsView: some View {
+        VStack(spacing: 12) {
+            // メモ使用状況
+            HStack {
+                VStack(alignment: .leading, spacing: 4) {
+                    Text("メモ数")
+                        .font(.subheadline)
+                        .foregroundColor(.secondary)
+                    
+                    if let remaining = DataManager.shared.getRemainingMemoCount() {
+                        Text("\(DataManager.shared.memos.count)/50")
+                            .font(.title3)
+                            .fontWeight(.semibold)
+                        Text("残り \(remaining) 個")
+                            .font(.caption)
+                            .foregroundColor(remaining <= 10 ? .red : .secondary)
+                    } else {
+                        HStack {
+                            Text("\(DataManager.shared.memos.count)")
+                                .font(.title3)
+                                .fontWeight(.semibold)
+                            Text("無制限")
+                                .font(.caption)
+                                .foregroundColor(.green)
+                        }
+                    }
+                }
+                
+                Spacer()
+                
+                // カテゴリ使用状況
+                VStack(alignment: .trailing, spacing: 4) {
+                    Text("カテゴリ数")
+                        .font(.subheadline)
+                        .foregroundColor(.secondary)
+                    
+                    if let remaining = DataManager.shared.getRemainingCategoryCount() {
+                        Text("\(DataManager.shared.categories.count)/3")
+                            .font(.title3)
+                            .fontWeight(.semibold)
+                        Text("残り \(remaining) 個")
+                            .font(.caption)
+                            .foregroundColor(remaining == 0 ? .red : .secondary)
+                    } else {
+                        HStack {
+                            Text("無制限")
+                                .font(.caption)
+                                .foregroundColor(.green)
+                            Text("\(DataManager.shared.categories.count)")
+                                .font(.title3)
+                                .fontWeight(.semibold)
+                        }
+                    }
+                }
+            }
+            
+            // 機能制限の表示
+            if !purchaseManager.isProVersion {
+                VStack(spacing: 8) {
+                    Divider()
+                    
+                    VStack(alignment: .leading, spacing: 4) {
+                        HStack {
+                            Image(systemName: "lock.fill")
+                                .foregroundColor(.orange)
+                                .font(.caption)
+                            Text("Pro版限定機能")
+                                .font(.caption)
+                                .fontWeight(.medium)
+                                .foregroundColor(.orange)
+                            Spacer()
+                        }
+                        
+                        Text("• 高度なタグ管理\n• カレンダー詳細連携\n• Deep Link機能\n• Widget カスタマイズ\n• データバックアップ")
+                            .font(.caption)
+                            .foregroundColor(.secondary)
+                    }
+                }
+            }
+        }
+        .padding()
+        .background(Color(.systemGray6))
+        .cornerRadius(8)
     }
 
     // MARK: - Actions

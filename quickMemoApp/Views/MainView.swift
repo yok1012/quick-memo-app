@@ -14,6 +14,10 @@ struct MainView: View {
     @State private var showingCategoryManagement = false
     @State private var deepLinkCategory: String? = nil
     @StateObject private var calendarService = CalendarService.shared
+    @StateObject private var purchaseManager = PurchaseManager.shared
+    @State private var showingPurchase = false
+    @State private var showingLimitAlert = false
+    @State private var limitAlertMessage = ""
     
     var body: some View {
         NavigationStack {
@@ -47,6 +51,26 @@ struct MainView: View {
 
                 ToolbarItem(placement: .navigationBarTrailing) {
                     HStack(spacing: 16) {
+                        // Pro badge if not purchased
+                        if !purchaseManager.isProVersion {
+                            Button(action: {
+                                showingPurchase = true
+                            }) {
+                                HStack(spacing: 4) {
+                                    Image(systemName: "star.fill")
+                                        .foregroundColor(.yellow)
+                                    Text("Pro")
+                                        .font(.caption)
+                                        .fontWeight(.semibold)
+                                }
+                                .padding(.horizontal, 8)
+                                .padding(.vertical, 4)
+                                .background(Color.blue)
+                                .foregroundColor(.white)
+                                .cornerRadius(12)
+                            }
+                        }
+                        
                         Button(action: {
                             showingSearch = true
                         }) {
@@ -91,6 +115,17 @@ struct MainView: View {
             .sheet(isPresented: $showingCategoryManagement) {
                 CategoryManagementView()
             }
+            .sheet(isPresented: $showingPurchase) {
+                PurchaseView()
+            }
+            .alert("制限に達しました", isPresented: $showingLimitAlert) {
+                Button("Pro版を購入") {
+                    showingPurchase = true
+                }
+                Button("キャンセル", role: .cancel) { }
+            } message: {
+                Text(limitAlertMessage)
+            }
         }
     }
     
@@ -133,7 +168,17 @@ struct MainView: View {
     
     private var addButton: some View {
         Button(action: {
-            showingFastInput = true
+            // Check if user can add more memos
+            if dataManager.canAddMemo() {
+                showingFastInput = true
+            } else {
+                if let remaining = dataManager.getRemainingMemoCount() {
+                    limitAlertMessage = "無料版では50個までのメモを作成できます。Pro版にアップグレードすると無制限に作成できます。"
+                } else {
+                    limitAlertMessage = "メモの作成制限に達しました。Pro版にアップグレードして無制限に作成しましょう。"
+                }
+                showingLimitAlert = true
+            }
         }) {
             Image(systemName: "plus")
                 .font(.system(size: 28, weight: .medium))

@@ -7,6 +7,10 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		BE026D8D2E7EAA3200ADB5D0 /* Configuration.storekit in Resources */ = {isa = PBXBuildFile; fileRef = BE026D8C2E7EAA3200ADB5D0 /* Configuration.storekit */; };
+		BE026D8F2E7EAA4900ADB5D0 /* PurchaseManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = BE026D8E2E7EAA4900ADB5D0 /* PurchaseManager.swift */; };
+		BE026D912E7EAA6200ADB5D0 /* PurchaseView.swift in Sources */ = {isa = PBXBuildFile; fileRef = BE026D902E7EAA6200ADB5D0 /* PurchaseView.swift */; };
+		BE026D932E7EAAEB00ADB5D0 /* ProFeatureViews.swift in Sources */ = {isa = PBXBuildFile; fileRef = BE026D922E7EAAEB00ADB5D0 /* ProFeatureViews.swift */; };
 		BE37DED02E75A03000343AF8 /* WidgetKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = BE37DECF2E75A03000343AF8 /* WidgetKit.framework */; };
 		BE37DED22E75A03000343AF8 /* SwiftUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = BE37DED12E75A03000343AF8 /* SwiftUI.framework */; };
 		BE37DEE32E75A03100343AF8 /* quickMemoWidgetExtension.appex in Embed Foundation Extensions */ = {isa = PBXBuildFile; fileRef = BE37DECD2E75A03000343AF8 /* quickMemoWidgetExtension.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
@@ -51,6 +55,10 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		BE026D8C2E7EAA3200ADB5D0 /* Configuration.storekit */ = {isa = PBXFileReference; lastKnownFileType = text; path = Configuration.storekit; sourceTree = "<group>"; };
+		BE026D8E2E7EAA4900ADB5D0 /* PurchaseManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PurchaseManager.swift; sourceTree = "<group>"; };
+		BE026D902E7EAA6200ADB5D0 /* PurchaseView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PurchaseView.swift; sourceTree = "<group>"; };
+		BE026D922E7EAAEB00ADB5D0 /* ProFeatureViews.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProFeatureViews.swift; sourceTree = "<group>"; };
 		BE2A96F62E52958500736A63 /* quickMemoApp.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = quickMemoApp.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		BE2A97032E52958600736A63 /* quickMemoAppTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = quickMemoAppTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		BE2A970D2E52958600736A63 /* quickMemoAppUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = quickMemoAppUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -152,6 +160,10 @@
 				BE37DED32E75A03000343AF8 /* quickMemoWidget */,
 				BE37DECE2E75A03000343AF8 /* Frameworks */,
 				BE2A96F72E52958500736A63 /* Products */,
+				BE026D8C2E7EAA3200ADB5D0 /* Configuration.storekit */,
+				BE026D8E2E7EAA4900ADB5D0 /* PurchaseManager.swift */,
+				BE026D902E7EAA6200ADB5D0 /* PurchaseView.swift */,
+				BE026D922E7EAAEB00ADB5D0 /* ProFeatureViews.swift */,
 			);
 			sourceTree = "<group>";
 		};
@@ -350,6 +362,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				BE026D8D2E7EAA3200ADB5D0 /* Configuration.storekit in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -388,6 +401,9 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				BE026D912E7EAA6200ADB5D0 /* PurchaseView.swift in Sources */,
+				BE026D8F2E7EAA4900ADB5D0 /* PurchaseManager.swift in Sources */,
+				BE026D932E7EAAEB00ADB5D0 /* ProFeatureViews.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
