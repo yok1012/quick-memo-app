@@ -4,6 +4,7 @@ struct MemoListView: View {
     @StateObject private var dataManager = DataManager.shared
     let selectedCategory: String
     let searchText: String
+    @State private var editingMemo: QuickMemo? = nil
     
     private var filteredMemos: [QuickMemo] {
         dataManager.filteredMemos(category: selectedCategory, searchText: searchText)
@@ -15,6 +16,10 @@ struct MemoListView: View {
                 MemoRow(memo: memo)
                     .listRowInsets(EdgeInsets(top: 8, leading: 16, bottom: 8, trailing: 16))
                     .listRowSeparator(.hidden)
+                    .contentShape(Rectangle())
+                    .onTapGesture {
+                        editingMemo = memo
+                    }
             }
             .onDelete(perform: deleteMemos)
         }
@@ -22,12 +27,17 @@ struct MemoListView: View {
         .refreshable {
             // DataManager自動更新のため何もしない
         }
+        .sheet(item: $editingMemo) { memo in
+            EditMemoView(memo: memo)
+        }
     }
     
     private func deleteMemos(offsets: IndexSet) {
         withAnimation {
             let memosToDelete = offsets.map { filteredMemos[$0] }
-            for memo in memosToDelete {
+            for var memo in memosToDelete {
+                // カレンダーイベントも削除
+                memo.deleteCalendarEvent()
                 dataManager.deleteMemo(id: memo.id)
             }
         }
@@ -69,11 +79,25 @@ struct MemoRow: View {
                 )
             
             VStack(alignment: .leading, spacing: 4) {
-                Text(memo.content)
-                    .font(.system(size: 16, weight: .medium))
-                    .foregroundColor(.primary)
-                    .lineLimit(2)
-                    .multilineTextAlignment(.leading)
+                // タイトルがある場合はタイトルを表示、ない場合はコンテンツの先頭を表示
+                if !memo.title.isEmpty {
+                    Text(memo.title)
+                        .font(.system(size: 16, weight: .semibold))
+                        .foregroundColor(.primary)
+                        .lineLimit(1)
+
+                    Text(memo.content)
+                        .font(.system(size: 14))
+                        .foregroundColor(.secondary)
+                        .lineLimit(1)
+                        .multilineTextAlignment(.leading)
+                } else {
+                    Text(memo.content)
+                        .font(.system(size: 16, weight: .medium))
+                        .foregroundColor(.primary)
+                        .lineLimit(2)
+                        .multilineTextAlignment(.leading)
+                }
                 
                 HStack {
                     Text(memo.primaryCategory)
@@ -101,6 +125,16 @@ struct MemoRow: View {
                     }
                     
                     Spacer()
+                    
+                    if memo.durationMinutes != 30 {
+                        HStack(spacing: 2) {
+                            Image(systemName: "clock")
+                                .font(.system(size: 10))
+                            Text("\(memo.durationMinutes)分")
+                                .font(.system(size: 11))
+                        }
+                        .foregroundColor(.secondary)
+                    }
                     
                     Text(relativeTimeString(from: memo.createdAt))
                         .font(.system(size: 12))

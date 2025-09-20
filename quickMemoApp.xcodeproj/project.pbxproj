@@ -6,6 +6,12 @@
 	objectVersion = 77;
 	objects = {
 
+/* Begin PBXBuildFile section */
+		BE37DED02E75A03000343AF8 /* WidgetKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = BE37DECF2E75A03000343AF8 /* WidgetKit.framework */; };
+		BE37DED22E75A03000343AF8 /* SwiftUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = BE37DED12E75A03000343AF8 /* SwiftUI.framework */; };
+		BE37DEE32E75A03100343AF8 /* quickMemoWidgetExtension.appex in Embed Foundation Extensions */ = {isa = PBXBuildFile; fileRef = BE37DECD2E75A03000343AF8 /* quickMemoWidgetExtension.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
+/* End PBXBuildFile section */
+
 /* Begin PBXContainerItemProxy section */
 		BE2A97042E52958600736A63 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
@@ -21,14 +27,48 @@
 			remoteGlobalIDString = BE2A96F52E52958500736A63;
 			remoteInfo = quickMemoApp;
 		};
+		BE37DEE12E75A03100343AF8 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = BE2A96EE2E52958500736A63 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = BE37DECC2E75A03000343AF8;
+			remoteInfo = quickMemoWidgetExtension;
+		};
 /* End PBXContainerItemProxy section */
+
+/* Begin PBXCopyFilesBuildPhase section */
+		BE37DEE82E75A03100343AF8 /* Embed Foundation Extensions */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 13;
+			files = (
+				BE37DEE32E75A03100343AF8 /* quickMemoWidgetExtension.appex in Embed Foundation Extensions */,
+			);
+			name = "Embed Foundation Extensions";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
 		BE2A96F62E52958500736A63 /* quickMemoApp.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = quickMemoApp.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		BE2A97032E52958600736A63 /* quickMemoAppTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = quickMemoAppTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		BE2A970D2E52958600736A63 /* quickMemoAppUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = quickMemoAppUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		BE2A97802E5325FF00736A63 /* quickMemoWatchApp.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.extensionkit-extension"; includeInIndex = 0; path = quickMemoWatchApp.appex; sourceTree = BUILT_PRODUCTS_DIR; };
+		BE37DECD2E75A03000343AF8 /* quickMemoWidgetExtension.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = quickMemoWidgetExtension.appex; sourceTree = BUILT_PRODUCTS_DIR; };
+		BE37DECF2E75A03000343AF8 /* WidgetKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = WidgetKit.framework; path = System/Library/Frameworks/WidgetKit.framework; sourceTree = SDKROOT; };
+		BE37DED12E75A03000343AF8 /* SwiftUI.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SwiftUI.framework; path = System/Library/Frameworks/SwiftUI.framework; sourceTree = SDKROOT; };
 /* End PBXFileReference section */
+
+/* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
+		BE37DEE42E75A03100343AF8 /* Exceptions for "quickMemoWidget" folder in "quickMemoWidgetExtension" target */ = {
+			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
+			membershipExceptions = (
+				Info.plist,
+			);
+			target = BE37DECC2E75A03000343AF8 /* quickMemoWidgetExtension */;
+		};
+/* End PBXFileSystemSynchronizedBuildFileExceptionSet section */
 
 /* Begin PBXFileSystemSynchronizedRootGroup section */
 		BE2A96F82E52958500736A63 /* quickMemoApp */ = {
@@ -49,6 +89,14 @@
 		BE2A97812E5325FF00736A63 /* quickMemoWatchApp */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
 			path = quickMemoWatchApp;
+			sourceTree = "<group>";
+		};
+		BE37DED32E75A03000343AF8 /* quickMemoWidget */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			exceptions = (
+				BE37DEE42E75A03100343AF8 /* Exceptions for "quickMemoWidget" folder in "quickMemoWidgetExtension" target */,
+			);
+			path = quickMemoWidget;
 			sourceTree = "<group>";
 		};
 /* End PBXFileSystemSynchronizedRootGroup section */
@@ -82,6 +130,15 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		BE37DECA2E75A03000343AF8 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				BE37DED22E75A03000343AF8 /* SwiftUI.framework in Frameworks */,
+				BE37DED02E75A03000343AF8 /* WidgetKit.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
@@ -92,6 +149,8 @@
 				BE2A97062E52958600736A63 /* quickMemoAppTests */,
 				BE2A97102E52958600736A63 /* quickMemoAppUITests */,
 				BE2A97812E5325FF00736A63 /* quickMemoWatchApp */,
+				BE37DED32E75A03000343AF8 /* quickMemoWidget */,
+				BE37DECE2E75A03000343AF8 /* Frameworks */,
 				BE2A96F72E52958500736A63 /* Products */,
 			);
 			sourceTree = "<group>";
@@ -103,8 +162,18 @@
 				BE2A97032E52958600736A63 /* quickMemoAppTests.xctest */,
 				BE2A970D2E52958600736A63 /* quickMemoAppUITests.xctest */,
 				BE2A97802E5325FF00736A63 /* quickMemoWatchApp.appex */,
+				BE37DECD2E75A03000343AF8 /* quickMemoWidgetExtension.appex */,
 			);
 			name = Products;
+			sourceTree = "<group>";
+		};
+		BE37DECE2E75A03000343AF8 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				BE37DECF2E75A03000343AF8 /* WidgetKit.framework */,
+				BE37DED12E75A03000343AF8 /* SwiftUI.framework */,
+			);
+			name = Frameworks;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -117,10 +186,12 @@
 				BE2A96F22E52958500736A63 /* Sources */,
 				BE2A96F32E52958500736A63 /* Frameworks */,
 				BE2A96F42E52958500736A63 /* Resources */,
+				BE37DEE82E75A03100343AF8 /* Embed Foundation Extensions */,
 			);
 			buildRules = (
 			);
 			dependencies = (
+				BE37DEE22E75A03100343AF8 /* PBXTargetDependency */,
 			);
 			fileSystemSynchronizedGroups = (
 				BE2A96F82E52958500736A63 /* quickMemoApp */,
@@ -200,6 +271,28 @@
 			productReference = BE2A97802E5325FF00736A63 /* quickMemoWatchApp.appex */;
 			productType = "com.apple.product-type.extensionkit-extension";
 		};
+		BE37DECC2E75A03000343AF8 /* quickMemoWidgetExtension */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = BE37DEE52E75A03100343AF8 /* Build configuration list for PBXNativeTarget "quickMemoWidgetExtension" */;
+			buildPhases = (
+				BE37DEC92E75A03000343AF8 /* Sources */,
+				BE37DECA2E75A03000343AF8 /* Frameworks */,
+				BE37DECB2E75A03000343AF8 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			fileSystemSynchronizedGroups = (
+				BE37DED32E75A03000343AF8 /* quickMemoWidget */,
+			);
+			name = quickMemoWidgetExtension;
+			packageProductDependencies = (
+			);
+			productName = quickMemoWidgetExtension;
+			productReference = BE37DECD2E75A03000343AF8 /* quickMemoWidgetExtension.appex */;
+			productType = "com.apple.product-type.app-extension";
+		};
 /* End PBXNativeTarget section */
 
 /* Begin PBXProject section */
@@ -224,6 +317,9 @@
 					BE2A977F2E5325FF00736A63 = {
 						CreatedOnToolsVersion = 16.4;
 					};
+					BE37DECC2E75A03000343AF8 = {
+						CreatedOnToolsVersion = 16.4;
+					};
 				};
 			};
 			buildConfigurationList = BE2A96F12E52958500736A63 /* Build configuration list for PBXProject "quickMemoApp" */;
@@ -244,6 +340,7 @@
 				BE2A97022E52958600736A63 /* quickMemoAppTests */,
 				BE2A970C2E52958600736A63 /* quickMemoAppUITests */,
 				BE2A977F2E5325FF00736A63 /* quickMemoWatchApp */,
+				BE37DECC2E75A03000343AF8 /* quickMemoWidgetExtension */,
 			);
 		};
 /* End PBXProject section */
@@ -271,6 +368,13 @@
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 		BE2A977E2E5325FF00736A63 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		BE37DECB2E75A03000343AF8 /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -308,6 +412,13 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		BE37DEC92E75A03000343AF8 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXTargetDependency section */
@@ -320,6 +431,11 @@
 			isa = PBXTargetDependency;
 			target = BE2A96F52E52958500736A63 /* quickMemoApp */;
 			targetProxy = BE2A970E2E52958600736A63 /* PBXContainerItemProxy */;
+		};
+		BE37DEE22E75A03100343AF8 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = BE37DECC2E75A03000343AF8 /* quickMemoWidgetExtension */;
+			targetProxy = BE37DEE12E75A03100343AF8 /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
 
@@ -454,6 +570,7 @@
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = MFQB3583D6;
 				ENABLE_PREVIEWS = YES;
+				ENABLE_RESOURCE_ACCESS_CALENDARS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_KEY_NSCalendarsFullAccessUsageDescription = "QuickMemoはメモをカレンダーに保存し、時系列で管理するためにカレンダーへの完全なアクセスを必要とします。";
 				INFOPLIST_KEY_NSCalendarsUsageDescription = "QuickMemoはメモをカレンダーに保存し、時系列で管理するためにカレンダーへのアクセスを必要とします。";
@@ -484,6 +601,7 @@
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = MFQB3583D6;
 				ENABLE_PREVIEWS = YES;
+				ENABLE_RESOURCE_ACCESS_CALENDARS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_KEY_NSCalendarsFullAccessUsageDescription = "QuickMemoはメモをカレンダーに保存し、時系列で管理するためにカレンダーへの完全なアクセスを必要とします。";
 				INFOPLIST_KEY_NSCalendarsUsageDescription = "QuickMemoはメモをカレンダーに保存し、時系列で管理するためにカレンダーへのアクセスを必要とします。";
@@ -633,6 +751,62 @@
 			};
 			name = Release;
 		};
+		BE37DEE62E75A03100343AF8 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				ASSETCATALOG_COMPILER_WIDGET_BACKGROUND_COLOR_NAME = WidgetBackground;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = MFQB3583D6;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = quickMemoWidget/Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = quickMemoWidget;
+				INFOPLIST_KEY_NSHumanReadableCopyright = "";
+				IPHONEOS_DEPLOYMENT_TARGET = 18.5;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@executable_path/../../Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = yokAppDev.quickMemoApp.quickMemoWidget;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = YES;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		BE37DEE72E75A03100343AF8 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				ASSETCATALOG_COMPILER_WIDGET_BACKGROUND_COLOR_NAME = WidgetBackground;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = MFQB3583D6;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = quickMemoWidget/Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = quickMemoWidget;
+				INFOPLIST_KEY_NSHumanReadableCopyright = "";
+				IPHONEOS_DEPLOYMENT_TARGET = 18.5;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@executable_path/../../Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = yokAppDev.quickMemoApp.quickMemoWidget;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = YES;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Release;
+		};
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
@@ -677,6 +851,15 @@
 			buildConfigurations = (
 				BE2A97872E5325FF00736A63 /* Debug */,
 				BE2A97882E5325FF00736A63 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		BE37DEE52E75A03100343AF8 /* Build configuration list for PBXNativeTarget "quickMemoWidgetExtension" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				BE37DEE62E75A03100343AF8 /* Debug */,
+				BE37DEE72E75A03100343AF8 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;

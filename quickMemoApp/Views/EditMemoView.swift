@@ -1,23 +1,26 @@
 import SwiftUI
 
-struct FastInputView: View {
+struct EditMemoView: View {
     @Environment(\.dismiss) private var dismiss
     @StateObject private var dataManager = DataManager.shared
-    @StateObject private var quickInputManager = QuickInputManager.shared
     
+    @State private var memoText: String
     @State private var selectedCategory: String
-    @State private var memoTitle: String = ""  // タイトル用のステート変数を追加
-    @State private var memoText: String = ""
-    @State private var isExpanded: Bool = false
-    @State private var selectedTags: Set<String> = []
-    @FocusState private var isTextFieldFocused: Bool
-    @State private var isComposing: Bool = false
-    @State private var selectedDuration: Int = 30  // デフォルト30分
+    @State private var selectedTags: Set<String>
+    @State private var selectedDuration: Int
+    @State private var isExpanded: Bool = true
+    @State private var showingDeleteAlert = false
     @State private var showingAddTag = false
     @State private var newTagText = ""
     
-    init(defaultCategory: String? = nil) {
-        _selectedCategory = State(initialValue: defaultCategory ?? QuickInputManager.shared.getQuickCategory())
+    let memo: QuickMemo
+    
+    init(memo: QuickMemo) {
+        self.memo = memo
+        _memoText = State(initialValue: memo.content)
+        _selectedCategory = State(initialValue: memo.primaryCategory)
+        _selectedTags = State(initialValue: Set(memo.tags))
+        _selectedDuration = State(initialValue: memo.durationMinutes)
     }
     
     var body: some View {
@@ -26,9 +29,7 @@ struct FastInputView: View {
                 headerView
                 
                 categorySelector
-
-                titleInputArea
-
+                
                 textInputArea
                 
                 if isExpanded {
@@ -37,12 +38,17 @@ struct FastInputView: View {
                 }
                 
                 Spacer()
+                
+                deleteButton
             }
             .toolbar(.hidden, for: .navigationBar)
-            .onAppear {
-                DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
-                    isTextFieldFocused = true
+            .alert("メモを削除", isPresented: $showingDeleteAlert) {
+                Button("削除", role: .destructive) {
+                    deleteMemo()
                 }
+                Button("キャンセル", role: .cancel) {}
+            } message: {
+                Text("このメモを削除してもよろしいですか？")
             }
         }
     }
@@ -59,15 +65,15 @@ struct FastInputView: View {
             
             Spacer()
             
-            Text("Quick Memo")
+            Text("メモを編集")
                 .font(.system(size: 18, weight: .semibold))
             
             Spacer()
             
             Button(action: {
-                saveMemo()
+                updateMemo()
             }) {
-                Text("保存")
+                Text("更新")
                     .font(.system(size: 16, weight: .bold))
                     .foregroundColor(.white)
                     .padding(.horizontal, 16)
@@ -105,22 +111,10 @@ struct FastInputView: View {
         .background(Color(.systemGray6))
     }
     
-    private var titleInputArea: some View {
-        VStack(spacing: 0) {
-            TextField("タイトル（オプション）", text: $memoTitle)
-                .font(.system(size: 16, weight: .medium))
-                .padding(.horizontal, 20)
-                .padding(.vertical, 12)
-                .background(Color(.systemBackground))
-
-            Divider()
-        }
-    }
-
     private var textInputArea: some View {
         VStack(alignment: .leading, spacing: 0) {
             ZStack(alignment: .topLeading) {
-                if memoText.isEmpty && !isComposing {
+                if memoText.isEmpty {
                     Text("メモを入力...")
                         .font(.system(size: 18))
                         .foregroundColor(Color(.placeholderText))
@@ -130,34 +124,24 @@ struct FastInputView: View {
                 }
                 
                 TextEditor(text: $memoText)
-                    .focused($isTextFieldFocused)
                     .font(.system(size: 18))
                     .scrollContentBackground(.hidden)
                     .background(Color.clear)
                     .padding(.horizontal, 15)
                     .padding(.vertical, 11)
                     .frame(minHeight: 100, maxHeight: 150)
-                    .onReceive(NotificationCenter.default.publisher(for: UITextView.textDidBeginEditingNotification)) { _ in
-                        isComposing = true
-                    }
-                    .onReceive(NotificationCenter.default.publisher(for: UITextView.textDidEndEditingNotification)) { _ in
-                        isComposing = false
-                    }
             }
             
             HStack {
                 Button(action: {
                     withAnimation(.easeInOut(duration: 0.2)) {
                         isExpanded.toggle()
-                        if isExpanded {
-                            updateDefaultTags()
-                        }
                     }
                 }) {
                     HStack(spacing: 6) {
                         Image(systemName: isExpanded ? "chevron.up" : "chevron.down")
                             .font(.system(size: 12))
-                        Text(isExpanded ? "タグを隠す" : "タグを追加")
+                        Text(isExpanded ? "オプションを隠す" : "オプションを表示")
                             .font(.system(size: 14))
                     }
                     .foregroundColor(.secondary)
@@ -255,6 +239,28 @@ struct FastInputView: View {
         .transition(.move(edge: .top).combined(with: .opacity))
     }
     
+    private var deleteButton: some View {
+        Button(action: {
+            showingDeleteAlert = true
+        }) {
+            HStack {
+                Image(systemName: "trash")
+                    .font(.system(size: 16))
+                Text("メモを削除")
+                    .font(.system(size: 16, weight: .medium))
+            }
+            .foregroundColor(.red)
+            .frame(maxWidth: .infinity)
+            .padding(.vertical, 12)
+            .background(
+                RoundedRectangle(cornerRadius: 8)
+                    .stroke(Color.red.opacity(0.3), lineWidth: 1)
+            )
+        }
+        .padding(.horizontal, 20)
+        .padding(.bottom, 34)
+    }
+    
     private func toggleTag(_ tag: String) {
         withAnimation(.easeInOut(duration: 0.15)) {
             if selectedTags.contains(tag) {
@@ -267,48 +273,42 @@ struct FastInputView: View {
     
     private func updateDefaultTags() {
         if let category = dataManager.getCategory(named: selectedCategory) {
-            // 自動的に最初の2つのタグを選択
             selectedTags = Set(category.defaultTags.prefix(2))
         }
     }
     
-    private func saveMemo() {
+    private func updateMemo() {
         let trimmedText = memoText.trimmingCharacters(in: .whitespacesAndNewlines)
         guard !trimmedText.isEmpty else { return }
         
-        let memo = QuickMemo(
-            title: memoTitle.trimmingCharacters(in: .whitespacesAndNewlines),  // タイトルを追加
-            content: trimmedText,
-            primaryCategory: selectedCategory,
-            tags: Array(selectedTags),
-            durationMinutes: selectedDuration
-        )
+        var updatedMemo = memo
+        updatedMemo.content = trimmedText
+        updatedMemo.primaryCategory = selectedCategory
+        updatedMemo.tags = Array(selectedTags)
+        updatedMemo.durationMinutes = selectedDuration
+        updatedMemo.updatedAt = Date()
         
-        dataManager.addMemo(memo)
-        quickInputManager.recordCategoryUsage(selectedCategory)
+        dataManager.updateMemo(updatedMemo)
         
-        // カレンダー連携（権限がある場合のみ）
+        // カレンダーイベントも更新（権限がある場合のみ）
         if CalendarService.shared.hasCalendarAccess {
             Task {
-                print("📅 カレンダーイベント作成開始...")
-                let eventId = await CalendarService.shared.createCalendarEvent(for: memo)
-                if let eventId = eventId {
-                    print("✅ カレンダーイベント作成完了: \(eventId)")
-                    await MainActor.run {
-                        var updatedMemo = memo
-                        updatedMemo.calendarEventId = eventId
-                        dataManager.updateMemo(updatedMemo)
-                    }
-                } else {
-                    print("❌ カレンダーイベント作成失敗")
-                    if let error = CalendarService.shared.lastError {
-                        print("   エラー: \(error)")
-                    }
-                }
+                updatedMemo.updateCalendarEvent()
             }
-        } else {
-            print("⚠️ カレンダーアクセス権限がないため、カレンダーイベントは作成されません")
         }
+        
+        dismiss()
+    }
+    
+    private func deleteMemo() {
+        // カレンダーイベントを削除（権限がある場合のみ）
+        if CalendarService.shared.hasCalendarAccess {
+            var memoToDelete = memo
+            memoToDelete.deleteCalendarEvent()
+        }
+        
+        // メモを削除
+        dataManager.deleteMemo(id: memo.id)
         
         dismiss()
     }
@@ -323,88 +323,10 @@ struct FastInputView: View {
     }
 }
 
-struct CategoryChip: View {
-    let category: Category
-    let isSelected: Bool
-    let action: () -> Void
-    
-    var body: some View {
-        Button(action: action) {
-            HStack(spacing: 6) {
-                Image(systemName: category.icon)
-                    .font(.system(size: 14))
-                Text(category.name)
-                    .font(.system(size: 14, weight: .medium))
-            }
-            .foregroundColor(isSelected ? .white : .primary)
-            .padding(.horizontal, 12)
-            .padding(.vertical, 6)
-            .background(
-                Capsule()
-                    .fill(isSelected ? Color(hex: category.color) : Color(.systemBackground))
-            )
-            .overlay(
-                Capsule()
-                    .stroke(Color(hex: category.color).opacity(0.3), lineWidth: 1)
-            )
-        }
-    }
-}
-
-struct QuickTagChip: View {
-    let tag: String
-    let isSelected: Bool
-    let action: () -> Void
-    
-    var body: some View {
-        Button(action: action) {
-            Text("#\(tag)")
-                .font(.system(size: 13, weight: .medium))
-                .foregroundColor(isSelected ? .white : .primary)
-                .padding(.horizontal, 10)
-                .padding(.vertical, 5)
-                .background(
-                    Capsule()
-                        .fill(isSelected ? Color.blue : Color(.systemGray5))
-                )
-        }
-    }
-}
-
-struct DurationChip: View {
-    let duration: Int
-    let isSelected: Bool
-    let action: () -> Void
-    
-    var durationText: String {
-        if duration < 60 {
-            return "\(duration)分"
-        } else {
-            let hours = duration / 60
-            let minutes = duration % 60
-            if minutes == 0 {
-                return "\(hours)時間"
-            } else {
-                return "\(hours)時間\(minutes)分"
-            }
-        }
-    }
-    
-    var body: some View {
-        Button(action: action) {
-            Text(durationText)
-                .font(.system(size: 14, weight: .medium))
-                .foregroundColor(isSelected ? .white : .primary)
-                .padding(.horizontal, 12)
-                .padding(.vertical, 6)
-                .background(
-                    Capsule()
-                        .fill(isSelected ? Color.blue : Color(.systemGray5))
-                )
-        }
-    }
-}
-
 #Preview {
-    FastInputView()
+    EditMemoView(memo: QuickMemo(
+        content: "サンプルメモ",
+        primaryCategory: "仕事",
+        tags: ["重要", "TODO"]
+    ))
 }

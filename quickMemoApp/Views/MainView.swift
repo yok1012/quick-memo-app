@@ -2,12 +2,17 @@ import SwiftUI
 
 struct MainView: View {
     @StateObject private var dataManager = DataManager.shared
+    @EnvironmentObject var deepLinkManager: DeepLinkManager
     @State private var selectedCategory: String = "すべて"
     @State private var showingCategorySelection = false
     @State private var showingFastInput = false
     @State private var searchText = ""
     @State private var showingCalendarPermission = false
     @State private var showingSearch = false
+    @State private var showingTagManagement = false
+    @State private var showingSettings = false
+    @State private var showingCategoryManagement = false
+    @State private var deepLinkCategory: String? = nil
     @StateObject private var calendarService = CalendarService.shared
     
     var body: some View {
@@ -24,28 +29,67 @@ struct MainView: View {
             .navigationTitle("Quick Memo")
             .quickInputEnabled()
             .toolbar {
+                ToolbarItem(placement: .navigationBarLeading) {
+                    HStack(spacing: 16) {
+                        Button(action: {
+                            showingCategoryManagement = true
+                        }) {
+                            Image(systemName: "folder")
+                        }
+
+                        Button(action: {
+                            showingTagManagement = true
+                        }) {
+                            Image(systemName: "tag")
+                        }
+                    }
+                }
+
                 ToolbarItem(placement: .navigationBarTrailing) {
-                    Button(action: {
-                        showingSearch = true
-                    }) {
-                        Image(systemName: "magnifyingglass")
+                    HStack(spacing: 16) {
+                        Button(action: {
+                            showingSearch = true
+                        }) {
+                            Image(systemName: "magnifyingglass")
+                        }
+
+                        Button(action: {
+                            showingSettings = true
+                        }) {
+                            Image(systemName: "gearshape")
+                        }
                     }
                 }
             }
             .onAppear {
                 checkCalendarPermission()
             }
+            .onChange(of: deepLinkManager.pendingAction) { action in
+                handleDeepLink(action)
+            }
             .sheet(isPresented: $showingCategorySelection) {
                 CategorySelectionView()
             }
             .sheet(isPresented: $showingFastInput) {
-                FastInputView()
+                FastInputView(defaultCategory: deepLinkCategory)
+                    .onDisappear {
+                        deepLinkCategory = nil
+                    }
             }
             .sheet(isPresented: $showingCalendarPermission) {
                 CalendarPermissionView()
             }
             .sheet(isPresented: $showingSearch) {
                 SearchView()
+            }
+            .sheet(isPresented: $showingTagManagement) {
+                TagManagementView()
+            }
+            .sheet(isPresented: $showingSettings) {
+                SettingsView()
+            }
+            .sheet(isPresented: $showingCategoryManagement) {
+                CategoryManagementView()
             }
         }
     }
@@ -117,9 +161,31 @@ struct MainView: View {
             }
         }
     }
+
+    private func handleDeepLink(_ action: DeepLinkManager.DeepLinkAction?) {
+        guard let action = action else { return }
+
+        switch action {
+        case .openApp:
+            // アプリを開くだけ
+            break
+        case .addMemo(let category):
+            // 指定されたカテゴリーでメモ追加画面を開く
+            if dataManager.categories.contains(where: { $0.name == category }) {
+                deepLinkCategory = category
+                showingFastInput = true
+            } else {
+                // カテゴリーが存在しない場合はデフォルトで開く
+                showingFastInput = true
+            }
+        }
+
+        deepLinkManager.clearPendingAction()
+    }
     
 }
 
 #Preview {
     MainView()
+        .environmentObject(DeepLinkManager())
 }

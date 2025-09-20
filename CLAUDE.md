@@ -79,7 +79,8 @@ xcodebuild test -project quickMemoApp.xcodeproj -scheme quickMemoAppUITests -des
 ## Important Technical Details
 
 ### Data Storage
-- **Active**: UserDefaults with JSON encoding via DataManager
+- **Active**: UserDefaults with JSON encoding via DataManager (App Group enabled)
+- **App Group**: group.yokAppDev.quickMemoApp (for widget data sharing)
 - **Inactive**: Core Data stack exists but not integrated
 - CloudKit container ID needs updating: "iCloud.com.yourcompany.quickMemoApp"
 
@@ -109,5 +110,34 @@ xcodebuild test -project quickMemoApp.xcodeproj -scheme quickMemoAppUITests -des
 ### Deployment Configuration
 - iOS Deployment Target: 16.0+
 - watchOS Deployment Target: 11.5+
-- Bundle IDs: yokAppDev.quickMemoApp (iOS), yokAppDev.quickMemoWatchApp (Watch)
+- Bundle IDs:
+  - yokAppDev.quickMemoApp (iOS)
+  - yokAppDev.quickMemoWatchApp (Watch)
+  - yokAppDev.quickMemoApp.Widget (Widget Extension - needs to be added in Xcode)
 - No external dependencies - pure Swift/SwiftUI implementation
+
+### Required Xcode Configuration
+
+#### Widget Extension Setup
+1. **Add Widget Extension Target**:
+   - File → New → Target → Widget Extension
+   - Product Name: QuickMemoWidget
+   - Include Configuration Intent: No
+   - Team: Your Development Team
+
+2. **App Groups Configuration**:
+   - Select main app target → Signing & Capabilities → + Capability → App Groups
+   - Add: group.yokAppDev.quickMemoApp
+   - Repeat for Widget Extension target
+
+3. **URL Scheme Configuration**:
+   - Select main app target → Info → URL Types → +
+   - URL Schemes: quickmemo
+   - Role: Editor
+
+4. **Widget Files**:
+   - Move `/quickMemoApp/Widget/QuickMemoWidget.swift` to Widget Extension target
+   - Add DataModels.swift to Widget Extension target (Target Membership)
+
+5. **Build Settings**:
+   - Ensure both targets have same iOS Deployment Target (16.0+)
