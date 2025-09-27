@@ -3,7 +3,9 @@ import WatchKit
 
 struct WatchMainView: View {
     @EnvironmentObject private var connectivityManager: WatchConnectivityManager
+    @StateObject private var dataManager = WatchDataManager.shared
     @State private var showingMemoInput = false
+    @State private var showingMemoList = false
     
     var body: some View {
         NavigationStack {
@@ -11,17 +13,22 @@ struct WatchMainView: View {
                 statusIndicator
                 
                 quickActionButton
-                
+
+                memoListButton
+
                 if !connectivityManager.pendingMemos.isEmpty {
                     pendingMemosIndicator
                 }
-                
+
                 Spacer()
             }
             .padding()
             .navigationTitle("Quick Memo")
             .sheet(isPresented: $showingMemoInput) {
                 WatchFastInputView()
+            }
+            .sheet(isPresented: $showingMemoList) {
+                WatchMemoListView()
             }
         }
     }
@@ -46,16 +53,43 @@ struct WatchMainView: View {
                 Image(systemName: "plus.circle.fill")
                     .font(.title2)
                     .foregroundColor(.blue)
-                
+
                 Text("新しいメモ")
                     .font(.caption)
                     .fontWeight(.medium)
             }
             .frame(maxWidth: .infinity)
-            .padding(.vertical, 16)
+            .padding(.vertical, 12)
             .background(
                 RoundedRectangle(cornerRadius: 12)
-                    .fill(Color(.systemGray6))
+                    .fill(Color.gray.opacity(0.2))
+            )
+        }
+        .buttonStyle(PlainButtonStyle())
+    }
+
+    private var memoListButton: some View {
+        Button(action: {
+            showingMemoList = true
+        }) {
+            HStack {
+                VStack(alignment: .leading, spacing: 4) {
+                    Text("メモ一覧")
+                        .font(.footnote)
+                        .fontWeight(.medium)
+                    Text("\(dataManager.memos.count)件")
+                        .font(.caption2)
+                        .foregroundColor(.secondary)
+                }
+                Spacer()
+                Image(systemName: "list.bullet")
+                    .font(.body)
+                    .foregroundColor(.secondary)
+            }
+            .padding(12)
+            .background(
+                RoundedRectangle(cornerRadius: 12)
+                    .fill(Color.gray.opacity(0.2))
             )
         }
         .buttonStyle(PlainButtonStyle())

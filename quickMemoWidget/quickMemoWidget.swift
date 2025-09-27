@@ -139,6 +139,14 @@ struct QuickMemoWidgetEntryView : View {
 struct SmallWidgetView: View {
     let categories: [Category]
 
+    private var isProVersion: Bool {
+        let appGroupIdentifier = "group.yokAppDev.quickMemoApp"
+        guard let userDefaults = UserDefaults(suiteName: appGroupIdentifier) else {
+            return false
+        }
+        return userDefaults.bool(forKey: "is_pro_version") || userDefaults.bool(forKey: "isPurchased")
+    }
+
     var body: some View {
         VStack(spacing: 8) {
             HStack {
@@ -170,6 +178,24 @@ struct SmallWidgetView: View {
                     .padding(10)
                     .background(Color(.systemGray6))
                     .cornerRadius(10)
+                }
+            }
+
+            // Pro版でない場合はアップグレードボタンを表示
+            if !isProVersion {
+                Link(destination: URL(string: "quickmemo://purchase")!) {
+                    HStack(spacing: 4) {
+                        Image(systemName: "star.fill")
+                            .font(.system(size: 12))
+                            .foregroundColor(.yellow)
+                        Text("Pro版へ")
+                            .font(.system(size: 11, weight: .semibold))
+                            .foregroundColor(.white)
+                    }
+                    .frame(maxWidth: .infinity)
+                    .padding(.vertical, 6)
+                    .background(Color.blue)
+                    .cornerRadius(6)
                 }
             }
 

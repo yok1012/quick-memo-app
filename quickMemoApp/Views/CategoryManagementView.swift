@@ -30,6 +30,7 @@ struct CategoryManagementView: View {
                     .deleteDisabled(!dataManager.canDeleteCategory(category))
                 }
                 .onMove(perform: moveCategories)
+                .onDelete(perform: deleteCategories)
             }
             .listStyle(InsetGroupedListStyle())
             .navigationTitle("カテゴリー管理")
@@ -100,6 +101,19 @@ struct CategoryManagementView: View {
             dataManager.deleteCategory(id: category.id)
         }
         categoryToDelete = nil
+    }
+
+    private func deleteCategories(offsets: IndexSet) {
+        let sortedCategories = dataManager.categories.sorted(by: { $0.order < $1.order })
+        for index in offsets {
+            let category = sortedCategories[index]
+            if dataManager.canDeleteCategory(category) {
+                categoryToDelete = category
+                showingDeleteAlert = true
+                // Note: Only show alert for the first deletable item when multiple are selected
+                break
+            }
+        }
     }
 }
 

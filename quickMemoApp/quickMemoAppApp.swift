@@ -10,6 +10,9 @@ import SwiftUI
 @main
 struct quickMemoAppApp: App {
     @StateObject private var deepLinkManager = DeepLinkManager()
+    @StateObject private var purchaseManager = PurchaseManager.shared
+    @StateObject private var watchConnectivityManager = iOSWatchConnectivityManager.shared
+    @StateObject private var notificationManager = NotificationManager.shared
 
     var body: some Scene {
         WindowGroup {
@@ -18,6 +21,22 @@ struct quickMemoAppApp: App {
                 .onOpenURL { url in
                     deepLinkManager.handleURL(url)
                 }
+                .onAppear {
+                    // Pro版で通知が有効な場合、通知権限をチェックしてからスケジュール
+                    if purchaseManager.isProVersion && notificationManager.isNotificationEnabled {
+                        notificationManager.checkPermission { granted in
+                            if granted {
+                                // 少し遅延を入れてスケジュール（初期化完了を待つ）
+                                DispatchQueue.main.asyncAfter(deadline: .now() + 1.0) {
+                                    // 再度Pro版をチェック
+                                    if purchaseManager.isProVersion {
+                                        notificationManager.scheduleNotifications()
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
         }
     }
 }
@@ -25,10 +44,14 @@ struct quickMemoAppApp: App {
 // Deep Link Manager
 class DeepLinkManager: ObservableObject {
     @Published var pendingAction: DeepLinkAction?
+    @Published var showPurchaseView = false
+    @Published var showSettingsView = false
 
     enum DeepLinkAction: Equatable {
         case openApp
         case addMemo(category: String)
+        case showPurchase
+        case showSettings
     }
 
     func handleURL(_ url: URL) {
@@ -43,6 +66,14 @@ class DeepLinkManager: ObservableObject {
                let categoryName = categoryItem.value?.removingPercentEncoding {
                 pendingAction = .addMemo(category: categoryName)
             }
+        case "purchase":
+            // 購入画面を表示
+            pendingAction = .showPurchase
+            showPurchaseView = true
+        case "settings":
+            // 設定画面を表示
+            pendingAction = .showSettings
+            showSettingsView = true
         default:
             break
         }

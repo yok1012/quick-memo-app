@@ -4,7 +4,8 @@ struct FastInputView: View {
     @Environment(\.dismiss) private var dismiss
     @StateObject private var dataManager = DataManager.shared
     @StateObject private var quickInputManager = QuickInputManager.shared
-    
+    @StateObject private var purchaseManager = PurchaseManager.shared
+
     @State private var selectedCategory: String
     @State private var memoTitle: String = ""  // タイトル用のステート変数を追加
     @State private var memoText: String = ""
@@ -15,6 +16,8 @@ struct FastInputView: View {
     @State private var selectedDuration: Int = 30  // デフォルト30分
     @State private var showingAddTag = false
     @State private var newTagText = ""
+    @State private var showingTagLimitAlert = false
+    @State private var showingPurchase = false
     
     init(defaultCategory: String? = nil) {
         _selectedCategory = State(initialValue: defaultCategory ?? QuickInputManager.shared.getQuickCategory())
@@ -226,6 +229,17 @@ struct FastInputView: View {
         } message: {
             Text("\(selectedCategory)カテゴリーに新しいタグを追加します")
         }
+        .alert("タグ数の制限", isPresented: $showingTagLimitAlert) {
+            Button("Pro版を見る") {
+                showingPurchase = true
+            }
+            Button("OK", role: .cancel) {}
+        } message: {
+            Text("無料版では1つのメモに15個までのタグを設定できます。Pro版では無制限にタグを追加できます。")
+        }
+        .sheet(isPresented: $showingPurchase) {
+            PurchaseView()
+        }
     }
     
     private var durationSection: some View {
@@ -260,7 +274,14 @@ struct FastInputView: View {
             if selectedTags.contains(tag) {
                 selectedTags.remove(tag)
             } else {
-                selectedTags.insert(tag)
+                // タグ数制限のチェック
+                let maxTags = purchaseManager.getMaxTagsPerMemo()
+                if selectedTags.count >= maxTags && !purchaseManager.isProVersion {
+                    // 無料版で制限に達している場合、アラートを表示
+                    showingTagLimitAlert = true
+                } else {
+                    selectedTags.insert(tag)
+                }
             }
         }
     }
@@ -316,9 +337,21 @@ struct FastInputView: View {
     private func addNewTag() {
         let trimmed = newTagText.trimmingCharacters(in: .whitespacesAndNewlines)
         guard !trimmed.isEmpty else { return }
-        
-        dataManager.addTag(to: selectedCategory, tag: trimmed)
-        selectedTags.insert(trimmed)  // 新しいタグを自動選択
+
+        // タグ数制限のチェック
+        let maxTags = purchaseManager.getMaxTagsPerMemo()
+        if selectedTags.count >= maxTags && !purchaseManager.isProVersion {
+            showingTagLimitAlert = true
+            newTagText = ""
+            return
+        }
+
+        if dataManager.addTag(to: selectedCategory, tag: trimmed) {
+            selectedTags.insert(trimmed)  // 新しいタグを自動選択
+        } else {
+            // タグ追加に失敗（制限に達した）
+            showingTagLimitAlert = true
+        }
         newTagText = ""
     }
 }

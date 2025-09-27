@@ -5,15 +5,34 @@ import SwiftUI
 class PurchaseManager: ObservableObject {
     static let shared = PurchaseManager()
     
-    // Product identifiers
+    // Product identifiers - Sandboxテスト用に正しいProduct IDを設定
+    // App Store Connect で設定した実際のProduct IDと一致させる必要があります
+    // 複数の可能なProduct IDをサポート
     private let proVersionID = "yokAppDev.quickMemoApp.pro"
+    private let alternativeProVersionID = "pro.quickmemo.monthly"
+    private let allProductIDs: Set<String> = [
+        "yokAppDev.quickMemoApp.pro",
+        "pro.quickmemo.monthly",
+        "com.yokAppDev.quickMemoApp.pro" // 別の可能性のあるID
+    ]
     
     @Published var products: [Product] = []
     @Published var purchasedProductIDs: Set<String> = []
-    @Published var isProVersion: Bool = false
+    @Published var isProVersion: Bool = false {
+        didSet {
+            if oldValue != isProVersion {
+                NotificationCenter.default.post(
+                    name: NSNotification.Name("PurchaseStatusChanged"),
+                    object: nil
+                )
+            }
+        }
+    }
     @Published var purchaseState: PurchaseState = .notStarted
     
     private var updateListenerTask: Task<Void, Error>? = nil
+    
+    // MARK: - Debug Properties (Removed for production)
     
     enum PurchaseState: Equatable {
         case notStarted
@@ -55,14 +74,58 @@ class PurchaseManager: ObservableObject {
     // MARK: - Product Loading
     
     func loadProducts() async {
+
         do {
-            let products = try await Product.products(for: [proVersionID])
-            
+
+            // ネットワーク接続を確認
+            let isConnected = await checkNetworkConnection()
+            if !isConnected {
+                return
+            }
+
+            // すべての可能なProduct IDで試す
+            let products = try await Product.products(for: allProductIDs)
+
+
+            if products.isEmpty {
+            }
+
             await MainActor.run {
                 self.products = products
             }
+        } catch let error as StoreKitError {
+            handleStoreKitError(error)
         } catch {
-            print("Failed to load products: \(error)")
+
+            // エラーメッセージから404を検出
+            if error.localizedDescription.contains("404") ||
+               error.localizedDescription.contains("アプリが見つかりません") {
+            }
+        }
+    }
+
+    private func checkNetworkConnection() async -> Bool {
+        // ネットワーク確認をスキップ（StoreKitが自動的に処理）
+        // ネットワークチェックが原因で製品読み込みが失敗する可能性があるため
+        return true
+    }
+
+    private func handleStoreKitError(_ error: StoreKitError) {
+        switch error {
+        case .networkError(let urlError):
+            break
+        case .systemError(let nsError):
+            break
+        case .userCancelled:
+            break
+        case .notAvailableInStorefront:
+            break
+        case .notEntitled:
+            break
+        case .unknown:
+            break
+        @unknown default:
+            break
         }
     }
     
@@ -115,11 +178,33 @@ class PurchaseManager: ObservableObject {
     }
     
     func restorePurchases() async {
+
+        await MainActor.run {
+            purchaseState = .purchasing
+        }
+
         do {
+            // App Store と同期
             try await AppStore.sync()
+
+            // 購入済み商品を更新
             await updatePurchasedProducts()
+
+            // 復元結果をチェック
+            let hasProVersion = await MainActor.run { self.isProVersion }
+
+            await MainActor.run {
+                if hasProVersion {
+                    purchaseState = .purchased
+                } else {
+                    purchaseState = .failed("購入履歴が見つかりませんでした")
+                }
+            }
         } catch {
-            print("Failed to restore purchases: \(error)")
+
+            await MainActor.run {
+                purchaseState = .failed("復元に失敗しました: \(error.localizedDescription)")
+            }
         }
     }
     
@@ -143,28 +228,42 @@ class PurchaseManager: ObservableObject {
             }
         case .unverified(_, let error):
             // Handle unverified transaction
-            print("Unverified transaction: \(error)")
+            break
         }
     }
     
     private func updatePurchasedProducts() async {
+
         var purchasedProductIDs: Set<String> = []
-        
+        var transactionCount = 0
+
+        // すべての現在の権利を確認
         for await verificationResult in StoreKit.Transaction.currentEntitlements {
+            transactionCount += 1
             switch verificationResult {
             case let .verified(transaction):
-                if transaction.revocationDate == nil {
+
+                if let revocationDate = transaction.revocationDate {
+                } else {
                     purchasedProductIDs.insert(transaction.productID)
                 }
-            case .unverified:
-                // Ignore unverified transactions
+
+            case let .unverified(transaction, error):
                 break
             }
         }
-        
+
+
         await MainActor.run {
             self.purchasedProductIDs = purchasedProductIDs
-            self.isProVersion = purchasedProductIDs.contains(proVersionID)
+            // いずれかのPro版Product IDが購入済みかチェック
+            self.isProVersion = !purchasedProductIDs.isDisjoint(with: allProductIDs)
+
+
+            // App Groupに保存（Watch/Widget用）
+            if let sharedDefaults = UserDefaults(suiteName: "group.yokAppDev.quickMemoApp") {
+                sharedDefaults.set(self.isProVersion, forKey: "isPurchased")
+            }
         }
     }
     
@@ -184,7 +283,7 @@ class PurchaseManager: ObservableObject {
         if isProVersion {
             return true // Unlimited for pro users
         }
-        return currentCount < 50 // Free users limited to 50 memos
+        return currentCount < 100 // Free users limited to 100 memos
     }
     
     func canCreateMoreCategories(currentCount: Int) -> Bool {
@@ -200,6 +299,21 @@ class PurchaseManager: ObservableObject {
 
     func canCustomizeWidget() -> Bool {
         return isProVersion
+    }
+
+    func canUseUnlimitedTags() -> Bool {
+        if isProVersion {
+            return true // Unlimited for pro users
+        }
+        return false // Free users limited to 15 tags per memo
+    }
+
+    func canUseiCloudSync() -> Bool {
+        return isProVersion // iCloud sync is Pro only
+    }
+
+    func getMaxTagsPerMemo() -> Int {
+        return isProVersion ? Int.max : 15
     }
 }
 

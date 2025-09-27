@@ -12,7 +12,9 @@ class WatchConnectivityManager: ObservableObject {
     
     func sendMemoToPhone(memoData: [String: Any]) {
         // iOSでは同じデバイス内なので即座にメモを保存
-        saveMemoLocally(memoData: memoData)
+        Task { @MainActor in
+            saveMemoLocally(memoData: memoData)
+        }
     }
     
     func syncPendingMemos() {
@@ -24,6 +26,7 @@ class WatchConnectivityManager: ObservableObject {
         isReachable = true
     }
     
+    @MainActor
     private func saveMemoLocally(memoData: [String: Any]) {
         let memo = QuickMemo(
             content: memoData["content"] as? String ?? "",

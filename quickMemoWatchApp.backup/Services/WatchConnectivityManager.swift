@@ -3,7 +3,7 @@ import WatchConnectivity
 
 class WatchConnectivityManager: NSObject, ObservableObject {
     static let shared = WatchConnectivityManager()
-    
+
     @Published var isReachable = false
     @Published var pendingMemos: [[String: Any]] = []
     
@@ -92,12 +92,67 @@ extension WatchConnectivityManager: WCSessionDelegate {
     
     private func handleReceivedMessage(_ message: [String: Any]) {
         guard let type = message["type"] as? String else { return }
-        
+
         switch type {
         case "syncRequest":
             syncPendingMemos()
+        case "categoriesUpdate":
+            if let data = message["data"] as? [[String: Any]] {
+                updateCategories(data)
+            }
+        case "memosUpdate":
+            if let data = message["data"] as? [[String: Any]] {
+                updateMemos(data)
+            }
         default:
             break
+        }
+    }
+
+    private func updateCategories(_ categoriesData: [[String: Any]]) {
+        let categories = categoriesData.compactMap { data -> WatchCategory? in
+            guard let name = data["name"] as? String,
+                  let icon = data["icon"] as? String,
+                  let color = data["color"] as? String else { return nil }
+
+            return WatchCategory(
+                id: UUID(uuidString: data["id"] as? String ?? "") ?? UUID(),
+                name: name,
+                icon: icon,
+                color: color
+            )
+        }
+
+        DispatchQueue.main.async {
+            WatchDataManager.shared.updateFromPhone(
+                memos: WatchDataManager.shared.memos,
+                categories: categories
+            )
+        }
+    }
+
+    private func updateMemos(_ memosData: [[String: Any]]) {
+        let memos = memosData.compactMap { data -> WatchMemo? in
+            guard let content = data["content"] as? String,
+                  let category = data["category"] as? String else { return nil }
+
+            let title = data["title"] as? String ?? ""
+            let timestamp = data["createdAt"] as? TimeInterval ?? Date().timeIntervalSince1970
+
+            return WatchMemo(
+                id: UUID(uuidString: data["id"] as? String ?? "") ?? UUID(),
+                title: title,
+                content: content,
+                category: category,
+                createdAt: Date(timeIntervalSince1970: timestamp)
+            )
+        }
+
+        DispatchQueue.main.async {
+            WatchDataManager.shared.updateFromPhone(
+                memos: memos,
+                categories: WatchDataManager.shared.categories
+            )
         }
     }
 }

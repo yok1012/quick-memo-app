@@ -3,6 +3,7 @@ import SwiftUI
 struct EditMemoView: View {
     @Environment(\.dismiss) private var dismiss
     @StateObject private var dataManager = DataManager.shared
+    @StateObject private var purchaseManager = PurchaseManager.shared
     
     @State private var memoText: String
     @State private var selectedCategory: String
@@ -12,6 +13,8 @@ struct EditMemoView: View {
     @State private var showingDeleteAlert = false
     @State private var showingAddTag = false
     @State private var newTagText = ""
+    @State private var showingTagLimitAlert = false
+    @State private var showingPurchase = false
     
     let memo: QuickMemo
     
@@ -199,6 +202,17 @@ struct EditMemoView: View {
         }
         .padding(.bottom, 12)
         .transition(.move(edge: .top).combined(with: .opacity))
+        .alert("タグ数の制限", isPresented: $showingTagLimitAlert) {
+            Button("Pro版を見る") {
+                showingPurchase = true
+            }
+            Button("OK", role: .cancel) {}
+        } message: {
+            Text("無料版では1つのメモに15個までのタグを設定できます。Pro版では無制限にタグを追加できます。")
+        }
+        .sheet(isPresented: $showingPurchase) {
+            PurchaseView()
+        }
         .alert("新しいタグを追加", isPresented: $showingAddTag) {
             TextField("タグ名", text: $newTagText)
             Button("追加") {
@@ -266,7 +280,13 @@ struct EditMemoView: View {
             if selectedTags.contains(tag) {
                 selectedTags.remove(tag)
             } else {
-                selectedTags.insert(tag)
+                // タグ数制限のチェック
+                let maxTags = purchaseManager.getMaxTagsPerMemo()
+                if selectedTags.count >= maxTags && !purchaseManager.isProVersion {
+                    showingTagLimitAlert = true
+                } else {
+                    selectedTags.insert(tag)
+                }
             }
         }
     }
@@ -316,9 +336,21 @@ struct EditMemoView: View {
     private func addNewTag() {
         let trimmed = newTagText.trimmingCharacters(in: .whitespacesAndNewlines)
         guard !trimmed.isEmpty else { return }
-        
-        dataManager.addTag(to: selectedCategory, tag: trimmed)
-        selectedTags.insert(trimmed)  // 新しいタグを自動選択
+
+        // タグ数制限のチェック
+        let maxTags = purchaseManager.getMaxTagsPerMemo()
+        if selectedTags.count >= maxTags && !purchaseManager.isProVersion {
+            showingTagLimitAlert = true
+            newTagText = ""
+            return
+        }
+
+        if dataManager.addTag(to: selectedCategory, tag: trimmed) {
+            selectedTags.insert(trimmed)  // 新しいタグを自動選択
+        } else {
+            // タグ追加に失敗（制限に達した）
+            showingTagLimitAlert = true
+        }
         newTagText = ""
     }
 }

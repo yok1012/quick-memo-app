@@ -19,6 +19,7 @@ struct MainView: View {
     @State private var showingLimitAlert = false
     @State private var limitAlertMessage = ""
     
+    
     var body: some View {
         NavigationStack {
             VStack(spacing: 0) {
@@ -35,6 +36,7 @@ struct MainView: View {
             .toolbar {
                 ToolbarItem(placement: .navigationBarLeading) {
                     HStack(spacing: 16) {
+                        
                         Button(action: {
                             showingCategoryManagement = true
                         }) {
@@ -87,15 +89,24 @@ struct MainView: View {
             }
             .onAppear {
                 checkCalendarPermission()
+                setupNotificationObservers()
             }
             .onChange(of: deepLinkManager.pendingAction) { action in
                 handleDeepLink(action)
+            }
+            .onChange(of: deepLinkManager.showPurchaseView) { show in
+                if show {
+                    showingPurchase = true
+                    deepLinkManager.showPurchaseView = false
+                }
             }
             .sheet(isPresented: $showingCategorySelection) {
                 CategorySelectionView()
             }
             .sheet(isPresented: $showingFastInput) {
-                FastInputView(defaultCategory: deepLinkCategory)
+                // deepLinkCategoryがある場合はそれを使用、なければ現在選択中のカテゴリーを使用
+                let category = deepLinkCategory ?? (selectedCategory != "すべて" ? selectedCategory : nil)
+                FastInputView(defaultCategory: category)
                     .onDisappear {
                         deepLinkCategory = nil
                     }
@@ -173,7 +184,7 @@ struct MainView: View {
                 showingFastInput = true
             } else {
                 if let remaining = dataManager.getRemainingMemoCount() {
-                    limitAlertMessage = "無料版では50個までのメモを作成できます。Pro版にアップグレードすると無制限に作成できます。"
+                    limitAlertMessage = "無料版では100個までのメモを作成できます。Pro版にアップグレードすると無制限に作成できます。"
                 } else {
                     limitAlertMessage = "メモの作成制限に達しました。Pro版にアップグレードして無制限に作成しましょう。"
                 }
@@ -223,9 +234,33 @@ struct MainView: View {
                 // カテゴリーが存在しない場合はデフォルトで開く
                 showingFastInput = true
             }
+        case .showPurchase:
+            showingPurchase = true
+        case .showSettings:
+            showingSettings = true
         }
 
         deepLinkManager.clearPendingAction()
+    }
+
+    private func setupNotificationObservers() {
+        // Apple Watchからの購入画面表示要求を受信
+        NotificationCenter.default.addObserver(
+            forName: NSNotification.Name("OpenPurchaseView"),
+            object: nil,
+            queue: .main
+        ) { _ in
+            showingPurchase = true
+        }
+
+        // Apple Watchからの設定画面表示要求を受信
+        NotificationCenter.default.addObserver(
+            forName: NSNotification.Name("OpenSettingsView"),
+            object: nil,
+            queue: .main
+        ) { _ in
+            showingSettings = true
+        }
     }
     
 }

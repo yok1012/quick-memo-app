@@ -3,23 +3,28 @@ import CoreData
 
 class CoreDataStack: ObservableObject {
     static let shared = CoreDataStack()
-    
-    lazy var persistentContainer: NSPersistentCloudKitContainer = {
-        let container = NSPersistentCloudKitContainer(name: "QuickMemoApp")
-        
-        // CloudKit設定
+
+    private func managedObjectModel() -> NSManagedObjectModel {
+        guard let modelURL = Bundle.main.url(forResource: "QuickMemoApp", withExtension: "momd") else {
+            fatalError("Failed to find data model")
+        }
+        guard let managedObjectModel = NSManagedObjectModel(contentsOf: modelURL) else {
+            fatalError("Failed to create managed object model")
+        }
+        return managedObjectModel
+    }
+
+    lazy var persistentContainer: NSPersistentContainer = {
+        // 一時的に通常のNSPersistentContainerを使用（CloudKit同期を無効化）
+        let container = NSPersistentContainer(name: "QuickMemoApp", managedObjectModel: self.managedObjectModel())
+
+        // ローカルストレージのみの設定
         guard let description = container.persistentStoreDescriptions.first else {
             fatalError("Failed to retrieve a persistent store description.")
         }
-        
-        // CloudKit同期の設定
+
+        // 履歴トラッキングを有効化（将来のCloudKit統合のため）
         description.setOption(true as NSNumber, forKey: NSPersistentHistoryTrackingKey)
-        description.setOption(true as NSNumber, forKey: NSPersistentStoreRemoteChangeNotificationPostOptionKey)
-        
-        // CloudKitコンテナの設定
-        description.cloudKitContainerOptions = NSPersistentCloudKitContainerOptions(
-            containerIdentifier: "iCloud.com.yourcompany.quickMemoApp"
-        )
         
         container.loadPersistentStores { _, error in
             if let error = error as NSError? {

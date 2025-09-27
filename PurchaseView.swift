@@ -15,8 +15,10 @@ struct PurchaseView: View {
                     
                     featuresSection
                     
-                    if let proProduct = purchaseManager.getProduct(for: "yokAppDev.quickMemoApp.pro") {
+                    if let proProduct = purchaseManager.products.first {
                         purchaseSection(for: proProduct)
+                    } else {
+                        noProductsView
                     }
                     
                     restoreSection
@@ -69,14 +71,13 @@ struct PurchaseView: View {
                 .font(.headline)
                 .fontWeight(.semibold)
             
-            FeatureRow(icon: "infinity", title: "無制限のメモ", description: "メモ数の制限なし")
+            FeatureRow(icon: "infinity", title: "無制限のメモ", description: "100個以上のメモを作成可能")
             FeatureRow(icon: "folder.badge.plus", title: "無制限のカテゴリ", description: "カテゴリを自由に作成")
-            FeatureRow(icon: "tag.fill", title: "高度なタグ管理", description: "タグでメモを整理")
-            FeatureRow(icon: "calendar.badge.plus", title: "カレンダー連携", description: "詳細なカレンダー設定")
-            FeatureRow(icon: "link", title: "Deep Link", description: "他のアプリから直接メモ作成")
+            FeatureRow(icon: "tag.fill", title: "無制限のタグ", description: "メモあたり15個以上のタグ")
+            FeatureRow(icon: "icloud.and.arrow.up", title: "iCloud同期", description: "すべてのデバイスで自動同期")
             FeatureRow(icon: "square.stack.3d.up.fill", title: "Widget カスタマイズ", description: "ウィジェットの表示をカスタマイズ")
-            FeatureRow(icon: "icloud.and.arrow.up", title: "データバックアップ", description: "データの安全な保存")
-            FeatureRow(icon: "arrow.triangle.2.circlepath", title: "完全同期", description: "すべてのデバイスで同期")
+            FeatureRow(icon: "applewatch", title: "Apple Watch Pro", description: "カテゴリーカスタマイズ")
+            FeatureRow(icon: "square.and.arrow.down.on.square", title: "データエクスポート", description: "CSV/JSON形式でバックアップ")
         }
         .padding()
         .background(Color(.systemGray6))
@@ -138,6 +139,32 @@ struct PurchaseView: View {
         .disabled(purchaseManager.purchaseState == .purchasing)
     }
     
+    private var noProductsView: some View {
+        VStack(spacing: 16) {
+            Image(systemName: "exclamationmark.triangle")
+                .font(.largeTitle)
+                .foregroundColor(.orange)
+
+            Text("製品情報を取得できません")
+                .font(.headline)
+
+            Text("ネットワーク接続を確認してください。\n問題が続く場合は、後でもう一度お試しください。")
+                .font(.caption)
+                .foregroundColor(.secondary)
+                .multilineTextAlignment(.center)
+
+            Button("再試行") {
+                Task {
+                    await purchaseManager.loadProducts()
+                }
+            }
+            .buttonStyle(.borderedProminent)
+        }
+        .padding()
+        .background(Color.orange.opacity(0.1))
+        .cornerRadius(12)
+    }
+
     private var restoreSection: some View {
         VStack(spacing: 8) {
             Button("購入を復元") {
@@ -146,10 +173,11 @@ struct PurchaseView: View {
                 }
             }
             .foregroundColor(.blue)
-            
+
             Text("以前に購入した場合はここから復元できます")
                 .font(.caption)
                 .foregroundColor(.secondary)
+
         }
     }
     

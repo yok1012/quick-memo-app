@@ -4,19 +4,13 @@ import WatchKit
 struct WatchFastInputView: View {
     @Environment(\.dismiss) private var dismiss
     @EnvironmentObject var connectivityManager: WatchConnectivityManager
-    
+    @StateObject private var dataManager = WatchDataManager.shared
+
     @State private var selectedCategory: String = "仕事"
+    @State private var memoTitle: String = ""
     @State private var memoText: String = ""
     @State private var showingVoiceInput = false
     @State private var showingScribble = false
-    
-    private let categories = [
-        ("仕事", "briefcase", "#007AFF"),
-        ("プライベート", "house", "#34C759"),
-        ("アイデア", "lightbulb", "#FF9500"),
-        ("人物", "person", "#AF52DE"),
-        ("その他", "folder", "#8E8E93")
-    ]
     
     var body: some View {
         NavigationStack {
@@ -39,23 +33,23 @@ struct WatchFastInputView: View {
     private var categorySelector: some View {
         ScrollView(.horizontal, showsIndicators: false) {
             HStack(spacing: 8) {
-                ForEach(categories, id: \.0) { category in
+                ForEach(dataManager.categories) { category in
                     Button(action: {
-                        selectedCategory = category.0
+                        selectedCategory = category.name
                         WKInterfaceDevice.current().play(.click)
                     }) {
                         VStack(spacing: 4) {
-                            Image(systemName: category.1)
+                            Image(systemName: category.icon)
                                 .font(.system(size: 16))
-                            Text(category.0)
+                            Text(category.name)
                                 .font(.system(size: 10))
                         }
-                        .foregroundColor(selectedCategory == category.0 ? .white : .primary)
+                        .foregroundColor(selectedCategory == category.name ? .white : .primary)
                         .frame(width: 60, height: 50)
                         .background(
                             RoundedRectangle(cornerRadius: 8)
-                                .fill(selectedCategory == category.0 ? 
-                                    Color(hex: category.2) : Color(.darkGray))
+                                .fill(selectedCategory == category.name ?
+                                    Color(hex: category.color) : Color(.darkGray))
                         )
                     }
                     .buttonStyle(PlainButtonStyle())
@@ -129,7 +123,7 @@ struct WatchFastInputView: View {
             VoiceInputView(text: $memoText)
         }
         .sheet(isPresented: $showingScribble) {
-            ScribbleInputView(text: $memoText)
+            WatchScribbleInputView(text: $memoText)
         }
     }
     
@@ -157,15 +151,26 @@ struct WatchFastInputView: View {
     
     private func saveMemo() {
         guard !memoText.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty else { return }
-        
+
+        // Save locally first
+        let watchMemo = WatchMemo(
+            title: memoTitle,
+            content: memoText,
+            category: selectedCategory
+        )
+        dataManager.addMemo(watchMemo)
+
+        // Then send to phone
         let memoData: [String: Any] = [
+            "id": watchMemo.id.uuidString,
+            "title": memoTitle,
             "content": memoText,
             "category": selectedCategory,
             "timestamp": Date().timeIntervalSince1970
         ]
-        
+
         connectivityManager.sendMemoToPhone(memoData: memoData)
-        
+
         WKInterfaceDevice.current().play(.success)
         dismiss()
     }
@@ -213,7 +218,7 @@ struct VoiceInputView: View {
     }
 }
 
-struct ScribbleInputView: View {
+struct WatchScribbleInputView: View {
     @Binding var text: String
     @Environment(\.dismiss) private var dismiss
     
@@ -224,7 +229,7 @@ struct ScribbleInputView: View {
             
             TextField("ここに書く...", text: $text)
                 .font(.system(size: 14))
-                .textFieldStyle(RoundedBorderTextFieldStyle())
+                .textFieldStyle(.automatic)
             
             Button(action: {
                 dismiss()

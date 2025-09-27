@@ -1,16 +1,20 @@
 import Foundation
 import SwiftUI
+import CoreData
 #if canImport(WidgetKit)
 import WidgetKit
 #endif
 
+@MainActor
 class DataManager: ObservableObject {
     static let shared = DataManager()
 
     @Published var memos: [QuickMemo] = []
     @Published var categories: [Category] = []
-    
-    private let purchaseManager = PurchaseManager.shared
+
+    nonisolated private let purchaseManager = PurchaseManager.shared
+    nonisolated private let coreDataStack = CoreDataStack.shared
+    private var iCloudSyncEnabled = false
 
     private let memosKey = "quick_memos"
     private let categoriesKey = "categories"
@@ -34,6 +38,7 @@ class DataManager: ObservableObject {
 
         loadData()
         initializeDefaultCategories()
+        setupiCloudSync()
     }
 
     private func migrateDataIfNeeded() {
@@ -55,6 +60,110 @@ class DataManager: ObservableObject {
         }
     }
     
+    // MARK: - iCloud Sync Setup
+
+    private func setupiCloudSync() {
+        // 一時的にiCloud同期を無効化（CloudKit設定が完了するまで）
+        Task { @MainActor in
+            iCloudSyncEnabled = false // purchaseManager.canUseiCloudSync()
+            if iCloudSyncEnabled {
+                print("✅ iCloud同期が有効になりました（Pro版）")
+                await syncWithCoreData()
+            } else {
+                print("ℹ️ iCloud同期は無効です（無料版）")
+            }
+        }
+
+        // Listen for Pro version changes
+        NotificationCenter.default.addObserver(
+            self,
+            selector: #selector(purchaseStatusChanged),
+            name: NSNotification.Name("PurchaseStatusChanged"),
+            object: nil
+        )
+    }
+
+    @objc private func purchaseStatusChanged() {
+        Task { @MainActor in
+            // 一時的にiCloud同期を無効化
+            let wasEnabled = iCloudSyncEnabled
+            iCloudSyncEnabled = false // purchaseManager.canUseiCloudSync()
+
+            if !wasEnabled && iCloudSyncEnabled {
+                print("🎉 Pro版にアップグレード - iCloud同期を開始")
+                await migrateUserDefaultsToCoreData()
+                await syncWithCoreData()
+            }
+        }
+    }
+
+    // MARK: - Core Data Sync
+
+    private func syncWithCoreData() async {
+        guard iCloudSyncEnabled else { return }
+
+        await MainActor.run {
+            // Load from Core Data
+            let coreDataMemos = coreDataStack.fetchMemos()
+            let coreDataCategories = coreDataStack.fetchCategories()
+
+            // Merge with existing data (UserDefaults has priority for local changes)
+            mergeMemos(from: coreDataMemos)
+            mergeCategories(from: coreDataCategories)
+        }
+    }
+
+    private func migrateUserDefaultsToCoreData() async {
+        guard iCloudSyncEnabled else { return }
+
+        await MainActor.run {
+            print("📤 UserDefaultsからCore Dataへデータ移行開始")
+
+            // Migrate all memos to Core Data
+            for memo in memos {
+                coreDataStack.saveMemo(memo)
+            }
+
+            // Migrate all categories to Core Data
+            for category in categories {
+                coreDataStack.saveCategory(category)
+            }
+
+            print("✅ データ移行完了: \(memos.count)件のメモ, \(categories.count)件のカテゴリー")
+        }
+    }
+
+    private func mergeMemos(from coreDataMemos: [QuickMemo]) {
+        // Simple merge strategy: combine unique memos
+        var memoDict = Dictionary(uniqueKeysWithValues: memos.map { ($0.id, $0) })
+
+        for cdMemo in coreDataMemos {
+            if let existingMemo = memoDict[cdMemo.id] {
+                // Use the newer version
+                if cdMemo.updatedAt > existingMemo.updatedAt {
+                    memoDict[cdMemo.id] = cdMemo
+                }
+            } else {
+                memoDict[cdMemo.id] = cdMemo
+            }
+        }
+
+        memos = Array(memoDict.values).sorted { $0.createdAt > $1.createdAt }
+    }
+
+    private func mergeCategories(from coreDataCategories: [Category]) {
+        // Simple merge strategy: combine unique categories
+        var categoryDict = Dictionary(uniqueKeysWithValues: categories.map { ($0.id, $0) })
+
+        for cdCategory in coreDataCategories {
+            if categoryDict[cdCategory.id] == nil {
+                categoryDict[cdCategory.id] = cdCategory
+            }
+        }
+
+        categories = Array(categoryDict.values).sorted { $0.order < $1.order }
+    }
+
     // MARK: - Data Loading/Saving
     
     private func loadData() {
@@ -77,18 +186,54 @@ class DataManager: ObservableObject {
     }
     
     private func saveMemos() {
+        // Always save to UserDefaults for widgets
         if let data = try? JSONEncoder().encode(memos) {
             userDefaults.set(data, forKey: memosKey)
             // Notify widget to update
             notifyWidgetUpdate()
         }
+
+        // Also save to Core Data if Pro version
+        if iCloudSyncEnabled {
+            Task {
+                await saveMemosToCoreData()
+            }
+        }
+    }
+
+    private func saveMemosToCoreData() async {
+        guard iCloudSyncEnabled else { return }
+
+        await MainActor.run {
+            for memo in memos {
+                coreDataStack.saveMemo(memo)
+            }
+        }
     }
     
     private func saveCategories() {
+        // Always save to UserDefaults for widgets
         if let data = try? JSONEncoder().encode(categories) {
             userDefaults.set(data, forKey: categoriesKey)
             // Notify widget to update
             notifyWidgetUpdate()
+        }
+
+        // Also save to Core Data if Pro version
+        if iCloudSyncEnabled {
+            Task {
+                await saveCategoriesToCoreData()
+            }
+        }
+    }
+
+    private func saveCategoriesToCoreData() async {
+        guard iCloudSyncEnabled else { return }
+
+        await MainActor.run {
+            for category in categories {
+                coreDataStack.saveCategory(category)
+            }
         }
     }
 
@@ -101,22 +246,58 @@ class DataManager: ObservableObject {
     }
     
     // MARK: - Memo Operations
-    
+
     func addMemo(_ memo: QuickMemo) {
-        memos.append(memo)
+        var newMemo = memo
+
+        // Enforce tag limit for free users
+        if !purchaseManager.isProVersion {
+            let maxTags = purchaseManager.getMaxTagsPerMemo()
+            if newMemo.tags.count > maxTags {
+                print("⚠️ タグ数制限: \(newMemo.tags.count) → \(maxTags)")
+                newMemo.tags = Array(newMemo.tags.prefix(maxTags))
+            }
+        }
+
+        memos.append(newMemo)
         saveMemos()
-        // カレンダー登録処理を削除（FastInputViewで既に実行されているため）
+
+        // Save to Core Data if Pro version
+        if iCloudSyncEnabled {
+            coreDataStack.saveMemo(newMemo)
+        }
     }
     
     func deleteMemo(id: UUID) {
         memos.removeAll { $0.id == id }
         saveMemos()
+
+        // Delete from Core Data if Pro version
+        if iCloudSyncEnabled {
+            coreDataStack.deleteMemo(id: id)
+        }
     }
     
     func updateMemo(_ memo: QuickMemo) {
-        if let index = memos.firstIndex(where: { $0.id == memo.id }) {
-            memos[index] = memo
+        var updatedMemo = memo
+
+        // Enforce tag limit for free users
+        if !purchaseManager.isProVersion {
+            let maxTags = purchaseManager.getMaxTagsPerMemo()
+            if updatedMemo.tags.count > maxTags {
+                print("⚠️ タグ数制限: \(updatedMemo.tags.count) → \(maxTags)")
+                updatedMemo.tags = Array(updatedMemo.tags.prefix(maxTags))
+            }
+        }
+
+        if let index = memos.firstIndex(where: { $0.id == updatedMemo.id }) {
+            memos[index] = updatedMemo
             saveMemos()
+
+            // Update in Core Data if Pro version
+            if iCloudSyncEnabled {
+                coreDataStack.saveMemo(updatedMemo)
+            }
         }
     }
     
@@ -189,17 +370,28 @@ class DataManager: ObservableObject {
     }
     
     // MARK: - Tag Operations
-    
-    func addTag(to categoryName: String, tag: String) {
-        guard var category = getCategory(named: categoryName) else { return }
-        
+
+    func addTag(to categoryName: String, tag: String) -> Bool {
+        guard var category = getCategory(named: categoryName) else { return false }
+
         let trimmedTag = tag.trimmingCharacters(in: .whitespacesAndNewlines)
-        guard !trimmedTag.isEmpty else { return }
-        
+        guard !trimmedTag.isEmpty else { return false }
+
+        // Check tag limit for free users
+        if !purchaseManager.isProVersion {
+            let maxTags = purchaseManager.getMaxTagsPerMemo()
+            if category.defaultTags.count >= maxTags {
+                print("⚠️ カテゴリーのデフォルトタグ数が制限に達しています: \(maxTags)")
+                return false
+            }
+        }
+
         if !category.defaultTags.contains(trimmedTag) {
             category.defaultTags.append(trimmedTag)
             updateCategory(category)
+            return true
         }
+        return false
     }
     
     func removeTag(from categoryName: String, tag: String) {
@@ -348,7 +540,7 @@ class DataManager: ObservableObject {
         if purchaseManager.isProVersion {
             return nil // Unlimited
         }
-        return max(0, 50 - memos.count)
+        return max(0, 100 - memos.count)
     }
     
     @MainActor

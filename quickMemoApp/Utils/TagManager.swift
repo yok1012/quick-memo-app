@@ -12,6 +12,7 @@ class TagManager: ObservableObject {
     
     private init() {}
     
+    @MainActor
     func generateTagSuggestions(for text: String, category: String) -> [String] {
         let words = extractKeywords(from: text)
         let categoryTags = getCategoryDefaultTags(category: category)
@@ -48,10 +49,12 @@ class TagManager: ObservableObject {
         return Array(Set(words))
     }
     
+    @MainActor
     private func getCategoryDefaultTags(category: String) -> [String] {
         return DataManager.shared.getCategory(named: category)?.defaultTags ?? []
     }
     
+    @MainActor
     private func getFrequentTags() -> [String] {
         let allTags = DataManager.shared.memos
             .suffix(100)
@@ -71,12 +74,9 @@ class TagManager: ObservableObject {
     }
     
     private func updatePopularTags() {
-        DispatchQueue.global(qos: .background).async {
+        Task { @MainActor in
             let frequentTags = self.getFrequentTags()
-            
-            DispatchQueue.main.async {
-                self.popularTags = frequentTags
-            }
+            self.popularTags = frequentTags
         }
     }
 }

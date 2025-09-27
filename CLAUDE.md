@@ -98,6 +98,7 @@ xcodebuild test -project quickMemoApp.xcodeproj -scheme quickMemoAppUITests -des
 - Project uses GENERATE_INFOPLIST_FILE = YES (auto-generated Info.plist)
 - Calendar permissions set via project build settings (INFOPLIST_KEY_*)
 - Watch app uses AppIntents extension architecture
+- Notification permissions: Add INFOPLIST_KEY_NSUserNotificationsUsageDescription in build settings with value "メモを書くことを思い出させるための通知を送信します"
 
 ### Known Issues & Considerations
 

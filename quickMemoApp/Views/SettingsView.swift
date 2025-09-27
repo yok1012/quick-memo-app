@@ -1,18 +1,30 @@
 import SwiftUI
 import EventKit
+import UniformTypeIdentifiers
 
 struct SettingsView: View {
     @StateObject private var calendarService = CalendarService.shared
     @StateObject private var purchaseManager = PurchaseManager.shared
+    @StateObject private var notificationManager = NotificationManager.shared
     @State private var isTestingConnection = false
     @State private var showTestResult = false
     @State private var testResultMessage = ""
     @State private var testResultSuccess = false
     @State private var showingPermissionRequest = false
-    @State private var showingCalendarDebug = false
     @State private var showingForceSyncAlert = false
     @State private var showingPurchase = false
     @State private var showingWidgetSettings = false
+    @State private var showingWatchSettings = false
+    @State private var showingExportOptions = false
+    @State private var showingImportPicker = false
+    @State private var exportFormat: ExportManager.ExportFormat = .json
+    @State private var isExporting = false
+    @State private var exportedFileURL: URL?
+    @State private var showingShareSheet = false
+    @State private var showingExportError = false
+    @State private var exportErrorMessage = ""
+    @State private var showingImportConfirmation = false
+    @State private var importedMemos: [QuickMemo] = []
     @AppStorage("calendar_sync_mode") private var syncMode = "normal"
 
     var body: some View {
@@ -94,7 +106,125 @@ struct SettingsView: View {
                     Text(purchaseManager.isProVersion ? "ウィジェットに表示するカテゴリーを選択できます" : "Pro版では表示するカテゴリーをカスタマイズできます")
                         .font(.system(size: 12))
                 }
-                
+
+                // Apple Watch設定セクション
+                Section {
+                    Button(action: {
+                        showingWatchSettings = true
+                    }) {
+                        HStack {
+                            Image(systemName: "applewatch")
+                                .foregroundColor(.blue)
+                            Text("Apple Watch設定")
+                            Spacer()
+                            if !purchaseManager.isProVersion {
+                                Text("Pro限定")
+                                    .font(.caption)
+                                    .foregroundColor(.orange)
+                            }
+                            Image(systemName: "chevron.right")
+                                .font(.caption)
+                                .foregroundColor(.secondary)
+                        }
+                    }
+                } header: {
+                    Label("Apple Watch", systemImage: "applewatch")
+                } footer: {
+                    Text(purchaseManager.isProVersion ? "Apple Watchで使用するカテゴリーを選択できます" : "Pro版ではWatch用のカテゴリーをカスタマイズできます")
+                        .font(.system(size: 12))
+                }
+
+                // 通知設定セクション
+                Section {
+                    Toggle("メモ通知を有効にする", isOn: $notificationManager.isNotificationEnabled)
+                        .onChange(of: notificationManager.isNotificationEnabled) { newValue in
+                            if newValue {
+                                notificationManager.requestPermission { granted in
+                                    if !granted {
+                                        notificationManager.isNotificationEnabled = false
+                                    } else {
+                                        notificationManager.saveSettings()
+                                    }
+                                }
+                            } else {
+                                notificationManager.saveSettings()
+                            }
+                        }
+
+                        if notificationManager.isNotificationEnabled {
+                            VStack {
+                                HStack {
+                                    Text("通知間隔")
+                                    Spacer()
+                                    Picker("", selection: $notificationManager.notificationInterval) {
+                                        Text("1分").tag(1)
+                                        Text("3分").tag(3)
+                                        Text("15分").tag(15)
+                                        Text("30分").tag(30)
+                                        Text("1時間").tag(60)
+                                        Text("1.5時間").tag(90)
+                                        Text("2時間").tag(120)
+                                        Text("3時間").tag(180)
+                                        Text("4時間").tag(240)
+                                    }
+                                    .pickerStyle(.menu)
+                                    .onChange(of: notificationManager.notificationInterval) { _ in
+                                        notificationManager.saveSettings()
+                                    }
+                                }
+
+                                Divider()
+
+                                Toggle("おやすみモード", isOn: $notificationManager.isQuietModeEnabled)
+                                    .onChange(of: notificationManager.isQuietModeEnabled) { _ in
+                                        notificationManager.saveSettings()
+                                    }
+
+                                if notificationManager.isQuietModeEnabled {
+                                    VStack {
+                                        HStack {
+                                            Text("開始時刻")
+                                            Spacer()
+                                            DatePicker("", selection: $notificationManager.quietModeStartTime, displayedComponents: .hourAndMinute)
+                                                .labelsHidden()
+                                                .onChange(of: notificationManager.quietModeStartTime) { _ in
+                                                    notificationManager.saveSettings()
+                                                }
+                                        }
+
+                                        HStack {
+                                            Text("終了時刻")
+                                            Spacer()
+                                            DatePicker("", selection: $notificationManager.quietModeEndTime, displayedComponents: .hourAndMinute)
+                                                .labelsHidden()
+                                                .onChange(of: notificationManager.quietModeEndTime) { _ in
+                                                    notificationManager.saveSettings()
+                                                }
+                                        }
+                                    }
+                                }
+                            }
+
+                            Divider()
+
+                            Button(action: {
+                                notificationManager.sendTestNotification()
+                            }) {
+                                HStack {
+                                    Image(systemName: "bell.badge")
+                                        .foregroundColor(.blue)
+                                    Text("テスト通知を送信")
+                                    Spacer()
+                                }
+                            }
+                        }
+                } header: {
+                    Label("メモ通知", systemImage: "bell")
+                } footer: {
+                    Text("定期的にメモを書くことを促す通知を送信します。おやすみモードでは指定時間内の通知を停止します。")
+                        .font(.system(size: 12))
+                }
+
                 // カレンダー設定セクション
                 Section {
                     connectionStatusView
@@ -158,25 +288,44 @@ struct SettingsView: View {
                 Section {
                     diagnosticsView
                     
-                    // デバッグログへのリンク
-                    Button(action: {
-                        showingCalendarDebug = true
-                    }) {
-                        HStack {
-                            Image(systemName: "ladybug")
-                                .font(.system(size: 14))
-                                .foregroundColor(.orange)
-                            Text("カレンダーデバッグログ")
-                                .font(.system(size: 15, weight: .medium))
-                            Spacer()
-                            Image(systemName: "chevron.right")
-                                .font(.system(size: 12))
-                                .foregroundColor(.secondary)
-                        }
-                        .padding(.vertical, 4)
-                    }
                 } header: {
                     Label("診断情報", systemImage: "stethoscope")
+                }
+
+                // データ管理セクション
+                Section {
+                    // エクスポートボタン
+                    Button(action: {
+                        showingExportOptions = true
+                    }) {
+                        HStack {
+                            Image(systemName: "square.and.arrow.up")
+                                .foregroundColor(.blue)
+                            Text("メモをエクスポート")
+                            Spacer()
+                            Text("\(DataManager.shared.memos.count)件")
+                                .font(.caption)
+                                .foregroundColor(.secondary)
+                        }
+                    }
+                    .disabled(DataManager.shared.memos.isEmpty)
+
+                    // インポートボタン
+                    Button(action: {
+                        showingImportPicker = true
+                    }) {
+                        HStack {
+                            Image(systemName: "square.and.arrow.down")
+                                .foregroundColor(.green)
+                            Text("メモをインポート")
+                            Spacer()
+                        }
+                    }
+                } header: {
+                    Label("データ管理", systemImage: "externaldrive")
+                } footer: {
+                    Text("メモをCSVまたはJSON形式でエクスポート・インポートできます")
+                        .font(.system(size: 12))
                 }
 
                 // アプリ情報セクション
@@ -202,14 +351,14 @@ struct SettingsView: View {
             .sheet(isPresented: $showingPermissionRequest) {
                 CalendarPermissionView()
             }
-            .sheet(isPresented: $showingCalendarDebug) {
-                CalendarDebugView()
-            }
             .sheet(isPresented: $showingPurchase) {
                 PurchaseView()
             }
             .sheet(isPresented: $showingWidgetSettings) {
                 WidgetCategorySettingsView()
+            }
+            .sheet(isPresented: $showingWatchSettings) {
+                WatchSettingsView()
             }
             .alert("接続テスト結果", isPresented: $showTestResult) {
                 Button("OK") {
@@ -221,9 +370,6 @@ struct SettingsView: View {
             .sheet(isPresented: $showingPermissionRequest) {
                 CalendarPermissionView()
             }
-            .sheet(isPresented: $showingCalendarDebug) {
-                CalendarDebugView()
-            }
             .alert("強制同期", isPresented: $showingForceSyncAlert) {
                 Button("同期開始") {
                     Task {
@@ -233,6 +379,46 @@ struct SettingsView: View {
                 Button("キャンセル", role: .cancel) {}
             } message: {
                 Text("カレンダーとの同期を強制的に実行します。これにより一時的にアプリが遅くなる可能性があります。")
+            }
+            .confirmationDialog("エクスポート形式", isPresented: $showingExportOptions) {
+                Button("JSON形式") {
+                    exportFormat = .json
+                    exportMemos()
+                }
+                Button("CSV形式") {
+                    exportFormat = .csv
+                    exportMemos()
+                }
+                Button("キャンセル", role: .cancel) {}
+            } message: {
+                Text("エクスポート形式を選択してください")
+            }
+            .sheet(isPresented: $showingShareSheet) {
+                if let url = exportedFileURL {
+                    ShareSheet(activityItems: [url])
+                }
+            }
+            .alert("エクスポートエラー", isPresented: $showingExportError) {
+                Button("OK") {}
+            } message: {
+                Text(exportErrorMessage)
+            }
+            .fileImporter(
+                isPresented: $showingImportPicker,
+                allowedContentTypes: [.json, .commaSeparatedText],
+                allowsMultipleSelection: false
+            ) { result in
+                handleImportResult(result)
+            }
+            .alert("インポート確認", isPresented: $showingImportConfirmation) {
+                Button("インポート") {
+                    performImport()
+                }
+                Button("キャンセル", role: .cancel) {
+                    importedMemos = []
+                }
+            } message: {
+                Text("\(importedMemos.count)件のメモをインポートします。既存のメモと重複する場合は新規として追加されます。")
             }
         }
     }
@@ -500,12 +686,12 @@ struct SettingsView: View {
                         .foregroundColor(.secondary)
                     
                     if let remaining = DataManager.shared.getRemainingMemoCount() {
-                        Text("\(DataManager.shared.memos.count)/50")
+                        Text("\(DataManager.shared.memos.count)/100")
                             .font(.title3)
                             .fontWeight(.semibold)
                         Text("残り \(remaining) 個")
                             .font(.caption)
-                            .foregroundColor(remaining <= 10 ? .red : .secondary)
+                            .foregroundColor(remaining <= 20 ? .orange : .secondary)
                     } else {
                         HStack {
                             Text("\(DataManager.shared.memos.count)")
@@ -563,7 +749,7 @@ struct SettingsView: View {
                             Spacer()
                         }
                         
-                        Text("• 高度なタグ管理\n• カレンダー詳細連携\n• Deep Link機能\n• Widget カスタマイズ\n• データバックアップ")
+                        Text("• 無制限のタグ（15個以上）\n• iCloud同期\n• カレンダー詳細連携\n• Widget カスタマイズ\n• Apple Watchカスタマイズ")
                             .font(.caption)
                             .foregroundColor(.secondary)
                     }
@@ -626,8 +812,69 @@ struct SettingsView: View {
             UIApplication.shared.open(url)
         }
     }
+
+    // MARK: - Export/Import Functions
+
+    @MainActor
+    private func exportMemos() {
+        isExporting = true
+
+        do {
+            let url = try ExportManager.shared.exportMemos(format: exportFormat)
+            exportedFileURL = url
+            showingShareSheet = true
+        } catch {
+            exportErrorMessage = error.localizedDescription
+            showingExportError = true
+        }
+
+        isExporting = false
+    }
+
+    private func handleImportResult(_ result: Result<[URL], Error>) {
+        switch result {
+        case .success(let urls):
+            guard let url = urls.first else { return }
+
+            do {
+                importedMemos = try ExportManager.shared.importMemos(from: url)
+                if !importedMemos.isEmpty {
+                    showingImportConfirmation = true
+                }
+            } catch {
+                exportErrorMessage = "インポートに失敗しました: \(error.localizedDescription)"
+                showingExportError = true
+            }
+
+        case .failure(let error):
+            exportErrorMessage = "ファイルの選択に失敗しました: \(error.localizedDescription)"
+            showingExportError = true
+        }
+    }
+
+    private func performImport() {
+        for memo in importedMemos {
+            DataManager.shared.addMemo(memo)
+        }
+        importedMemos = []
+    }
 }
 
+// MARK: - ShareSheet
+
+struct ShareSheet: UIViewControllerRepresentable {
+    let activityItems: [Any]
+
+    func makeUIViewController(context: Context) -> UIActivityViewController {
+        let controller = UIActivityViewController(
+            activityItems: activityItems,
+            applicationActivities: nil
+        )
+        return controller
+    }
+
+    func updateUIViewController(_ uiViewController: UIActivityViewController, context: Context) {}
+}
 
 #Preview {
     SettingsView()

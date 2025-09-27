@@ -1,22 +1,22 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <model type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="22758" systemVersion="24B91" minimumToolsVersion="Automatic" sourceLanguage="Swift" usedWithCloudKit="YES" userDefinedModelVersionIdentifier="">
-    <entity name="Category" representedClassName="Category" syncable="YES">
-        <attribute name="color" optional="YES" attributeType="String"/>
-        <attribute name="defaultTags" optional="YES" attributeType="Transformable" valueTransformerName="NSSecureUnarchiveFromDataTransformer" customClassName="[String]"/>
-        <attribute name="icon" optional="YES" attributeType="String"/>
+    <entity name="CategoryEntity" representedClassName="CategoryEntity" syncable="YES">
+        <attribute name="color" optional="NO" attributeType="String" defaultValueString="#000000"/>
+        <attribute name="defaultTags" optional="YES" attributeType="Transformable" valueTransformerName="NSSecureUnarchiveFromDataTransformer"/>
+        <attribute name="icon" optional="NO" attributeType="String" defaultValueString="folder"/>
         <attribute name="id" optional="YES" attributeType="UUID" usesScalarValueType="NO"/>
-        <attribute name="name" optional="YES" attributeType="String"/>
-        <attribute name="order" optional="YES" attributeType="Integer 32" defaultValueString="0" usesScalarValueType="YES"/>
-        <relationship name="memos" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="QuickMemo" inverseName="category" inverseEntity="QuickMemo"/>
+        <attribute name="name" optional="NO" attributeType="String" defaultValueString=""/>
+        <attribute name="order" optional="NO" attributeType="Integer 32" defaultValueString="0" usesScalarValueType="YES"/>
     </entity>
-    <entity name="QuickMemo" representedClassName="QuickMemo" syncable="YES">
+    <entity name="QuickMemoEntity" representedClassName="QuickMemoEntity" syncable="YES">
         <attribute name="calendarEventId" optional="YES" attributeType="String"/>
-        <attribute name="content" optional="YES" attributeType="String"/>
+        <attribute name="content" optional="NO" attributeType="String" defaultValueString=""/>
         <attribute name="createdAt" optional="YES" attributeType="Date" usesScalarValueType="NO"/>
+        <attribute name="durationMinutes" optional="NO" attributeType="Integer 32" defaultValueString="30" usesScalarValueType="YES"/>
         <attribute name="id" optional="YES" attributeType="UUID" usesScalarValueType="NO"/>
-        <attribute name="primaryCategory" optional="YES" attributeType="String"/>
-        <attribute name="tags" optional="YES" attributeType="Transformable" valueTransformerName="NSSecureUnarchiveFromDataTransformer" customClassName="[String]"/>
+        <attribute name="primaryCategory" optional="NO" attributeType="String" defaultValueString="その他"/>
+        <attribute name="tags" optional="YES" attributeType="Transformable" valueTransformerName="NSSecureUnarchiveFromDataTransformer"/>
+        <attribute name="title" optional="YES" attributeType="String"/>
         <attribute name="updatedAt" optional="YES" attributeType="Date" usesScalarValueType="NO"/>
-        <relationship name="category" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Category" inverseName="memos" inverseEntity="Category"/>
     </entity>
 </model>
