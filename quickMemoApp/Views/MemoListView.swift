@@ -46,27 +46,29 @@ struct MemoListView: View {
 
 struct MemoRow: View {
     let memo: QuickMemo
-    
+    @ObservedObject private var localizationManager = LocalizationManager.shared
+
     private var categoryColor: Color {
-        switch memo.primaryCategory {
-        case "仕事": return Color(hex: "#007AFF")
-        case "プライベート": return Color(hex: "#34C759")
-        case "アイデア": return Color(hex: "#FF9500")
-        case "人物": return Color(hex: "#AF52DE")
+        let key = LocalizedCategories.baseKey(forLocalizedName: memo.primaryCategory) ?? "custom"
+        switch key {
+        case "work": return Color(hex: "#007AFF")
+        case "personal": return Color(hex: "#34C759")
+        case "idea": return Color(hex: "#FF9500")
+        case "people": return Color(hex: "#AF52DE")
+        case "other": return Color(hex: "#8E8E93")
         default: return Color(hex: "#8E8E93")
         }
     }
-    
+
     private var categoryIcon: String {
-        switch memo.primaryCategory {
-        case "仕事": return "briefcase"
-        case "プライベート": return "house"
-        case "アイデア": return "lightbulb"
-        case "人物": return "person"
-        default: return "folder"
-        }
+        let key = LocalizedCategories.baseKey(forLocalizedName: memo.primaryCategory) ?? memo.primaryCategory
+        return LocalizedCategories.iconName(for: key)
     }
-    
+
+    private var localizedCategoryName: String {
+        LocalizedCategories.getLocalizedName(for: memo.primaryCategory)
+    }
+
     var body: some View {
         HStack(spacing: 12) {
             Image(systemName: categoryIcon)
@@ -100,7 +102,7 @@ struct MemoRow: View {
                 }
                 
                 HStack {
-                    Text(memo.primaryCategory)
+                    Text(localizedCategoryName)
                         .font(.system(size: 12, weight: .medium))
                         .foregroundColor(categoryColor)
                         .padding(.horizontal, 8)
@@ -130,7 +132,7 @@ struct MemoRow: View {
                         HStack(spacing: 2) {
                             Image(systemName: "clock")
                                 .font(.system(size: 10))
-                            Text("\(memo.durationMinutes)分")
+                            Text("\(memo.durationMinutes) \(localizationManager.localizedString(for: "memo_minutes"))")
                                 .font(.system(size: 11))
                         }
                         .foregroundColor(.secondary)
@@ -156,4 +158,3 @@ struct MemoRow: View {
         return formatter.localizedString(for: date, relativeTo: Date())
     }
 }
-

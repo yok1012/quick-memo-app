@@ -28,13 +28,23 @@ class WatchConnectivityManager: ObservableObject {
     
     @MainActor
     private func saveMemoLocally(memoData: [String: Any]) {
+        let categoryName = memoData["category"] as? String ?? ""
+        let identifier = memoData["baseKey"] as? String ?? LocalizedCategories.baseKey(forLocalizedName: categoryName) ?? categoryName
+        let primaryCategory = identifier.isEmpty
+            ? LocalizedCategories.localizedName(for: "other")
+            : LocalizedCategories.localizedName(for: identifier)
+
+        let title = memoData["title"] as? String ?? ""
+        let content = memoData["content"] as? String ?? ""
+        let tags = memoData["tags"] as? [String] ?? []
+
         let memo = QuickMemo(
-            content: memoData["content"] as? String ?? "",
-            primaryCategory: memoData["category"] as? String ?? "その他",
-            tags: []
+            title: title,
+            content: content,
+            primaryCategory: primaryCategory,
+            tags: tags
         )
-        
+
         DataManager.shared.addMemo(memo)
-        print("iOS: メモを保存しました")
     }
 }

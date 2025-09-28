@@ -13,10 +13,12 @@ struct quickMemoAppApp: App {
     @StateObject private var purchaseManager = PurchaseManager.shared
     @StateObject private var watchConnectivityManager = iOSWatchConnectivityManager.shared
     @StateObject private var notificationManager = NotificationManager.shared
+    @StateObject private var localizationManager = LocalizationManager.shared
 
     var body: some Scene {
         WindowGroup {
             MainView()
+                .id(localizationManager.refreshID)  // Force refresh when language changes
                 .environmentObject(deepLinkManager)
                 .onOpenURL { url in
                     deepLinkManager.handleURL(url)

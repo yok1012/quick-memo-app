@@ -29,13 +29,13 @@ struct PurchaseView: View {
             .navigationBarTitleDisplayMode(.large)
             .toolbar {
                 ToolbarItem(placement: .navigationBarTrailing) {
-                    Button("閉じる") {
+                    Button("close".localized) {
                         dismiss()
                     }
                 }
             }
         }
-        .alert("購入状況", isPresented: $showingAlert) {
+        .alert("purchase_status".localized, isPresented: $showingAlert) {
             Button("OK") { }
         } message: {
             Text(alertMessage)
@@ -58,7 +58,7 @@ struct PurchaseView: View {
                 .font(.largeTitle)
                 .fontWeight(.bold)
             
-            Text("すべての機能をアンロックして、より効率的にメモを管理しましょう")
+            Text("purchase_unlock_description".localized)
                 .font(.body)
                 .foregroundColor(.secondary)
                 .multilineTextAlignment(.center)
@@ -67,17 +67,17 @@ struct PurchaseView: View {
     
     private var featuresSection: some View {
         VStack(alignment: .leading, spacing: 16) {
-            Text("Pro機能")
+            Text("purchase_pro_features".localized)
                 .font(.headline)
                 .fontWeight(.semibold)
             
-            FeatureRow(icon: "infinity", title: "無制限のメモ", description: "100個以上のメモを作成可能")
-            FeatureRow(icon: "folder.badge.plus", title: "無制限のカテゴリ", description: "カテゴリを自由に作成")
-            FeatureRow(icon: "tag.fill", title: "無制限のタグ", description: "メモあたり15個以上のタグ")
-            FeatureRow(icon: "icloud.and.arrow.up", title: "iCloud同期", description: "すべてのデバイスで自動同期")
-            FeatureRow(icon: "square.stack.3d.up.fill", title: "Widget カスタマイズ", description: "ウィジェットの表示をカスタマイズ")
-            FeatureRow(icon: "applewatch", title: "Apple Watch Pro", description: "カテゴリーカスタマイズ")
-            FeatureRow(icon: "square.and.arrow.down.on.square", title: "データエクスポート", description: "CSV/JSON形式でバックアップ")
+            FeatureRow(icon: "infinity", title: "purchase_unlimited_memos".localized, description: "purchase_unlimited_memos_desc".localized)
+            FeatureRow(icon: "folder.badge.plus", title: "purchase_unlimited_categories".localized, description: "purchase_unlimited_categories_desc".localized)
+            FeatureRow(icon: "tag.fill", title: "purchase_unlimited_tags".localized, description: "purchase_unlimited_tags_desc".localized)
+            FeatureRow(icon: "icloud.and.arrow.up", title: "purchase_icloud_sync".localized, description: "purchase_icloud_sync_desc".localized)
+            FeatureRow(icon: "square.stack.3d.up.fill", title: "purchase_widget_customize".localized, description: "purchase_widget_customize_desc".localized)
+            FeatureRow(icon: "applewatch", title: "purchase_watch_pro".localized, description: "purchase_watch_pro_desc".localized)
+            FeatureRow(icon: "square.and.arrow.down.on.square", title: "purchase_data_export".localized, description: "purchase_data_export_desc".localized)
         }
         .padding()
         .background(Color(.systemGray6))
@@ -92,7 +92,7 @@ struct PurchaseView: View {
                 purchaseButton(for: product)
             }
             
-            Text("一度の購入ですべての機能が永続的に利用可能")
+            Text("purchase_one_time".localized)
                 .font(.caption)
                 .foregroundColor(.secondary)
         }
@@ -104,7 +104,7 @@ struct PurchaseView: View {
                 .foregroundColor(.green)
                 .font(.title2)
             
-            Text("購入済み")
+            Text("purchase_completed".localized)
                 .font(.headline)
                 .foregroundColor(.green)
             
@@ -126,7 +126,7 @@ struct PurchaseView: View {
                     ProgressView()
                         .scaleEffect(0.8)
                 } else {
-                    Text("購入する - \(product.localizedPrice)")
+                    Text("\("purchase_buy".localized) - \(product.localizedPrice)")
                         .fontWeight(.semibold)
                 }
             }
@@ -145,15 +145,15 @@ struct PurchaseView: View {
                 .font(.largeTitle)
                 .foregroundColor(.orange)
 
-            Text("製品情報を取得できません")
+            Text("purchase_no_products".localized)
                 .font(.headline)
 
-            Text("ネットワーク接続を確認してください。\n問題が続く場合は、後でもう一度お試しください。")
+            Text("purchase_network_error".localized)
                 .font(.caption)
                 .foregroundColor(.secondary)
                 .multilineTextAlignment(.center)
 
-            Button("再試行") {
+            Button("purchase_retry".localized) {
                 Task {
                     await purchaseManager.loadProducts()
                 }
@@ -167,14 +167,14 @@ struct PurchaseView: View {
 
     private var restoreSection: some View {
         VStack(spacing: 8) {
-            Button("購入を復元") {
+            Button("purchase_restore".localized) {
                 Task {
                     await purchaseManager.restorePurchases()
                 }
             }
             .foregroundColor(.blue)
 
-            Text("以前に購入した場合はここから復元できます")
+            Text("purchase_restore_description".localized)
                 .font(.caption)
                 .foregroundColor(.secondary)
 
@@ -184,16 +184,16 @@ struct PurchaseView: View {
     private func handlePurchaseStateChange(_ state: PurchaseManager.PurchaseState) {
         switch state {
         case .purchased:
-            alertMessage = "購入が完了しました！Pro機能をお楽しみください。"
+            alertMessage = "purchase_success_message".localized
             showingAlert = true
             DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
                 dismiss()
             }
         case .failed(let error):
-            alertMessage = "購入に失敗しました: \(error)"
+            alertMessage = "\("purchase_failed".localized): \(error)"
             showingAlert = true
         case .cancelled:
-            alertMessage = "購入がキャンセルされました。"
+            alertMessage = "purchase_cancelled".localized
             showingAlert = true
         default:
             break

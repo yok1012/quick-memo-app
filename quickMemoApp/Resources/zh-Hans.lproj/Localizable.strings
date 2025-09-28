@@ -1,0 +1,360 @@
+/*
+  Localizable.strings (Simplified Chinese)
+  quickMemoApp
+*/
+
+// MARK: - App General
+"app_name" = "快速备忘录";
+"quick_memo" = "快速备忘录";
+
+// MARK: - Tab & Navigation
+"all_memos" = "全部";
+"settings" = "设置";
+"close" = "关闭";
+"cancel" = "取消";
+"save" = "保存";
+"delete" = "删除";
+"edit" = "编辑";
+"done" = "完成";
+"ok" = "确定";
+
+// MARK: - Common Buttons
+"add" = "添加";
+"retry" = "重试";
+
+// MARK: - Main View
+"add_memo" = "添加备忘录";
+"no_memos" = "没有备忘录";
+"memos_count" = "%d个备忘录";
+"category_all" = "全部";
+"search_placeholder" = "搜索备忘录";
+
+// MARK: - Categories
+"work" = "工作";
+"personal" = "私人";
+"idea" = "想法";
+"people" = "人物";
+"category_management" = "分类管理";
+"add_category" = "添加分类";
+"category_name" = "分类名称";
+"select_color" = "选择颜色";
+"cannot_delete_category" = "无法删除此分类";
+"category_has_memos" = "此分类包含备忘录";
+"delete_category_confirm" = "删除此分类？";
+
+// MARK: - Category Management
+"category_new" = "新分类";
+"category_edit" = "编辑分类";
+"category_delete_confirm" = "删除分类";
+"category_basic_info" = "基本信息";
+"category_icon" = "图标";
+"category_color" = "颜色";
+"category_default_tags" = "默认标签";
+"category_name_placeholder" = "分类名称";
+"category_exists_error" = "同名分类已存在";
+"category_pro_required" = "需要专业版";
+"category_free_limit_message" = "免费版仅限使用5个默认分类。升级到专业版可自由添加、删除和重新排列分类。";
+"delete_category_with_memos" = "删除\"%@\"分类？\n\n%d个备忘录将移动到\"其他\"分类。";
+"delete_category_confirm_message" = "删除\"%@\"分类？";
+"comma_separated_tags" = "输入逗号分隔（例如：会议，任务，截止日期）";
+
+// MARK: - Memo Input
+"input_placeholder" = "输入备忘录...";
+"save_memo" = "保存备忘录";
+"select_category" = "选择分类";
+"add_tags" = "添加标签";
+"duration_minutes" = "持续时间（分钟）";
+"shake_to_open" = "摇动打开";
+"memo_title_optional" = "标题（可选）";
+"memo_placeholder" = "输入备忘录...";
+"memo_tags_hide" = "隐藏标签";
+"memo_tags_add" = "添加标签";
+"memo_new_tag" = "添加新标签";
+"memo_tag_name" = "标签名称";
+"memo_tag_limit" = "标签数量限制";
+"memo_calendar_duration" = "日历时长";
+"memo_minutes" = "分钟";
+"memo_hours" = "小时";
+"memo_tags_count" = "%d个标签";
+
+// MARK: - Settings
+"settings_title" = "设置";
+"upgrade" = "升级";
+"pro_version" = "专业版";
+"pro_version_active" = "专业版已激活";
+"unlock_all_features" = "解锁所有功能";
+"usage_stats" = "使用统计";
+"apple_watch" = "Apple Watch";
+"notifications" = "备忘录通知";
+"calendar_sync" = "日历同步";
+"data_export" = "数据导出";
+"widget_settings" = "小组件设置";
+"watch_settings" = "手表设置";
+"language_settings" = "语言设置";
+"settings_upgrade" = "升级";
+"settings_pro_using" = "正在使用专业版";
+"settings_unlock_all" = "解锁所有功能";
+"settings_unlock_all_features" = "解锁全部功能";
+"settings_pro_version" = "专业版";
+"settings_pro_active" = "专业版已激活";
+"settings_quickmemo_pro" = "QuickMemo 专业版";
+"settings_usage_stats" = "使用统计";
+"settings_widget" = "小组件设置";
+"settings_widget_category" = "小组件类别设置";
+"settings_widget_categories" = "小组件类别";
+"settings_widget_footer_pro" = "可自由选择任意类别在小组件中显示。";
+"settings_widget_footer_free" = "免费版仅显示当前类别。";
+"settings_watch" = "Apple Watch 设置";
+"settings_watch_footer_pro" = "专业版可同步最多四个类别到 Apple Watch。";
+"settings_watch_footer_free" = "免费版仅同步默认类别。";
+"settings_apple_watch" = "Apple Watch 设置";
+"settings_memo_notifications" = "备忘录通知";
+"settings_enable_notifications" = "启用通知";
+"settings_notification_interval" = "通知间隔";
+"settings_1_minute" = "1 分钟";
+"settings_3_minutes" = "3 分钟";
+"settings_15_minutes" = "15 分钟";
+"settings_30_minutes" = "30 分钟";
+"settings_1_hour" = "1 小时";
+"settings_1_5_hours" = "1.5 小时";
+"settings_2_hours" = "2 小时";
+"settings_3_hours" = "3 小时";
+"settings_4_hours" = "4 小时";
+"settings_quiet_mode" = "勿扰模式";
+"settings_start_time" = "开始时间";
+"settings_end_time" = "结束时间";
+"settings_send_test_notification" = "发送测试通知";
+"settings_notifications_footer" = "设置勿扰时段以暂停指定时间内的提醒。";
+"settings_calendar_integration" = "日历集成";
+"settings_last_error" = "最近错误";
+"settings_calendar_footer" = "启用后，备忘录会自动保存为日历事件。";
+"settings_connection_test" = "测试连接";
+"settings_connection_test_result" = "连接测试结果";
+"settings_connection_test_success" = "日历连接成功。";
+"settings_connection_problem" = "连接出现问题";
+"settings_connection_test_failed" = "连接测试失败。";
+"settings_reconnect" = "重新连接";
+"settings_reconnect_success" = "重新连接成功。";
+"settings_reconnect_failed" = "重新连接失败。";
+"settings_allow_calendar_access" = "允许访问日历";
+"settings_open_system_settings" = "打开系统设置";
+"settings_calendar_access" = "日历访问";
+"settings_permitted" = "已允许";
+"settings_not_permitted" = "未允许";
+"settings_permission_level" = "访问级别";
+"settings_authorized" = "已授权";
+"settings_full_access" = "完全访问";
+"settings_write_only" = "仅写入";
+"settings_not_determined" = "未决定";
+"settings_restricted" = "受限制";
+"settings_denied" = "已拒绝";
+"settings_unknown" = "未知";
+"settings_quick_memo_calendar" = "Quick Memo 日历";
+"settings_configured" = "已配置";
+"settings_not_configured" = "未配置";
+"settings_ios_version" = "iOS 版本";
+"settings_memo_count" = "备忘录数量";
+"settings_category_count" = "类别数量";
+"settings_remaining" = "剩余";
+"settings_items" = "项";
+"settings_unlimited" = "无限制";
+"settings_pro_features" = "专业版功能";
+"settings_pro_features_list" = "解锁无限备忘录、类别、自定义标签和 iCloud 同步。";
+"settings_pro_only" = "仅限专业版";
+"settings_force_sync" = "强制同步";
+"settings_sync_mode" = "同步模式";
+"settings_sync_settings" = "同步设置";
+"settings_normal" = "标准";
+"settings_force_sync_now" = "立即强制同步";
+"settings_force_sync_message" = "当数据不同步时可尝试强制同步，是否继续？";
+"settings_force_sync_warning" = "强制同步会重新从 iCloud 下载数据，仅在必要时使用。";
+"settings_normal_sync_info" = "标准同步会在后台自动执行。";
+"settings_start_sync" = "开始同步";
+"settings_diagnostic" = "诊断信息";
+"settings_diagnostics" = "诊断信息";
+"settings_data_management" = "数据管理";
+"settings_export_memos" = "导出备忘录";
+"settings_export_format" = "导出格式";
+"settings_export_select_format" = "请选择文件格式";
+"settings_json_format" = "JSON 格式";
+"settings_csv_format" = "CSV 格式";
+"settings_export_footer" = "导出的文件可用于分享或备份。";
+"settings_export_error" = "导出错误";
+"settings_app_info" = "应用信息";
+"settings_version" = "版本";
+"settings_build" = "构建";
+"settings_connected" = "已连接";
+"settings_disconnected" = "未连接";
+"settings_checking" = "检查中...";
+"settings_error" = "错误";
+"settings_status_unknown" = "状态未知";
+
+"calendar_event_title_format" = "[%@] %@";
+"calendar_event_default_title" = "备忘";
+"calendar_note_content" = "内容";
+"calendar_note_category" = "类别";
+"calendar_note_tags" = "标签";
+"calendar_note_tags_none" = "无";
+"calendar_note_created" = "创建时间";
+"calendar_note_updated" = "更新时间";
+
+// MARK: - Notifications
+"enable_notifications" = "启用备忘录通知";
+"notification_interval" = "通知间隔";
+"interval_1min" = "1分钟";
+"interval_3min" = "3分钟";
+"interval_15min" = "15分钟";
+"interval_30min" = "30分钟";
+"interval_1hour" = "1小时";
+"interval_90min" = "1.5小时";
+"interval_2hours" = "2小时";
+"interval_3hours" = "3小时";
+"interval_4hours" = "4小时";
+"quiet_mode" = "勿扰模式";
+"quiet_mode_start" = "开始时间";
+"quiet_mode_end" = "结束时间";
+"send_test_notification" = "发送测试通知";
+"notification_title" = "记录备忘录时间";
+"notification_body" = "要记录您的想法或灵感吗？";
+"notification_permission_desc" = "发送提醒以鼓励定期记录笔记。勿扰模式会在指定时间内停止通知。";
+"notification_enable" = "启用备忘录通知";
+"notification_test" = "发送测试通知";
+"notification_quiet_mode" = "勿扰模式";
+"notification_start_time" = "开始时间";
+"notification_end_time" = "结束时间";
+
+// MARK: - Calendar
+"calendar_permission_title" = "日历访问";
+"calendar_permission_message" = "需要访问权限以将备忘录保存到日历";
+"grant_permission" = "授予权限";
+"calendar_sync_enabled" = "日历同步已启用";
+"calendar_sync_disabled" = "日历同步已禁用";
+"test_connection" = "测试连接";
+"calendar_integration" = "日历集成";
+"calendar_auto_record" = "自动将备忘录记录到日历";
+"calendar_timeline" = "时间线显示";
+"calendar_dedicated" = "专用日历";
+"calendar_allow_access" = "允许访问日历";
+"calendar_connected" = "已连接";
+"calendar_disconnected" = "未连接";
+"calendar_test_connection" = "连接测试";
+
+// MARK: - Pro Features
+"pro_features" = "专业功能";
+"unlimited_memos" = "无限备忘录";
+"unlimited_memos_desc" = "创建超过100个备忘录";
+"unlimited_categories" = "无限分类";
+"unlimited_categories_desc" = "自由创建分类";
+"unlimited_tags" = "无限标签";
+"unlimited_tags_desc" = "每个备忘录超过15个标签";
+"icloud_sync" = "iCloud同步";
+"icloud_sync_desc" = "所有设备自动同步";
+"widget_customize" = "小组件自定义";
+"widget_customize_desc" = "自定义小组件显示";
+"watch_pro" = "Apple Watch专业版";
+"watch_pro_desc" = "分类自定义";
+"data_export_desc" = "CSV/JSON格式备份";
+
+// MARK: - Purchase
+"purchase" = "购买";
+"restore_purchases" = "恢复购买";
+"purchased" = "已购买";
+"purchase_failed" = "购买失败";
+"restore_failed" = "恢复失败";
+"one_time_purchase" = "一次购买永久使用所有功能";
+
+// MARK: - Limits
+"memo_limit_reached" = "已达到备忘录上限";
+"category_limit_reached" = "已达到分类上限";
+"upgrade_to_pro" = "升级到专业版";
+"remaining_memos" = "剩余%d个";
+"remaining_categories" = "剩余%d个";
+"limit_reached" = "已达到限制";
+"memo_limit_message" = "免费版最多可创建100个备忘录。升级到专业版可无限创建。";
+"tag_limit_message" = "免费版每个备忘录最多可设置15个标签。专业版可添加无限标签。";
+
+// MARK: - Usage Stats
+"usage_memo_count" = "备忘录数量";
+"usage_category_count" = "分类数量";
+"usage_remaining" = "剩余 %d 个";
+"usage_unlimited" = "无限制";
+
+// MARK: - Pro Features
+"pro_required" = "仅限专业版";
+"pro_purchase" = "购买专业版";
+"pro_view" = "查看专业版";
+
+// MARK: - Export
+"export_format" = "导出格式";
+"export_json" = "JSON格式";
+"export_csv" = "CSV格式";
+"export_data" = "导出数据";
+"import_data" = "导入数据";
+"export_memos" = "导出备忘录";
+"export_error" = "导出错误";
+
+// MARK: - Languages
+"language_japanese" = "日本語";
+"language_english" = "English";
+"language_chinese" = "中文";
+"select_language" = "选择语言";
+"language_change_restart" = "语言更改将在下次启动时生效";
+"follow_device" = "跟随设备";
+
+// MARK: - Time Intervals
+"time_1min" = "1分钟";
+"time_3min" = "3分钟";
+"time_15min" = "15分钟";
+"time_30min" = "30分钟";
+"time_1hour" = "1小时";
+"time_90min" = "1.5小时";
+"time_2hours" = "2小时";
+"time_3hours" = "3小时";
+"time_4hours" = "4小时";
+
+// MARK: - Misc
+"items_count" = "项";
+"version" = "版本";
+"build" = "构建";
+"checking" = "检查中...";
+"error_prefix" = "错误：";
+"status_unknown" = "状态未知";
+"authorized" = "已授权";
+"not_authorized" = "未授权";
+"setup_later" = "稍后设置";
+"setting_up" = "设置中...";
+"system_settings" = "打开系统设置";
+
+// MARK: - Additional Keys
+"add_tag_to_category" = "向%@类别添加新标签";
+"tag_management" = "标签管理";
+"tag_delete" = "删除标签";
+"tag_delete_confirm" = "删除\"%@\"？";
+"no_tags" = "没有标签";
+"add_tag" = "添加标签";
+"shopping" = "购物";
+"schedule" = "日程";
+"memory" = "回忆";
+"health" = "健康";
+"business" = "商务";
+"creation" = "创意";
+"improvement" = "改进";
+"memo_tag" = "备忘";
+"misc" = "杂记";
+"temp" = "临时";
+"pending" = "待处理";
+"hold" = "搁置";
+"meeting" = "会议";
+"task" = "任务";
+"deadline" = "截止";
+"idea_tag" = "灵感";
+"contacts" = "联系人";
+"conversation" = "交流";
+"appointment" = "约定";
+"relationship" = "关系";
+"other" = "其他";
+"voice_input" = "语音输入";
+"recording" = "录音中...";
+"scribble_input" = "手写输入";
+"scribble_placeholder" = "请在此书写";
+"preview" = "预览";

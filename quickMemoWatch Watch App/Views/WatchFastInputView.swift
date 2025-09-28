@@ -171,7 +171,9 @@ struct WatchFastInputView: View {
         let watchMemo = WatchMemo(
             title: memoTitle,
             content: memoText,
-            category: selectedCategory
+            category: selectedCategory,
+            createdAt: Date(),
+            tags: []
         )
         dataManager.addMemo(watchMemo)
 
@@ -181,6 +183,7 @@ struct WatchFastInputView: View {
             "title": memoTitle,
             "content": memoText,
             "category": selectedCategory,
+            "tags": [],
             "timestamp": Date().timeIntervalSince1970
         ]
 

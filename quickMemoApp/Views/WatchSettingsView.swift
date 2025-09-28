@@ -116,7 +116,7 @@ struct WatchSettingsView: View {
                 .font(.caption)
                 .foregroundColor(.secondary)
 
-            ForEach(["仕事", "プライベート", "その他"], id: \.self) { categoryName in
+            ForEach(defaultFreeCategories, id: \.self) { categoryName in
                 HStack {
                     Image(systemName: getCategoryIcon(categoryName))
                         .frame(width: 20)
@@ -186,16 +186,12 @@ struct WatchSettingsView: View {
     }
 
     private func getCategoryIcon(_ name: String) -> String {
-        switch name {
-        case "仕事":
-            return "briefcase"
-        case "プライベート":
-            return "house"
-        case "その他":
-            return "folder"
-        default:
-            return "folder"
-        }
+        let key = LocalizedCategories.baseKey(forLocalizedName: name) ?? name
+        return LocalizedCategories.iconName(for: key)
+    }
+
+    private var defaultFreeCategories: [String] {
+        ["work", "personal", "other"].map { LocalizedCategories.localizedName(for: $0) }
     }
 
     private func loadSelectedCategories() {

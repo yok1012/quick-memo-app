@@ -2,8 +2,9 @@ import SwiftUI
 
 struct MainView: View {
     @StateObject private var dataManager = DataManager.shared
+    @StateObject private var localizationManager = LocalizationManager.shared
     @EnvironmentObject var deepLinkManager: DeepLinkManager
-    @State private var selectedCategory: String = "すべて"
+    @State private var selectedCategory: String = "category_all".localized
     @State private var showingCategorySelection = false
     @State private var showingFastInput = false
     @State private var searchText = ""
@@ -24,14 +25,15 @@ struct MainView: View {
         NavigationStack {
             VStack(spacing: 0) {
                 categoryTabView
-                
+
                 memoListView
-                
+
                 Spacer()
-                
+
                 addButton
             }
-            .navigationTitle("Quick Memo")
+            .id(localizationManager.refreshID)
+            .navigationTitle("app_name".localized)
             .quickInputEnabled()
             .toolbar {
                 ToolbarItem(placement: .navigationBarLeading) {
@@ -105,7 +107,7 @@ struct MainView: View {
             }
             .sheet(isPresented: $showingFastInput) {
                 // deepLinkCategoryがある場合はそれを使用、なければ現在選択中のカテゴリーを使用
-                let category = deepLinkCategory ?? (selectedCategory != "すべて" ? selectedCategory : nil)
+                let category = deepLinkCategory ?? (selectedCategory != "category_all".localized ? selectedCategory : nil)
                 FastInputView(defaultCategory: category)
                     .onDisappear {
                         deepLinkCategory = nil
@@ -129,11 +131,11 @@ struct MainView: View {
             .sheet(isPresented: $showingPurchase) {
                 PurchaseView()
             }
-            .alert("制限に達しました", isPresented: $showingLimitAlert) {
-                Button("Pro版を購入") {
+            .alert("limit_reached".localized, isPresented: $showingLimitAlert) {
+                Button("pro_purchase".localized) {
                     showingPurchase = true
                 }
-                Button("キャンセル", role: .cancel) { }
+                Button("cancel".localized, role: .cancel) { }
             } message: {
                 Text(limitAlertMessage)
             }
@@ -143,7 +145,7 @@ struct MainView: View {
     private var categoryTabView: some View {
         ScrollView(.horizontal, showsIndicators: false) {
             HStack(spacing: 16) {
-                categoryTab(name: "すべて", isSelected: selectedCategory == "すべて")
+                categoryTab(name: "category_all".localized, isSelected: selectedCategory == "category_all".localized)
                 
                 ForEach(dataManager.categories, id: \.id) { category in
                     categoryTab(name: category.name, isSelected: selectedCategory == category.name)
@@ -184,9 +186,9 @@ struct MainView: View {
                 showingFastInput = true
             } else {
                 if let remaining = dataManager.getRemainingMemoCount() {
-                    limitAlertMessage = "無料版では100個までのメモを作成できます。Pro版にアップグレードすると無制限に作成できます。"
+                    limitAlertMessage = "memo_limit_message".localized
                 } else {
-                    limitAlertMessage = "メモの作成制限に達しました。Pro版にアップグレードして無制限に作成しましょう。"
+                    limitAlertMessage = "memo_limit_message".localized
                 }
                 showingLimitAlert = true
             }

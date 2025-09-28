@@ -3,12 +3,14 @@ import SwiftUI
 struct CategoryManagementView: View {
     @Environment(\.dismiss) private var dismiss
     @StateObject private var dataManager = DataManager.shared
+    @StateObject private var purchaseManager = PurchaseManager.shared
     @State private var editMode: EditMode = .inactive
     @State private var showingAddCategory = false
     @State private var showingEditCategory = false
     @State private var selectedCategory: Category?
     @State private var showingDeleteAlert = false
     @State private var categoryToDelete: Category?
+    @State private var showingProAlert = false
 
     var body: some View {
         NavigationStack {
@@ -29,24 +31,30 @@ struct CategoryManagementView: View {
                     )
                     .deleteDisabled(!dataManager.canDeleteCategory(category))
                 }
-                .onMove(perform: moveCategories)
-                .onDelete(perform: deleteCategories)
+                .onMove(perform: purchaseManager.isProVersion ? moveCategories : nil)
+                .onDelete(perform: purchaseManager.isProVersion ? deleteCategories : nil)
             }
             .listStyle(InsetGroupedListStyle())
-            .navigationTitle("カテゴリー管理")
+            .navigationTitle("category_management".localized)
             .toolbar {
                 ToolbarItem(placement: .navigationBarLeading) {
-                    Button("閉じる") {
+                    Button("close".localized) {
                         dismiss()
                     }
                 }
 
                 ToolbarItem(placement: .navigationBarTrailing) {
                     HStack(spacing: 16) {
-                        EditButton()
+                        if purchaseManager.isProVersion {
+                            EditButton()
+                        }
 
                         Button(action: {
-                            showingAddCategory = true
+                            if purchaseManager.isProVersion {
+                                showingAddCategory = true
+                            } else {
+                                showingProAlert = true
+                            }
                         }) {
                             Image(systemName: "plus")
                         }
@@ -60,11 +68,11 @@ struct CategoryManagementView: View {
             .sheet(item: $selectedCategory) { category in
                 EditCategoryView(category: category)
             }
-            .alert("カテゴリーを削除", isPresented: $showingDeleteAlert) {
-                Button("キャンセル", role: .cancel) {
+            .alert("category_delete_confirm".localized, isPresented: $showingDeleteAlert) {
+                Button("cancel".localized, role: .cancel) {
                     categoryToDelete = nil
                 }
-                Button("削除", role: .destructive) {
+                Button("delete".localized, role: .destructive) {
                     if let category = categoryToDelete {
                         deleteCategory(category)
                     }
@@ -73,11 +81,16 @@ struct CategoryManagementView: View {
                 if let category = categoryToDelete {
                     let memoCount = dataManager.memos.filter { $0.primaryCategory == category.name }.count
                     if memoCount > 0 {
-                        Text("「\(category.name)」カテゴリーを削除しますか？\n\n\(memoCount)件のメモが「その他」カテゴリーに移動されます。")
+                        Text(String(format: "delete_category_with_memos".localized, category.name, memoCount))
                     } else {
-                        Text("「\(category.name)」カテゴリーを削除しますか？")
+                        Text(String(format: "delete_category_confirm_message".localized, category.name))
                     }
                 }
+            }
+            .alert("category_pro_required".localized, isPresented: $showingProAlert) {
+                Button("OK", role: .cancel) { }
+            } message: {
+                Text("category_free_limit_message".localized)
             }
         }
     }
@@ -145,11 +158,11 @@ struct CategoryRow: View {
             Spacer()
 
             HStack(spacing: 12) {
-                Text("\(memoCount)件")
+                Text("\(memoCount)\("items_count".localized)")
                     .font(.system(size: 14))
                     .foregroundColor(.secondary)
 
-                if category.name != "その他" {
+                if category.name != "other".localized && PurchaseManager.shared.isProVersion {
                     Button(action: onEdit) {
                         Image(systemName: "pencil")
                             .font(.system(size: 16))
@@ -193,12 +206,12 @@ struct AddCategoryView: View {
     var body: some View {
         NavigationStack {
             Form {
-                Section("基本情報") {
-                    TextField("カテゴリー名", text: $categoryName)
+                Section("category_basic_info".localized) {
+                    TextField("category_name_placeholder".localized, text: $categoryName)
                         .textInputAutocapitalization(.never)
                 }
 
-                Section("アイコン") {
+                Section("category_icon".localized) {
                     LazyVGrid(columns: Array(repeating: GridItem(.flexible()), count: 5), spacing: 20) {
                         ForEach(availableIcons, id: \.self) { icon in
                             Button(action: {
@@ -219,7 +232,7 @@ struct AddCategoryView: View {
                     .padding(.vertical, 8)
                 }
 
-                Section("カラー") {
+                Section("category_color".localized) {
                     LazyVGrid(columns: Array(repeating: GridItem(.flexible()), count: 5), spacing: 20) {
                         ForEach(availableColors, id: \.self) { color in
                             Button(action: {
@@ -239,27 +252,27 @@ struct AddCategoryView: View {
                     .padding(.vertical, 8)
                 }
 
-                Section("デフォルトタグ") {
-                    TextField("カンマ区切りで入力 (例: 会議, タスク, 締切)", text: $defaultTags)
+                Section("category_default_tags".localized) {
+                    TextField("comma_separated_tags".localized, text: $defaultTags)
                         .textInputAutocapitalization(.never)
                 }
             }
-            .navigationTitle("新規カテゴリー")
+            .navigationTitle("category_new".localized)
             .toolbar {
                 ToolbarItem(placement: .navigationBarLeading) {
-                    Button("キャンセル") {
+                    Button("cancel".localized) {
                         dismiss()
                     }
                 }
 
                 ToolbarItem(placement: .navigationBarTrailing) {
-                    Button("追加") {
+                    Button("add".localized) {
                         addCategory()
                     }
                     .disabled(categoryName.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty)
                 }
             }
-            .alert("エラー", isPresented: $showingError) {
+            .alert("error_prefix".localized, isPresented: $showingError) {
                 Button("OK") { }
             } message: {
                 Text(errorMessage)
@@ -272,7 +285,7 @@ struct AddCategoryView: View {
 
         // Check if category name already exists
         if dataManager.categories.contains(where: { $0.name == trimmedName }) {
-            errorMessage = "同じ名前のカテゴリーが既に存在します"
+            errorMessage = "category_exists_error".localized
             showingError = true
             return
         }
@@ -333,21 +346,21 @@ struct EditCategoryView: View {
     var body: some View {
         NavigationStack {
             Form {
-                Section("基本情報") {
-                    if category.name == "その他" {
+                Section("category_basic_info".localized) {
+                    if category.name == "other".localized {
                         HStack {
-                            Text("カテゴリー名")
+                            Text("category_name_placeholder".localized)
                             Spacer()
                             Text(categoryName)
                                 .foregroundColor(.secondary)
                         }
                     } else {
-                        TextField("カテゴリー名", text: $categoryName)
+                        TextField("category_name_placeholder".localized, text: $categoryName)
                             .textInputAutocapitalization(.never)
                     }
                 }
 
-                Section("アイコン") {
+                Section("category_icon".localized) {
                     LazyVGrid(columns: Array(repeating: GridItem(.flexible()), count: 5), spacing: 20) {
                         ForEach(availableIcons, id: \.self) { icon in
                             Button(action: {
@@ -368,7 +381,7 @@ struct EditCategoryView: View {
                     .padding(.vertical, 8)
                 }
 
-                Section("カラー") {
+                Section("category_color".localized) {
                     LazyVGrid(columns: Array(repeating: GridItem(.flexible()), count: 5), spacing: 20) {
                         ForEach(availableColors, id: \.self) { color in
                             Button(action: {
@@ -388,27 +401,27 @@ struct EditCategoryView: View {
                     .padding(.vertical, 8)
                 }
 
-                Section("デフォルトタグ") {
-                    TextField("カンマ区切りで入力 (例: 会議, タスク, 締切)", text: $defaultTags)
+                Section("category_default_tags".localized) {
+                    TextField("comma_separated_tags".localized, text: $defaultTags)
                         .textInputAutocapitalization(.never)
                 }
             }
-            .navigationTitle("カテゴリー編集")
+            .navigationTitle("category_edit".localized)
             .toolbar {
                 ToolbarItem(placement: .navigationBarLeading) {
-                    Button("キャンセル") {
+                    Button("cancel".localized) {
                         dismiss()
                     }
                 }
 
                 ToolbarItem(placement: .navigationBarTrailing) {
-                    Button("保存") {
+                    Button("save".localized) {
                         saveCategory()
                     }
                     .disabled(categoryName.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty)
                 }
             }
-            .alert("エラー", isPresented: $showingError) {
+            .alert("error_prefix".localized, isPresented: $showingError) {
                 Button("OK") { }
             } message: {
                 Text(errorMessage)

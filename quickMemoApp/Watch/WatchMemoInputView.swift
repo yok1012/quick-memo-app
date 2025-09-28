@@ -7,12 +7,15 @@ import WatchKit
 @available(watchOS 10.0, *)
 struct WatchMemoInputView: View {
     @Environment(\.dismiss) private var dismiss
-    @State private var selectedCategory: String = "仕事"
+    @ObservedObject private var localizationManager = LocalizationManager.shared
+    @State private var selectedCategory: String = LocalizedCategories.localizedName(for: "work")
     @State private var memoText: String = ""
     @State private var isRecording = false
     @State private var showingScribble = false
     
-    private let categories = ["仕事", "プライベート", "アイデア", "人物", "その他"]
+    private var categories: [String] {
+        LocalizedCategories.getDefaultCategories().map { $0.name } + [LocalizedCategories.localizedName(for: "other")]
+    }
     
     var body: some View {
         NavigationStack {
@@ -32,7 +35,7 @@ struct WatchMemoInputView: View {
                 }
             }
             .padding(.horizontal, 8)
-            .navigationTitle("Quick Memo")
+            .navigationTitle(localizationManager.localizedString(for: "quick_memo"))
             .navigationBarTitleDisplayMode(.inline)
         }
     }
@@ -69,7 +72,11 @@ struct WatchMemoInputView: View {
                 HStack {
                     Image(systemName: isRecording ? "mic.fill" : "mic")
                         .foregroundColor(isRecording ? .red : .blue)
-                    Text(isRecording ? "録音中..." : "音声入力")
+                    Text(
+                        isRecording
+                        ? localizationManager.localizedString(for: "recording")
+                        : localizationManager.localizedString(for: "voice_input")
+                    )
                         .font(.caption)
                 }
                 .frame(maxWidth: .infinity)
@@ -87,7 +94,7 @@ struct WatchMemoInputView: View {
                 HStack {
                     Image(systemName: "pencil.tip")
                         .foregroundColor(.blue)
-                    Text("手書き入力")
+                    Text(localizationManager.localizedString(for: "scribble_input"))
                         .font(.caption)
                 }
                 .frame(maxWidth: .infinity)
@@ -106,7 +113,7 @@ struct WatchMemoInputView: View {
     
     private var memoPreview: some View {
         VStack(alignment: .leading, spacing: 4) {
-            Text("プレビュー")
+            Text(localizationManager.localizedString(for: "preview"))
                 .font(.caption2)
                 .foregroundColor(.secondary)
             
@@ -127,7 +134,7 @@ struct WatchMemoInputView: View {
         }) {
             HStack {
                 Image(systemName: "checkmark.circle.fill")
-                Text("保存")
+                Text(localizationManager.localizedString(for: "save"))
                     .font(.caption)
                     .fontWeight(.semibold)
             }
@@ -186,22 +193,22 @@ struct ScribbleInputView: View {
     
     var body: some View {
         VStack {
-            Text("手書きで入力")
+            Text(localizationManager.localizedString(for: "scribble_input"))
                 .font(.caption)
                 .padding(.bottom, 8)
             
-            TextField("ここに書いてください", text: $scribbleText)
+            TextField(localizationManager.localizedString(for: "scribble_placeholder"), text: $scribbleText)
                 .textFieldStyle(RoundedBorderTextFieldStyle())
             
             HStack {
-                Button("キャンセル") {
+                Button(localizationManager.localizedString(for: "cancel")) {
                     dismiss()
                 }
                 .foregroundColor(.red)
                 
                 Spacer()
                 
-                Button("完了") {
+                Button(localizationManager.localizedString(for: "done")) {
                     text = scribbleText
                     dismiss()
                 }

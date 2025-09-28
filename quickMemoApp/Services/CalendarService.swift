@@ -245,18 +245,9 @@ class CalendarService: ObservableObject {
         }
 
         let event = EKEvent(eventStore: eventStore)
-        // タイトルがある場合はそれを使用、ない場合はコンテンツの先頭を使用
-        if !memo.title.isEmpty {
-            event.title = "[\(memo.primaryCategory)] \(memo.title)"
-        } else {
-            event.title = "[\(memo.primaryCategory)] \(String(memo.content.prefix(20)))"
-        }
-        event.notes = """
-        メモ内容: \(memo.content)
-        カテゴリ: \(memo.primaryCategory)
-        タグ: \(memo.tags.joined(separator: ", "))
-        作成日時: \(DateFormatter.localizedString(from: memo.createdAt, dateStyle: .medium, timeStyle: .short))
-        """
+        let eventStrings = localizedEventStrings(for: memo, referenceDate: memo.createdAt, referenceLabelKey: "calendar_note_created")
+        event.title = eventStrings.title
+        event.notes = eventStrings.notes
 
         event.startDate = memo.createdAt
         event.endDate = event.startDate.addingTimeInterval(TimeInterval(memo.durationMinutes * 60))
@@ -336,13 +327,9 @@ class CalendarService: ObservableObject {
             return false
         }
         
-        event.title = "[\(memo.primaryCategory)] \(String(memo.content.prefix(20)))"
-        event.notes = """
-        メモ内容: \(memo.content)
-        カテゴリ: \(memo.primaryCategory)
-        タグ: \(memo.tags.joined(separator: ", "))
-        更新日時: \(DateFormatter.localizedString(from: memo.updatedAt, dateStyle: .medium, timeStyle: .short))
-        """
+        let eventStrings = localizedEventStrings(for: memo, referenceDate: memo.updatedAt, referenceLabelKey: "calendar_note_updated")
+        event.title = eventStrings.title
+        event.notes = eventStrings.notes
         
         do {
             try eventStore.save(event, span: .thisEvent, commit: true)
@@ -368,6 +355,44 @@ class CalendarService: ObservableObject {
             lastError = "カレンダーイベント削除エラー: \(error.localizedDescription)"
             return false
         }
+    }
+
+    private func localizedEventStrings(for memo: QuickMemo, referenceDate: Date, referenceLabelKey: String) -> (title: String, notes: String) {
+        let localizationManager = LocalizationManager.shared
+
+        let localizedCategory = LocalizedCategories.getLocalizedName(for: memo.primaryCategory)
+        let rawTitle = memo.title.trimmingCharacters(in: .whitespacesAndNewlines)
+        let fallbackContent = memo.content.trimmingCharacters(in: .whitespacesAndNewlines)
+        var summary = rawTitle.isEmpty ? fallbackContent : rawTitle
+
+        if summary.isEmpty {
+            summary = localizationManager.localizedString(for: "calendar_event_default_title")
+        }
+
+        if summary.count > 40 {
+            summary = String(summary.prefix(40))
+        }
+
+        let titleFormat = localizationManager.localizedString(for: "calendar_event_title_format")
+        let title = String(format: titleFormat, localizedCategory, summary)
+
+        let contentLabel = localizationManager.localizedString(for: "calendar_note_content")
+        let categoryLabel = localizationManager.localizedString(for: "calendar_note_category")
+        let tagsLabel = localizationManager.localizedString(for: "calendar_note_tags")
+        let tagsNone = localizationManager.localizedString(for: "calendar_note_tags_none")
+        let dateLabel = localizationManager.localizedString(for: referenceLabelKey)
+
+        let tagsValue = memo.tags.isEmpty ? tagsNone : memo.tags.joined(separator: ", ")
+        let dateValue = DateFormatter.localizedString(from: referenceDate, dateStyle: .medium, timeStyle: .short)
+
+        let notes = [
+            "\(contentLabel): \(memo.content)",
+            "\(categoryLabel): \(localizedCategory)",
+            "\(tagsLabel): \(tagsValue)",
+            "\(dateLabel): \(dateValue)"
+        ].joined(separator: "\n")
+
+        return (title, notes)
     }
 
     // MARK: - Connection Testing
@@ -409,13 +434,11 @@ class CalendarService: ObservableObject {
             testEvent.alarms = nil
 
             try eventStore.save(testEvent, span: .thisEvent, commit: true)
-            
-            // 保存確認
-            if let _ = eventStore.event(withIdentifier: testEvent.eventIdentifier) {
-                try eventStore.remove(testEvent, span: .thisEvent, commit: true)
-            } else {
-            }
 
+            // 保存できたら即座に削除してクリーンアップ
+            try eventStore.remove(testEvent, span: .thisEvent, commit: true)
+
+            lastError = nil
             connectionStatus = .connected
             return true
         } catch {

@@ -137,7 +137,6 @@ class NotificationManager: NSObject, ObservableObject {
     // MARK: - Notification Scheduling
     
     func scheduleNotifications() {
-        print("[NotificationManager] scheduleNotifications開始")
 
         Task { @MainActor in
             let isEnabled = self.isNotificationEnabled
@@ -147,14 +146,12 @@ class NotificationManager: NSObject, ObservableObject {
             let quietEnd = self.quietModeEndTime
 
             guard isEnabled else {
-                print("[NotificationManager] 通知が無効のため終了")
                 return
             }
             
             // バックグラウンドスレッドで実行
             DispatchQueue.global(qos: .background).async { [weak self] in
                 guard let self = self else {
-                    print("[NotificationManager] selfがnilのため終了")
                     return
                 }
                 
@@ -176,7 +173,6 @@ class NotificationManager: NSObject, ObservableObject {
         quietStart: Date,
         quietEnd: Date
     ) {
-        print("[NotificationManager] 通知間隔: \(interval)分")
         
         let content = UNMutableNotificationContent()
         content.title = "メモを記録しましょう"
@@ -212,29 +208,24 @@ class NotificationManager: NSObject, ObservableObject {
                 
                 // 7日以上先の場合は終了
                 if currentTime.timeIntervalSince(now) > 7 * 24 * 60 * 60 {
-                    print("[NotificationManager] 7日以上先のため終了")
                     break
                 }
             } else {
                 // 日付計算に失敗した場合は終了
-                print("[NotificationManager] 日付計算に失敗")
                 break
             }
         }
             
         if loopCount >= maxLoops {
-            print("[NotificationManager] ループ回数が上限に達しました")
             return
         }
         
-        print("[NotificationManager] スケジュール予定: \(nextNotificationDates.count)件")
         
         // 通知をスケジュール（メインキューで実行しない）
         let totalCount = nextNotificationDates.count
         
         // 通知がない場合は早期リターン
         guard totalCount > 0 else {
-            print("[NotificationManager] スケジュールする通知がありません")
             return
         }
         
@@ -258,14 +249,12 @@ class NotificationManager: NSObject, ObservableObject {
             UNUserNotificationCenter.current().add(request) { error in
                 queue.async(flags: .barrier) {
                     if let error = error {
-                        print("[NotificationManager] 通知のスケジュールに失敗 \(index): \(error)")
                     } else {
                         successCount += 1
                     }
                     
                     pendingRequests -= 1
                     if pendingRequests == 0 {
-                        print("[NotificationManager] 通知のスケジュール完了: 成功 \(successCount)/\(totalCount)件")
                     }
                 }
             }
@@ -331,7 +320,6 @@ class NotificationManager: NSObject, ObservableObject {
         
         UNUserNotificationCenter.current().add(request) { error in
             if let error = error {
-                print("テスト通知の送信に失敗しました: \(error)")
             }
         }
     }

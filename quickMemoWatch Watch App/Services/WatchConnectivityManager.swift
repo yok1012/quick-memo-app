@@ -26,7 +26,6 @@ class WatchConnectivityManager: NSObject, ObservableObject {
 
         if session.isReachable {
             session.sendMessage(["type": "newMemo", "data": memoData], replyHandler: nil) { error in
-                print("Watch: メッセージ送信エラー: \(error)")
                 self.storePendingMemo(memoData)
             }
         } else {
@@ -39,15 +38,12 @@ class WatchConnectivityManager: NSObject, ObservableObject {
 
         if session.isReachable {
             session.sendMessage(message, replyHandler: nil) { error in
-                print("Watch: メッセージ送信エラー: \(error)")
             }
         } else {
-            print("Watch: iPhoneに接続できません")
             // アプリケーションコンテキストを更新して、後でiPhoneが受信できるようにする
             do {
                 try session.updateApplicationContext(message)
             } catch {
-                print("Watch: Application Context更新エラー: \(error)")
             }
         }
     }
@@ -76,7 +72,6 @@ class WatchConnectivityManager: NSObject, ObservableObject {
 
         for memoData in memosToSync {
             WCSession.default.sendMessage(["type": "newMemo", "data": memoData], replyHandler: nil) { error in
-                print("Watch: 保留メモ同期エラー: \(error)")
                 self.pendingMemos.append(memoData)
             }
         }
@@ -151,11 +146,15 @@ extension WatchConnectivityManager: WCSessionDelegate {
                   let icon = data["icon"] as? String,
                   let color = data["color"] as? String else { return nil }
 
+            let baseKeyValue = (data["baseKey"] as? String).flatMap { $0.isEmpty ? nil : $0 }
+
             return WatchCategory(
                 id: UUID(uuidString: data["id"] as? String ?? "") ?? UUID(),
                 name: name,
                 icon: icon,
-                color: color
+                color: color,
+                defaultTags: data["defaultTags"] as? [String] ?? [],
+                baseKey: baseKeyValue
             )
         }
 
@@ -180,7 +179,8 @@ extension WatchConnectivityManager: WCSessionDelegate {
                 title: title,
                 content: content,
                 category: category,
-                createdAt: Date(timeIntervalSince1970: timestamp)
+                createdAt: Date(timeIntervalSince1970: timestamp),
+                tags: data["tags"] as? [String] ?? []
             )
         }
 

@@ -6,6 +6,7 @@ struct SettingsView: View {
     @StateObject private var calendarService = CalendarService.shared
     @StateObject private var purchaseManager = PurchaseManager.shared
     @StateObject private var notificationManager = NotificationManager.shared
+    @StateObject private var localizationManager = LocalizationManager.shared
     @State private var isTestingConnection = false
     @State private var showTestResult = false
     @State private var testResultMessage = ""
@@ -16,16 +17,14 @@ struct SettingsView: View {
     @State private var showingWidgetSettings = false
     @State private var showingWatchSettings = false
     @State private var showingExportOptions = false
-    @State private var showingImportPicker = false
     @State private var exportFormat: ExportManager.ExportFormat = .json
     @State private var isExporting = false
     @State private var exportedFileURL: URL?
     @State private var showingShareSheet = false
     @State private var showingExportError = false
     @State private var exportErrorMessage = ""
-    @State private var showingImportConfirmation = false
-    @State private var importedMemos: [QuickMemo] = []
     @AppStorage("calendar_sync_mode") private var syncMode = "normal"
+    @AppStorage("app_language") private var selectedLanguage = LocalizationManager.shared.currentLanguage
 
     var body: some View {
         NavigationStack {
@@ -41,11 +40,11 @@ struct SettingsView: View {
                                     HStack {
                                         Image(systemName: "star.fill")
                                             .foregroundColor(.yellow)
-                                        Text("QuickMemo Pro")
+                                    Text("settings_quickmemo_pro".localized)
                                             .font(.headline)
                                             .fontWeight(.semibold)
                                     }
-                                    Text("すべての機能をアンロック")
+                                    Text("settings_unlock_all_features".localized)
                                         .font(.caption)
                                         .foregroundColor(.secondary)
                                 }
@@ -57,19 +56,19 @@ struct SettingsView: View {
                         }
                         .foregroundColor(.primary)
                     } header: {
-                        Label("アップグレード", systemImage: "star")
+                        Label("settings_upgrade".localized, systemImage: "star")
                     }
                 } else {
                     Section {
                         HStack {
                             Image(systemName: "checkmark.circle.fill")
                                 .foregroundColor(.green)
-                            Text("Pro版をご利用中")
+                            Text("settings_pro_active".localized)
                                 .font(.headline)
                             Spacer()
                         }
                     } header: {
-                        Label("Pro版", systemImage: "star.fill")
+                        Label("settings_pro_version".localized, systemImage: "star.fill")
                     }
                 }
                 
@@ -77,7 +76,7 @@ struct SettingsView: View {
                 Section {
                     usageStatsView
                 } header: {
-                    Label("使用状況", systemImage: "chart.bar")
+                    Label("settings_usage_stats".localized, systemImage: "chart.bar")
                 }
 
                 // ウィジェット設定セクション
@@ -88,10 +87,10 @@ struct SettingsView: View {
                         HStack {
                             Image(systemName: "square.grid.2x2")
                                 .foregroundColor(.blue)
-                            Text("ウィジェットカテゴリー設定")
+                            Text("settings_widget_categories".localized)
                             Spacer()
                             if !purchaseManager.isProVersion {
-                                Text("Pro限定")
+                                Text("settings_pro_only".localized)
                                     .font(.caption)
                                     .foregroundColor(.orange)
                             }
@@ -101,9 +100,9 @@ struct SettingsView: View {
                         }
                     }
                 } header: {
-                    Label("ウィジェット", systemImage: "apps.iphone")
+                    Label("settings_widget".localized, systemImage: "apps.iphone")
                 } footer: {
-                    Text(purchaseManager.isProVersion ? "ウィジェットに表示するカテゴリーを選択できます" : "Pro版では表示するカテゴリーをカスタマイズできます")
+                    Text(purchaseManager.isProVersion ? "settings_widget_footer_pro".localized : "settings_widget_footer_free".localized)
                         .font(.system(size: 12))
                 }
 
@@ -115,10 +114,10 @@ struct SettingsView: View {
                         HStack {
                             Image(systemName: "applewatch")
                                 .foregroundColor(.blue)
-                            Text("Apple Watch設定")
+                            Text("settings_apple_watch".localized)
                             Spacer()
                             if !purchaseManager.isProVersion {
-                                Text("Pro限定")
+                                Text("settings_pro_only".localized)
                                     .font(.caption)
                                     .foregroundColor(.orange)
                             }
@@ -128,15 +127,15 @@ struct SettingsView: View {
                         }
                     }
                 } header: {
-                    Label("Apple Watch", systemImage: "applewatch")
+                    Label("settings_apple_watch".localized, systemImage: "applewatch")
                 } footer: {
-                    Text(purchaseManager.isProVersion ? "Apple Watchで使用するカテゴリーを選択できます" : "Pro版ではWatch用のカテゴリーをカスタマイズできます")
+                    Text(purchaseManager.isProVersion ? "settings_watch_footer_pro".localized : "settings_watch_footer_free".localized)
                         .font(.system(size: 12))
                 }
 
                 // 通知設定セクション
                 Section {
-                    Toggle("メモ通知を有効にする", isOn: $notificationManager.isNotificationEnabled)
+                    Toggle("settings_enable_notifications".localized, isOn: $notificationManager.isNotificationEnabled)
                         .onChange(of: notificationManager.isNotificationEnabled) { newValue in
                             if newValue {
                                 notificationManager.requestPermission { granted in
@@ -154,18 +153,18 @@ struct SettingsView: View {
                         if notificationManager.isNotificationEnabled {
                             VStack {
                                 HStack {
-                                    Text("通知間隔")
+                                    Text("settings_notification_interval".localized)
                                     Spacer()
                                     Picker("", selection: $notificationManager.notificationInterval) {
-                                        Text("1分").tag(1)
-                                        Text("3分").tag(3)
-                                        Text("15分").tag(15)
-                                        Text("30分").tag(30)
-                                        Text("1時間").tag(60)
-                                        Text("1.5時間").tag(90)
-                                        Text("2時間").tag(120)
-                                        Text("3時間").tag(180)
-                                        Text("4時間").tag(240)
+                                        Text("settings_1_minute".localized).tag(1)
+                                        Text("settings_3_minutes".localized).tag(3)
+                                        Text("settings_15_minutes".localized).tag(15)
+                                        Text("settings_30_minutes".localized).tag(30)
+                                        Text("settings_1_hour".localized).tag(60)
+                                        Text("settings_1_5_hours".localized).tag(90)
+                                        Text("settings_2_hours".localized).tag(120)
+                                        Text("settings_3_hours".localized).tag(180)
+                                        Text("settings_4_hours".localized).tag(240)
                                     }
                                     .pickerStyle(.menu)
                                     .onChange(of: notificationManager.notificationInterval) { _ in
@@ -175,7 +174,7 @@ struct SettingsView: View {
 
                                 Divider()
 
-                                Toggle("おやすみモード", isOn: $notificationManager.isQuietModeEnabled)
+                                Toggle("settings_quiet_mode".localized, isOn: $notificationManager.isQuietModeEnabled)
                                     .onChange(of: notificationManager.isQuietModeEnabled) { _ in
                                         notificationManager.saveSettings()
                                     }
@@ -183,7 +182,7 @@ struct SettingsView: View {
                                 if notificationManager.isQuietModeEnabled {
                                     VStack {
                                         HStack {
-                                            Text("開始時刻")
+                                            Text("settings_start_time".localized)
                                             Spacer()
                                             DatePicker("", selection: $notificationManager.quietModeStartTime, displayedComponents: .hourAndMinute)
                                                 .labelsHidden()
@@ -193,7 +192,7 @@ struct SettingsView: View {
                                         }
 
                                         HStack {
-                                            Text("終了時刻")
+                                            Text("settings_end_time".localized)
                                             Spacer()
                                             DatePicker("", selection: $notificationManager.quietModeEndTime, displayedComponents: .hourAndMinute)
                                                 .labelsHidden()
@@ -213,15 +212,15 @@ struct SettingsView: View {
                                 HStack {
                                     Image(systemName: "bell.badge")
                                         .foregroundColor(.blue)
-                                    Text("テスト通知を送信")
+                                    Text("settings_send_test_notification".localized)
                                     Spacer()
                                 }
                             }
                         }
                 } header: {
-                    Label("メモ通知", systemImage: "bell")
+                    Label("settings_memo_notifications".localized, systemImage: "bell")
                 } footer: {
-                    Text("定期的にメモを書くことを促す通知を送信します。おやすみモードでは指定時間内の通知を停止します。")
+                    Text("settings_notifications_footer".localized)
                         .font(.system(size: 12))
                 }
 
@@ -234,7 +233,7 @@ struct SettingsView: View {
                             Image(systemName: "exclamationmark.triangle.fill")
                                 .foregroundColor(.orange)
                                 .font(.system(size: 14))
-                            Text("最後のエラー")
+                            Text("settings_last_error".localized)
                                 .font(.system(size: 14, weight: .medium))
                             Spacer()
                         }
@@ -248,17 +247,37 @@ struct SettingsView: View {
                     actionButtons
 
                 } header: {
-                    Label("カレンダー連携", systemImage: "calendar")
+                    Label("settings_calendar_integration".localized, systemImage: "calendar")
                 } footer: {
-                    Text("メモをカレンダーに自動記録するための設定です。カレンダーへのフルアクセス権限が必要です。")
+                    Text("settings_calendar_footer".localized)
                         .font(.system(size: 12))
+                }
+
+                // 言語設定セクション
+                Section {
+                    Picker("select_language".localized, selection: $selectedLanguage) {
+                        Text("follow_device".localized).tag("device")
+                        Divider()
+                        Text("language_japanese".localized).tag("ja")
+                        Text("language_english".localized).tag("en")
+                        Text("language_chinese".localized).tag("zh-Hans")
+                    }
+                    .pickerStyle(.menu)
+                    .onChange(of: selectedLanguage) { newValue in
+                        LocalizationManager.shared.setLanguage(newValue)
+                        // Language changes immediately, no restart needed
+                    }
+                } header: {
+                    Label("language_settings".localized, systemImage: "globe")
+                } footer: {
+                    // Language changes immediately without restart
                 }
 
                 // カレンダー同期モード
                 Section {
-                    Picker("同期モード", selection: $syncMode) {
-                        Text("通常").tag("normal")
-                        Text("強制同期").tag("force")
+                    Picker("settings_sync_mode".localized, selection: $syncMode) {
+                        Text("settings_normal".localized).tag("normal")
+                        Text("settings_force_sync".localized).tag("force")
                     }
                     .pickerStyle(.segmented)
                     
@@ -270,7 +289,7 @@ struct SettingsView: View {
                                 Image(systemName: "arrow.triangle.2.circlepath")
                                     .font(.system(size: 14))
                                     .foregroundColor(.orange)
-                                Text("今すぐ強制同期")
+                                Text("settings_force_sync_now".localized)
                                     .font(.system(size: 15, weight: .medium))
                                 Spacer()
                             }
@@ -278,9 +297,9 @@ struct SettingsView: View {
                         }
                     }
                 } header: {
-                    Label("同期設定", systemImage: "arrow.triangle.2.circlepath")
+                    Label("settings_sync_settings".localized, systemImage: "arrow.triangle.2.circlepath")
                 } footer: {
-                    Text(syncMode == "force" ? "実機での接続問題がある場合は強制同期モードを使用してください。バッテリー消費が増加する可能性があります。" : "通常モードでは効率的な同期を行います。")
+                    Text(syncMode == "force" ? "settings_force_sync_warning".localized : "settings_normal_sync_info".localized)
                         .font(.system(size: 12))
                 }
 
@@ -289,7 +308,7 @@ struct SettingsView: View {
                     diagnosticsView
                     
                 } header: {
-                    Label("診断情報", systemImage: "stethoscope")
+                    Label("settings_diagnostics".localized, systemImage: "stethoscope")
                 }
 
                 // データ管理セクション
@@ -301,9 +320,9 @@ struct SettingsView: View {
                         HStack {
                             Image(systemName: "square.and.arrow.up")
                                 .foregroundColor(.blue)
-                            Text("メモをエクスポート")
+                            Text("settings_export_memos".localized)
                             Spacer()
-                            Text("\(DataManager.shared.memos.count)件")
+                            Text("\(DataManager.shared.memos.count)\("items_count".localized)")
                                 .font(.caption)
                                 .foregroundColor(.secondary)
                         }
@@ -311,43 +330,34 @@ struct SettingsView: View {
                     .disabled(DataManager.shared.memos.isEmpty)
 
                     // インポートボタン
-                    Button(action: {
-                        showingImportPicker = true
-                    }) {
-                        HStack {
-                            Image(systemName: "square.and.arrow.down")
-                                .foregroundColor(.green)
-                            Text("メモをインポート")
-                            Spacer()
-                        }
-                    }
                 } header: {
-                    Label("データ管理", systemImage: "externaldrive")
+                    Label("settings_data_management".localized, systemImage: "externaldrive")
                 } footer: {
-                    Text("メモをCSVまたはJSON形式でエクスポート・インポートできます")
+                    Text("settings_export_footer".localized)
                         .font(.system(size: 12))
                 }
 
                 // アプリ情報セクション
                 Section {
                     HStack {
-                        Text("バージョン")
+                        Text("settings_version".localized)
                         Spacer()
                         Text(Bundle.main.infoDictionary?["CFBundleShortVersionString"] as? String ?? "1.0.0")
                             .foregroundColor(.secondary)
                     }
 
                     HStack {
-                        Text("ビルド")
+                        Text("settings_build".localized)
                         Spacer()
                         Text(Bundle.main.infoDictionary?["CFBundleVersion"] as? String ?? "1")
                             .foregroundColor(.secondary)
                     }
                 } header: {
-                    Label("アプリ情報", systemImage: "info.circle")
+                    Label("settings_app_info".localized, systemImage: "info.circle")
                 }
             }
-            .navigationTitle("設定")
+            .id(localizationManager.refreshID)  // Force refresh when language changes
+            .navigationTitle("settings_title".localized)
             .sheet(isPresented: $showingPermissionRequest) {
                 CalendarPermissionView()
             }
@@ -360,8 +370,8 @@ struct SettingsView: View {
             .sheet(isPresented: $showingWatchSettings) {
                 WatchSettingsView()
             }
-            .alert("接続テスト結果", isPresented: $showTestResult) {
-                Button("OK") {
+            .alert("settings_connection_test_result".localized, isPresented: $showTestResult) {
+                Button(localizationManager.localizedString(for: "ok")) {
                     showTestResult = false
                 }
             } message: {
@@ -370,55 +380,38 @@ struct SettingsView: View {
             .sheet(isPresented: $showingPermissionRequest) {
                 CalendarPermissionView()
             }
-            .alert("強制同期", isPresented: $showingForceSyncAlert) {
-                Button("同期開始") {
+            .alert("settings_force_sync".localized, isPresented: $showingForceSyncAlert) {
+                Button("settings_start_sync".localized) {
                     Task {
                         await calendarService.forceCalendarSync()
                     }
                 }
-                Button("キャンセル", role: .cancel) {}
+                Button("cancel".localized, role: .cancel) {}
             } message: {
-                Text("カレンダーとの同期を強制的に実行します。これにより一時的にアプリが遅くなる可能性があります。")
+                Text("settings_force_sync_message".localized)
             }
-            .confirmationDialog("エクスポート形式", isPresented: $showingExportOptions) {
-                Button("JSON形式") {
+            .confirmationDialog("settings_export_format".localized, isPresented: $showingExportOptions) {
+                Button("settings_json_format".localized) {
                     exportFormat = .json
                     exportMemos()
                 }
-                Button("CSV形式") {
+                Button("settings_csv_format".localized) {
                     exportFormat = .csv
                     exportMemos()
                 }
-                Button("キャンセル", role: .cancel) {}
+                Button("cancel".localized, role: .cancel) {}
             } message: {
-                Text("エクスポート形式を選択してください")
+                Text("settings_export_select_format".localized)
             }
             .sheet(isPresented: $showingShareSheet) {
                 if let url = exportedFileURL {
                     ShareSheet(activityItems: [url])
                 }
             }
-            .alert("エクスポートエラー", isPresented: $showingExportError) {
-                Button("OK") {}
+            .alert("settings_export_error".localized, isPresented: $showingExportError) {
+                Button(localizationManager.localizedString(for: "ok")) {}
             } message: {
                 Text(exportErrorMessage)
-            }
-            .fileImporter(
-                isPresented: $showingImportPicker,
-                allowedContentTypes: [.json, .commaSeparatedText],
-                allowsMultipleSelection: false
-            ) { result in
-                handleImportResult(result)
-            }
-            .alert("インポート確認", isPresented: $showingImportConfirmation) {
-                Button("インポート") {
-                    performImport()
-                }
-                Button("キャンセル", role: .cancel) {
-                    importedMemos = []
-                }
-            } message: {
-                Text("\(importedMemos.count)件のメモをインポートします。既存のメモと重複する場合は新規として追加されます。")
             }
         }
     }
@@ -475,15 +468,15 @@ struct SettingsView: View {
     private var statusText: String {
         switch calendarService.connectionStatus {
         case .connected:
-            return "接続済み"
+            return "settings_connected".localized
         case .disconnected:
-            return "未接続"
+            return "settings_disconnected".localized
         case .checking:
-            return "確認中..."
+            return "settings_checking".localized
         case .error(let message):
-            return "エラー: \(message)"
+            return "\("settings_error".localized): \(message)"
         case .unknown:
-            return "状態不明"
+            return "settings_status_unknown".localized
         }
     }
 
@@ -498,7 +491,7 @@ struct SettingsView: View {
                 HStack {
                     Image(systemName: "wifi.router")
                         .font(.system(size: 14))
-                    Text("接続テスト")
+                    Text("settings_connection_test".localized)
                         .font(.system(size: 15, weight: .medium))
                     Spacer()
                     if isTestingConnection {
@@ -523,7 +516,7 @@ struct SettingsView: View {
                 HStack {
                     Image(systemName: "arrow.clockwise")
                         .font(.system(size: 14))
-                    Text("再接続")
+                    Text("settings_reconnect".localized)
                         .font(.system(size: 15, weight: .medium))
                     Spacer()
                     if calendarService.isLoading {
@@ -549,7 +542,7 @@ struct SettingsView: View {
                     HStack {
                         Image(systemName: "lock.open")
                             .font(.system(size: 14))
-                        Text("カレンダーアクセスを許可")
+                        Text("settings_allow_calendar_access".localized)
                             .font(.system(size: 15, weight: .medium))
                         Spacer()
                         Image(systemName: "chevron.right")
@@ -568,7 +561,7 @@ struct SettingsView: View {
                 HStack {
                     Image(systemName: "gear")
                         .font(.system(size: 14))
-                    Text("システム設定を開く")
+                    Text("settings_open_system_settings".localized)
                         .font(.system(size: 15, weight: .medium))
                     Spacer()
                     Image(systemName: "arrow.up.forward.square")
@@ -584,14 +577,14 @@ struct SettingsView: View {
         VStack(alignment: .leading, spacing: 8) {
             // 権限状態
             HStack {
-                Text("カレンダーアクセス")
+                Text("settings_calendar_access".localized)
                     .font(.system(size: 14))
                 Spacer()
                 HStack(spacing: 4) {
                     Image(systemName: calendarService.hasCalendarAccess ? "checkmark.circle.fill" : "xmark.circle.fill")
                         .foregroundColor(calendarService.hasCalendarAccess ? .green : .red)
                         .font(.system(size: 12))
-                    Text(calendarService.hasCalendarAccess ? "許可済み" : "未許可")
+                    Text(calendarService.hasCalendarAccess ? "settings_permitted".localized : "settings_not_permitted".localized)
                         .font(.system(size: 14))
                         .foregroundColor(.secondary)
                 }
@@ -600,7 +593,7 @@ struct SettingsView: View {
             // iOS バージョンに応じた権限の詳細
             if #available(iOS 17.0, *) {
                 HStack {
-                    Text("権限レベル")
+                    Text("settings_permission_level".localized)
                         .font(.system(size: 14))
                     Spacer()
                     Text(authorizationStatusText)
@@ -611,7 +604,7 @@ struct SettingsView: View {
 
             // カレンダー情報
             HStack {
-                Text("Quick Memoカレンダー")
+                Text("settings_quick_memo_calendar".localized)
                     .font(.system(size: 14))
                 Spacer()
                 Text(calendarStatusText)
@@ -621,7 +614,7 @@ struct SettingsView: View {
 
             // デバイス情報
             HStack {
-                Text("iOSバージョン")
+                Text("settings_ios_version".localized)
                     .font(.system(size: 14))
                 Spacer()
                 Text(UIDevice.current.systemVersion)
@@ -636,41 +629,41 @@ struct SettingsView: View {
         if #available(iOS 17.0, *) {
             switch status {
             case .notDetermined:
-                return "未確認"
+                return "settings_not_determined".localized
             case .restricted:
-                return "制限付き"
+                return "settings_restricted".localized
             case .denied:
-                return "拒否"
+                return "settings_denied".localized
             case .fullAccess:
-                return "フルアクセス"
+                return "settings_full_access".localized
             case .writeOnly:
-                return "書き込みのみ"
+                return "settings_write_only".localized
             case .authorized:
-                return "許可済み"
+                return "settings_authorized".localized
             @unknown default:
-                return "不明"
+                return "settings_unknown".localized
             }
         } else {
             switch status {
             case .notDetermined:
-                return "未確認"
+                return "settings_not_determined".localized
             case .restricted:
-                return "制限付き"
+                return "settings_restricted".localized
             case .denied:
-                return "拒否"
+                return "settings_denied".localized
             case .authorized:
-                return "許可済み"
+                return "settings_authorized".localized
             @unknown default:
-                return "不明"
+                return "settings_unknown".localized
             }
         }
     }
 
     private var calendarStatusText: String {
         if calendarService.hasCalendarAccess {
-            return "設定済み"
+            return "settings_configured".localized
         } else {
-            return "未設定"
+            return "settings_not_configured".localized
         }
     }
 
@@ -681,7 +674,7 @@ struct SettingsView: View {
             // メモ使用状況
             HStack {
                 VStack(alignment: .leading, spacing: 4) {
-                    Text("メモ数")
+                    Text("settings_memo_count".localized)
                         .font(.subheadline)
                         .foregroundColor(.secondary)
                     
@@ -689,7 +682,7 @@ struct SettingsView: View {
                         Text("\(DataManager.shared.memos.count)/100")
                             .font(.title3)
                             .fontWeight(.semibold)
-                        Text("残り \(remaining) 個")
+                        Text("\("settings_remaining".localized) \(remaining) \("settings_items".localized)")
                             .font(.caption)
                             .foregroundColor(remaining <= 20 ? .orange : .secondary)
                     } else {
@@ -697,7 +690,7 @@ struct SettingsView: View {
                             Text("\(DataManager.shared.memos.count)")
                                 .font(.title3)
                                 .fontWeight(.semibold)
-                            Text("無制限")
+                            Text("settings_unlimited".localized)
                                 .font(.caption)
                                 .foregroundColor(.green)
                         }
@@ -708,20 +701,20 @@ struct SettingsView: View {
                 
                 // カテゴリ使用状況
                 VStack(alignment: .trailing, spacing: 4) {
-                    Text("カテゴリ数")
+                    Text("settings_category_count".localized)
                         .font(.subheadline)
                         .foregroundColor(.secondary)
                     
                     if let remaining = DataManager.shared.getRemainingCategoryCount() {
-                        Text("\(DataManager.shared.categories.count)/3")
+                        Text("\(DataManager.shared.categories.count)/5")
                             .font(.title3)
                             .fontWeight(.semibold)
-                        Text("残り \(remaining) 個")
+                        Text("\("settings_remaining".localized) \(remaining) \("settings_items".localized)")
                             .font(.caption)
                             .foregroundColor(remaining == 0 ? .red : .secondary)
                     } else {
                         HStack {
-                            Text("無制限")
+                            Text("settings_unlimited".localized)
                                 .font(.caption)
                                 .foregroundColor(.green)
                             Text("\(DataManager.shared.categories.count)")
@@ -742,14 +735,14 @@ struct SettingsView: View {
                             Image(systemName: "lock.fill")
                                 .foregroundColor(.orange)
                                 .font(.caption)
-                            Text("Pro版限定機能")
+                            Text("settings_pro_features".localized)
                                 .font(.caption)
                                 .fontWeight(.medium)
                                 .foregroundColor(.orange)
                             Spacer()
                         }
                         
-                        Text("• 無制限のタグ（15個以上）\n• iCloud同期\n• カレンダー詳細連携\n• Widget カスタマイズ\n• Apple Watchカスタマイズ")
+                        Text("settings_pro_features_list".localized)
                             .font(.caption)
                             .foregroundColor(.secondary)
                     }
@@ -768,15 +761,15 @@ struct SettingsView: View {
         let success = await calendarService.testCalendarConnection()
 
         if success {
-            testResultMessage = "カレンダーへの接続が正常に確認されました。メモの記録が可能です。"
+            testResultMessage = "settings_connection_test_success".localized
             testResultSuccess = true
         } else {
             let errorDetail = if case .error(let message) = calendarService.connectionStatus {
                 message
             } else {
-                "接続テストに失敗しました"
+                "settings_connection_test_failed".localized
             }
-            testResultMessage = "カレンダーへの接続に問題があります。\n\n\(errorDetail)"
+            testResultMessage = "\("settings_connection_problem".localized)\n\n\(errorDetail)"
             testResultSuccess = false
         }
 
@@ -788,10 +781,10 @@ struct SettingsView: View {
         let success = await calendarService.reconnectCalendar()
 
         if success {
-            testResultMessage = "カレンダーへの再接続が成功しました。"
+            testResultMessage = "settings_reconnect_success".localized
             testResultSuccess = true
         } else {
-            testResultMessage = "カレンダーへの再接続に失敗しました。システム設定でアプリの権限を確認してください。"
+            testResultMessage = "settings_reconnect_failed".localized
             testResultSuccess = false
         }
 
@@ -831,33 +824,6 @@ struct SettingsView: View {
         isExporting = false
     }
 
-    private func handleImportResult(_ result: Result<[URL], Error>) {
-        switch result {
-        case .success(let urls):
-            guard let url = urls.first else { return }
-
-            do {
-                importedMemos = try ExportManager.shared.importMemos(from: url)
-                if !importedMemos.isEmpty {
-                    showingImportConfirmation = true
-                }
-            } catch {
-                exportErrorMessage = "インポートに失敗しました: \(error.localizedDescription)"
-                showingExportError = true
-            }
-
-        case .failure(let error):
-            exportErrorMessage = "ファイルの選択に失敗しました: \(error.localizedDescription)"
-            showingExportError = true
-        }
-    }
-
-    private func performImport() {
-        for memo in importedMemos {
-            DataManager.shared.addMemo(memo)
-        }
-        importedMemos = []
-    }
 }
 
 // MARK: - ShareSheet

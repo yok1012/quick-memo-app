@@ -290,7 +290,7 @@ class PurchaseManager: ObservableObject {
         if isProVersion {
             return true // Unlimited for pro users
         }
-        return currentCount < 3 // Free users limited to 3 categories
+        return currentCount < 5 // Free users limited to 5 categories
     }
     
     func canUseAdvancedFeatures() -> Bool {

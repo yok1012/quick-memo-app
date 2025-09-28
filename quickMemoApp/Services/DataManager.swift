@@ -39,6 +39,7 @@ class DataManager: ObservableObject {
         loadData()
         initializeDefaultCategories()
         setupiCloudSync()
+        setupLanguageObserver()
     }
 
     private func migrateDataIfNeeded() {
@@ -67,10 +68,8 @@ class DataManager: ObservableObject {
         Task { @MainActor in
             iCloudSyncEnabled = false // purchaseManager.canUseiCloudSync()
             if iCloudSyncEnabled {
-                print("✅ iCloud同期が有効になりました（Pro版）")
                 await syncWithCoreData()
             } else {
-                print("ℹ️ iCloud同期は無効です（無料版）")
             }
         }
 
@@ -83,6 +82,46 @@ class DataManager: ObservableObject {
         )
     }
 
+    private func setupLanguageObserver() {
+        NotificationCenter.default.addObserver(
+            self,
+            selector: #selector(updateCategoryLanguages),
+            name: Notification.Name("UpdateCategoryLanguage"),
+            object: nil
+        )
+    }
+
+    @objc private func updateCategoryLanguages() {
+        Task { @MainActor in
+            // Update default category names based on current language
+            for index in categories.indices {
+                guard categories[index].isDefault else { continue }
+
+                if categories[index].baseKey == nil {
+                    categories[index].baseKey = LocalizedCategories.baseKey(forLocalizedName: categories[index].name)
+                }
+
+                guard let baseKey = categories[index].baseKey else { continue }
+
+                let oldName = categories[index].name
+                let localizedName = LocalizedCategories.localizedName(for: baseKey)
+
+                categories[index].name = localizedName
+                categories[index].icon = LocalizedCategories.iconName(for: baseKey)
+                categories[index].color = LocalizedCategories.colorHex(for: baseKey)
+                categories[index].defaultTags = LocalizedCategories.defaultTagKeys(for: baseKey).map { $0.localized }
+
+                if oldName != localizedName {
+                    updateMemosWithCategoryChange(oldName: oldName, newName: localizedName)
+                }
+            }
+            saveCategories()
+
+            // Force UI refresh
+            objectWillChange.send()
+        }
+    }
+
     @objc private func purchaseStatusChanged() {
         Task { @MainActor in
             // 一時的にiCloud同期を無効化
@@ -90,7 +129,6 @@ class DataManager: ObservableObject {
             iCloudSyncEnabled = false // purchaseManager.canUseiCloudSync()
 
             if !wasEnabled && iCloudSyncEnabled {
-                print("🎉 Pro版にアップグレード - iCloud同期を開始")
                 await migrateUserDefaultsToCoreData()
                 await syncWithCoreData()
             }
@@ -117,7 +155,6 @@ class DataManager: ObservableObject {
         guard iCloudSyncEnabled else { return }
 
         await MainActor.run {
-            print("📤 UserDefaultsからCore Dataへデータ移行開始")
 
             // Migrate all memos to Core Data
             for memo in memos {
@@ -129,7 +166,6 @@ class DataManager: ObservableObject {
                 coreDataStack.saveCategory(category)
             }
 
-            print("✅ データ移行完了: \(memos.count)件のメモ, \(categories.count)件のカテゴリー")
         }
     }
 
@@ -180,8 +216,32 @@ class DataManager: ObservableObject {
     
     private func loadCategories() {
         if let data = userDefaults.data(forKey: categoriesKey),
-           let decodedCategories = try? JSONDecoder().decode([Category].self, from: data) {
-            categories = decodedCategories
+           var decodedCategories = try? JSONDecoder().decode([Category].self, from: data) {
+            normalizeDefaultCategoryMetadata(for: &decodedCategories)
+            // If user is free and has more than 5 categories (from previous Pro subscription),
+            // keep only the default categories
+            if !purchaseManager.isProVersion && decodedCategories.count > 5 {
+                // Keep only default categories
+                let defaultCategoryNames = Set(
+                    LocalizedCategories.getDefaultCategories().flatMap { LocalizedCategories.allLocalizedVariants(for: $0.key) } +
+                    LocalizedCategories.allLocalizedVariants(for: "other")
+                )
+                categories = decodedCategories.filter { category in
+                    defaultCategoryNames.contains(category.name) ||
+                    category.order < 5  // Keep first 5 categories by order
+                }
+                // Ensure we have exactly 5 categories
+                if categories.count > 5 {
+                    categories = Array(categories.prefix(5))
+                }
+                saveCategories()
+            } else {
+                categories = decodedCategories
+            }
+
+            if migrateLegacyShoppingCategory() {
+                saveCategories()
+            }
         }
     }
     
@@ -254,7 +314,6 @@ class DataManager: ObservableObject {
         if !purchaseManager.isProVersion {
             let maxTags = purchaseManager.getMaxTagsPerMemo()
             if newMemo.tags.count > maxTags {
-                print("⚠️ タグ数制限: \(newMemo.tags.count) → \(maxTags)")
                 newMemo.tags = Array(newMemo.tags.prefix(maxTags))
             }
         }
@@ -285,7 +344,6 @@ class DataManager: ObservableObject {
         if !purchaseManager.isProVersion {
             let maxTags = purchaseManager.getMaxTagsPerMemo()
             if updatedMemo.tags.count > maxTags {
-                print("⚠️ タグ数制限: \(updatedMemo.tags.count) → \(maxTags)")
                 updatedMemo.tags = Array(updatedMemo.tags.prefix(maxTags))
             }
         }
@@ -308,11 +366,22 @@ class DataManager: ObservableObject {
     }
     
     func updateCategory(_ category: Category) {
+        // Free users cannot update categories
+        guard purchaseManager.isProVersion else { return }
+
         if let index = categories.firstIndex(where: { $0.id == category.id }) {
             let oldName = categories[index].name
-            categories[index] = category
 
-            // Update memos if category name changed
+            // Prevent renaming the "Other" default category
+            let oldBaseKey = LocalizedCategories.baseKey(forLocalizedName: oldName)
+            if oldBaseKey == "other" {
+                var modifiedCategory = category
+                modifiedCategory.name = oldName
+                categories[index] = modifiedCategory
+            } else {
+                categories[index] = category
+            }
+
             if oldName != category.name {
                 updateMemosWithCategoryChange(oldName: oldName, newName: category.name)
             }
@@ -322,9 +391,11 @@ class DataManager: ObservableObject {
     }
 
     func addCategory(_ category: Category) {
+        // Free users cannot add categories (limited to default 5)
+        guard purchaseManager.isProVersion else { return }
+
         // Ensure unique name
         guard !categories.contains(where: { $0.name == category.name }) else {
-            print("Category with name '\(category.name)' already exists")
             return
         }
 
@@ -333,13 +404,18 @@ class DataManager: ObservableObject {
     }
 
     func deleteCategory(id: UUID) {
+        // Free users cannot delete categories
+        guard purchaseManager.isProVersion else { return }
+
         guard let category = categories.first(where: { $0.id == id }) else { return }
 
-        // Move all memos from this category to "その他"
+        let destinationName = LocalizedCategories.localizedName(for: "other")
+
+        // Move all memos from this category to the default "Other" bucket
         let memosToUpdate = memos.filter { $0.primaryCategory == category.name }
         for memo in memosToUpdate {
             var updatedMemo = memo
-            updatedMemo.primaryCategory = "その他"
+            updatedMemo.primaryCategory = destinationName
             updateMemo(updatedMemo)
         }
 
@@ -348,6 +424,9 @@ class DataManager: ObservableObject {
     }
 
     func reorderCategories(_ categories: [Category]) {
+        // Only Pro users can reorder categories
+        guard purchaseManager.isProVersion else { return }
+
         // Update order property based on new arrangement
         for (index, category) in categories.enumerated() {
             if let existingIndex = self.categories.firstIndex(where: { $0.id == category.id }) {
@@ -381,7 +460,6 @@ class DataManager: ObservableObject {
         if !purchaseManager.isProVersion {
             let maxTags = purchaseManager.getMaxTagsPerMemo()
             if category.defaultTags.count >= maxTags {
-                print("⚠️ カテゴリーのデフォルトタグ数が制限に達しています: \(maxTags)")
                 return false
             }
         }
@@ -418,8 +496,22 @@ class DataManager: ObservableObject {
     func filteredMemos(category: String, searchText: String = "") -> [QuickMemo] {
         var filtered = memos
         
-        if category != "すべて" {
-            filtered = filtered.filter { $0.primaryCategory == category }
+        let localizationManager = LocalizationManager.shared
+        let allCategoryNames: Set<String> = [
+            localizationManager.localizedString(for: "category_all"),
+            "すべて",
+            "All",
+            "全部"
+        ]
+
+        if !allCategoryNames.contains(category) {
+            if let filterKey = LocalizedCategories.baseKey(forLocalizedName: category) {
+                filtered = filtered.filter {
+                    LocalizedCategories.baseKey(forLocalizedName: $0.primaryCategory) == filterKey
+                }
+            } else {
+                filtered = filtered.filter { $0.primaryCategory == category }
+            }
         }
         
         if !searchText.isEmpty {
@@ -474,27 +566,96 @@ class DataManager: ObservableObject {
         return Array(Set(allTags)).sorted()
     }
     
+    private func normalizeDefaultCategoryMetadata(for categories: inout [Category]) {
+        for index in categories.indices {
+            if let inferredKey = categories[index].baseKey ?? LocalizedCategories.baseKey(forLocalizedName: categories[index].name) {
+                if LocalizedCategories.allLocalizedVariants(for: inferredKey).contains(categories[index].name) {
+                    categories[index].baseKey = inferredKey
+                    categories[index].isDefault = true
+                }
+            }
+        }
+    }
+
+    @discardableResult
+    private func migrateLegacyShoppingCategory() -> Bool {
+        guard let index = categories.firstIndex(where: { category in
+            let key = category.baseKey ?? LocalizedCategories.baseKey(forLocalizedName: category.name)
+            return key == "shopping"
+        }) else {
+            return false
+        }
+
+        let oldName = categories[index].name
+
+        categories[index].baseKey = "people"
+        categories[index].isDefault = true
+        categories[index].name = LocalizedCategories.localizedName(for: "people")
+        categories[index].icon = LocalizedCategories.iconName(for: "people")
+        categories[index].color = LocalizedCategories.colorHex(for: "people")
+        categories[index].defaultTags = LocalizedCategories.defaultTagKeys(for: "people").map { $0.localized }
+
+        if oldName != categories[index].name {
+            updateMemosWithCategoryChange(oldName: oldName, newName: categories[index].name)
+        }
+
+        return true
+    }
+
     // MARK: - Default Categories
     
     private func initializeDefaultCategories() {
         if categories.isEmpty {
-            let defaultCategories = [
-                Category(name: "仕事", icon: "briefcase", color: "#007AFF", order: 0, defaultTags: ["会議", "タスク", "締切", "アイデア"]),
-                Category(name: "プライベート", icon: "house", color: "#34C759", order: 1, defaultTags: ["買い物", "予定", "思い出", "健康"]),
-                Category(name: "アイデア", icon: "lightbulb", color: "#FF9500", order: 2, defaultTags: ["ビジネス", "創作", "改善", "メモ"]),
-                Category(name: "人物", icon: "person", color: "#AF52DE", order: 3, defaultTags: ["連絡先", "会話", "約束", "関係"]),
-                Category(name: "その他", icon: "folder", color: "#8E8E93", order: 4, defaultTags: ["雑記", "一時", "分類待ち", "保留"])
-            ]
+            // Use LocalizedCategories to get localized category names
+            let defaultCategories = LocalizedCategories.getDefaultCategories().enumerated().map { index, categoryInfo in
+                Category(
+                    name: categoryInfo.name,
+                    icon: LocalizedCategories.iconName(for: categoryInfo.key),
+                    color: categoryInfo.color,
+                    order: index,
+                    defaultTags: LocalizedCategories.defaultTagKeys(for: categoryInfo.key).map { $0.localized },
+                    isDefault: true,
+                    baseKey: categoryInfo.key
+                )
+            }
 
-            categories = defaultCategories
+            // Add "Other" category
+            let otherCategory = Category(
+                name: LocalizedCategories.localizedName(for: "other"),
+                icon: LocalizedCategories.iconName(for: "other"),
+                color: LocalizedCategories.colorHex(for: "other"),
+                order: defaultCategories.count,
+                defaultTags: LocalizedCategories.defaultTagKeys(for: "other").map { $0.localized },
+                isDefault: true,
+                baseKey: "other"
+            )
+
+            categories = defaultCategories + [otherCategory]
             saveCategories()
         }
     }
 
+    private func getIconForCategory(_ name: String) -> String {
+        let key = LocalizedCategories.baseKey(forLocalizedName: name) ?? name
+        return LocalizedCategories.iconName(for: key)
+    }
+
+    private func getDefaultTagsForCategory(_ name: String) -> [String] {
+        let key = LocalizedCategories.baseKey(forLocalizedName: name) ?? name
+        return LocalizedCategories.defaultTagKeys(for: key).map { $0.localized }
+    }
+
+    private func getBaseKeyForCategory(_ name: String) -> String {
+        LocalizedCategories.baseKey(forLocalizedName: name) ?? "other"
+    }
+
     // カテゴリー名が変更された場合の検証
     func canRenameCategory(from oldName: String, to newName: String) -> Bool {
+        // Free users cannot rename categories
+        guard purchaseManager.isProVersion else { return false }
+
         // その他カテゴリーは名前変更不可
-        if oldName == "その他" {
+        if LocalizedCategories.baseKey(forLocalizedName: oldName) == "other" {
             return false
         }
 
@@ -504,8 +665,11 @@ class DataManager: ObservableObject {
 
     // カテゴリーが削除可能かチェック
     func canDeleteCategory(_ category: Category) -> Bool {
+        // Free users cannot delete any categories
+        guard purchaseManager.isProVersion else { return false }
+
         // その他カテゴリーは削除不可
-        return category.name != "その他"
+        return LocalizedCategories.baseKey(forLocalizedName: category.name) != "other"
     }
     
     // MARK: - Purchase Validation
@@ -548,7 +712,7 @@ class DataManager: ObservableObject {
         if purchaseManager.isProVersion {
             return nil // Unlimited
         }
-        return max(0, 3 - categories.count)
+        return max(0, 5 - categories.count)
     }
 
     // MARK: - Widget Management

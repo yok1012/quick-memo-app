@@ -3,7 +3,8 @@ import SwiftUI
 struct TagManagementView: View {
     @Environment(\.dismiss) private var dismiss
     @StateObject private var dataManager = DataManager.shared
-    @State private var selectedCategory: String = "仕事"
+    @StateObject private var localizationManager = LocalizationManager.shared
+    @State private var selectedCategory: String = ""
     @State private var showingAddTag = false
     @State private var newTagText = ""
     @State private var editingTag: String? = nil
@@ -20,11 +21,17 @@ struct TagManagementView: View {
                 
                 Spacer()
             }
-            .navigationTitle("タグ管理")
+            .id(localizationManager.refreshID)
+            .navigationTitle("tag_management".localized)
+            .onAppear {
+                if selectedCategory.isEmpty && !dataManager.categories.isEmpty {
+                    selectedCategory = dataManager.categories[0].name
+                }
+            }
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {
                 ToolbarItem(placement: .navigationBarLeading) {
-                    Button("閉じる") {
+                    Button("close".localized) {
                         dismiss()
                     }
                 }
@@ -37,26 +44,26 @@ struct TagManagementView: View {
                     }
                 }
             }
-            .alert("新しいタグを追加", isPresented: $showingAddTag) {
-                TextField("タグ名", text: $newTagText)
-                Button("追加") {
+            .alert("memo_new_tag".localized, isPresented: $showingAddTag) {
+                TextField("memo_tag_name".localized, text: $newTagText)
+                Button("add".localized) {
                     addNewTag()
                 }
-                Button("キャンセル", role: .cancel) {
+                Button("cancel".localized, role: .cancel) {
                     newTagText = ""
                 }
             } message: {
-                Text("\(selectedCategory)カテゴリーに新しいタグを追加します")
+                Text(localizationManager.localizedString(for: "add_tag_to_category", arguments: selectedCategory))
             }
-            .alert("タグを削除", isPresented: $showingDeleteAlert) {
-                Button("削除", role: .destructive) {
+            .alert("tag_delete".localized, isPresented: $showingDeleteAlert) {
+                Button("delete".localized, role: .destructive) {
                     if let tag = tagToDelete {
                         deleteTag(tag)
                     }
                 }
-                Button("キャンセル", role: .cancel) {}
+                Button("cancel".localized, role: .cancel) {}
             } message: {
-                Text("「\(tagToDelete ?? "")」を削除してもよろしいですか？")
+                Text(localizationManager.localizedString(for: "tag_delete_confirm", arguments: tagToDelete ?? ""))
             }
         }
     }
@@ -121,7 +128,7 @@ struct TagManagementView: View {
                 .font(.system(size: 48))
                 .foregroundColor(.secondary)
             
-            Text("タグがありません")
+            Text("no_tags".localized)
                 .font(.system(size: 18, weight: .medium))
                 .foregroundColor(.secondary)
             
@@ -130,7 +137,7 @@ struct TagManagementView: View {
             }) {
                 HStack {
                     Image(systemName: "plus.circle")
-                    Text("タグを追加")
+                    Text("add_tag".localized)
                 }
                 .font(.system(size: 16, weight: .medium))
                 .foregroundColor(.blue)
@@ -216,7 +223,7 @@ struct TagRow: View {
     var body: some View {
         HStack {
             if isEditing {
-                TextField("タグ名", text: $editingText)
+                TextField("memo_tag_name".localized, text: $editingText)
                     .textFieldStyle(RoundedBorderTextFieldStyle())
                     .onSubmit {
                         onSave()

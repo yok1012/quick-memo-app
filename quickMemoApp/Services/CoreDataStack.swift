@@ -28,7 +28,6 @@ class CoreDataStack: ObservableObject {
         
         container.loadPersistentStores { _, error in
             if let error = error as NSError? {
-                print("Core Data failed to load: \(error.localizedDescription)")
             }
         }
         
@@ -48,7 +47,6 @@ class CoreDataStack: ObservableObject {
             try context.save()
         } catch {
             let nsError = error as NSError
-            print("Core Data save error: \(nsError), \(nsError.userInfo)")
         }
     }
     
@@ -62,7 +60,6 @@ class CoreDataStack: ObservableObject {
             let entities = try context.fetch(request)
             return entities.map { $0.toQuickMemo() }
         } catch {
-            print("Error fetching memos: \(error)")
             return []
         }
     }
@@ -84,7 +81,6 @@ class CoreDataStack: ObservableObject {
             entity.update(from: memo)
             save()
         } catch {
-            print("Error saving memo: \(error)")
         }
     }
     
@@ -99,7 +95,6 @@ class CoreDataStack: ObservableObject {
                 save()
             }
         } catch {
-            print("Error deleting memo: \(error)")
         }
     }
     
@@ -113,7 +108,6 @@ class CoreDataStack: ObservableObject {
             let entities = try context.fetch(request)
             return entities.map { $0.toCategory() }
         } catch {
-            print("Error fetching categories: \(error)")
             return []
         }
     }
@@ -135,22 +129,35 @@ class CoreDataStack: ObservableObject {
             entity.update(from: category)
             save()
         } catch {
-            print("Error saving category: \(error)")
         }
     }
     
     func initializeDefaultCategories() {
         let existingCategories = fetchCategories()
         if existingCategories.isEmpty {
-            let defaultCategories = [
-                Category(name: "仕事", icon: "briefcase", color: "#007AFF", order: 0, defaultTags: ["会議", "タスク", "締切", "アイデア"]),
-                Category(name: "プライベート", icon: "house", color: "#34C759", order: 1, defaultTags: ["買い物", "予定", "思い出", "健康"]),
-                Category(name: "アイデア", icon: "lightbulb", color: "#FF9500", order: 2, defaultTags: ["ビジネス", "創作", "改善", "メモ"]),
-                Category(name: "人物", icon: "person", color: "#AF52DE", order: 3, defaultTags: ["連絡先", "会話", "約束", "関係"]),
-                Category(name: "その他", icon: "folder", color: "#8E8E93", order: 4, defaultTags: ["雑記", "一時", "分類待ち", "保留"])
-            ]
-            
-            for category in defaultCategories {
+            let defaultCategories = LocalizedCategories.getDefaultCategories().enumerated().map { index, info in
+                Category(
+                    name: info.name,
+                    icon: LocalizedCategories.iconName(for: info.key),
+                    color: info.color,
+                    order: index,
+                    defaultTags: LocalizedCategories.defaultTagKeys(for: info.key).map { $0.localized },
+                    isDefault: true,
+                    baseKey: info.key
+                )
+            }
+
+            let otherCategory = Category(
+                name: LocalizedCategories.localizedName(for: "other"),
+                icon: LocalizedCategories.iconName(for: "other"),
+                color: LocalizedCategories.colorHex(for: "other"),
+                order: defaultCategories.count,
+                defaultTags: LocalizedCategories.defaultTagKeys(for: "other").map { $0.localized },
+                isDefault: true,
+                baseKey: "other"
+            )
+
+            for category in defaultCategories + [otherCategory] {
                 saveCategory(category)
             }
         }

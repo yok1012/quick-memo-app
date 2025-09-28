@@ -33,7 +33,9 @@ class iOSWatchConnectivityManager: NSObject, ObservableObject {
                     "id": category.id.uuidString,
                     "name": category.name,
                     "icon": category.icon,
-                    "color": category.color
+                    "color": category.color,
+                    "defaultTags": category.defaultTags,
+                    "baseKey": category.baseKey ?? ""
                 ]
             }
 
@@ -41,7 +43,6 @@ class iOSWatchConnectivityManager: NSObject, ObservableObject {
 
             if WCSession.default.isReachable {
                 WCSession.default.sendMessage(message, replyHandler: nil) { error in
-                    print("iOS: カテゴリー送信エラー: \(error)")
                 }
             } else {
                 // Transfer user info for background delivery
@@ -61,7 +62,8 @@ class iOSWatchConnectivityManager: NSObject, ObservableObject {
                     "title": memo.title,
                     "content": memo.content,
                     "category": memo.primaryCategory,
-                    "createdAt": memo.createdAt.timeIntervalSince1970
+                    "createdAt": memo.createdAt.timeIntervalSince1970,
+                    "tags": memo.tags
                 ]
             }
 
@@ -69,7 +71,6 @@ class iOSWatchConnectivityManager: NSObject, ObservableObject {
 
             if WCSession.default.isReachable {
                 WCSession.default.sendMessage(message, replyHandler: nil) { error in
-                    print("iOS: メモ送信エラー: \(error)")
                 }
             } else {
                 WCSession.default.transferUserInfo(message)
@@ -81,13 +82,19 @@ class iOSWatchConnectivityManager: NSObject, ObservableObject {
     private func handleReceivedMemo(_ memoData: [String: Any]) {
         let title = memoData["title"] as? String ?? ""
         let content = memoData["content"] as? String ?? ""
-        let category = memoData["category"] as? String ?? "その他"
+        let categoryName = memoData["category"] as? String ?? ""
+        let categoryIdentifier = memoData["baseKey"] as? String ?? LocalizedCategories.baseKey(forLocalizedName: categoryName) ?? categoryName
+        let category = categoryIdentifier.isEmpty
+            ? LocalizedCategories.localizedName(for: "other")
+            : LocalizedCategories.localizedName(for: categoryIdentifier)
+
+        let tags = memoData["tags"] as? [String] ?? []
 
         let memo = QuickMemo(
             title: title,
             content: content,
             primaryCategory: category,
-            tags: []
+            tags: tags
         )
 
         // Add to DataManager
@@ -102,7 +109,6 @@ class iOSWatchConnectivityManager: NSObject, ObservableObject {
 
     private func showMemoNotification(memo: QuickMemo) {
         // Notification implementation if needed
-        print("新しいメモをWatchから受信: \(memo.content)")
     }
 }
 
@@ -229,7 +235,6 @@ extension iOSWatchConnectivityManager: WCSessionDelegate {
 
             if WCSession.default.isReachable {
                 WCSession.default.sendMessage(message, replyHandler: nil) { error in
-                    print("iOS: 課金状態送信エラー: \(error)")
                 }
             } else {
                 WCSession.default.transferUserInfo(message)
