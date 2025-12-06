@@ -2,7 +2,7 @@ import SwiftUI
 
 struct TagManagementView: View {
     @Environment(\.dismiss) private var dismiss
-    @StateObject private var dataManager = DataManager.shared
+    @ObservedObject private var dataManager = DataManager.shared
     @StateObject private var localizationManager = LocalizationManager.shared
     @State private var selectedCategory: String = ""
     @State private var showingAddTag = false

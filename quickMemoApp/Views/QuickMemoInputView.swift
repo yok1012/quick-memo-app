@@ -2,7 +2,7 @@ import SwiftUI
 
 struct QuickMemoInputView: View {
     @Environment(\.dismiss) private var dismiss
-    @StateObject private var dataManager = DataManager.shared
+    @ObservedObject private var dataManager = DataManager.shared
     @StateObject private var quickInputManager = QuickInputManager.shared
     @ObservedObject private var localizationManager = LocalizationManager.shared
     @State private var memoText = ""

@@ -2,12 +2,13 @@ import SwiftUI
 
 struct WatchSettingsView: View {
     @Environment(\.dismiss) private var dismiss
-    @StateObject private var dataManager = DataManager.shared
+    @ObservedObject private var dataManager = DataManager.shared
     @StateObject private var purchaseManager = PurchaseManager.shared
     @StateObject private var watchConnectivity = iOSWatchConnectivityManager.shared
 
     @State private var selectedCategories: Set<String> = []
     @State private var showingUpgradeAlert = false
+    @State private var showingPurchase = false
 
     // デバッグモード対応
     private var isProVersion: Bool {
@@ -16,7 +17,7 @@ struct WatchSettingsView: View {
             return true
         }
         #endif
-        return purchaseManager.isPurchased("pro.quickmemo.monthly")
+        return purchaseManager.isProVersion
     }
 
     var body: some View {
@@ -47,7 +48,7 @@ struct WatchSettingsView: View {
                     }
                 }
 
-                Section(header: Text("カテゴリー設定")) {
+                Section(header: Text("category_settings".localized)) {
                     if isProVersion {
                         proSettingsSection
                     } else {
@@ -68,7 +69,7 @@ struct WatchSettingsView: View {
                 }
 
                 #if DEBUG
-                Section(header: Text("デバッグ設定")) {
+                Section(header: Text("debug_settings".localized)) {
                     HStack {
                         Toggle(isOn: Binding<Bool>(
                             get: { UserDefaults.standard.bool(forKey: "debugProMode") },
@@ -107,6 +108,9 @@ struct WatchSettingsView: View {
         }
         .onAppear {
             loadSelectedCategories()
+        }
+        .sheet(isPresented: $showingPurchase) {
+            PurchaseView()
         }
     }
 
@@ -177,7 +181,7 @@ struct WatchSettingsView: View {
             }
 
             if selectedCategories.count == 4 {
-                Text("最大数に達しました")
+                Text("max_categories_reached".localized)
                     .font(.caption2)
                     .foregroundColor(.orange)
                     .padding(.top, 4)
@@ -254,7 +258,7 @@ struct WatchSettingsView: View {
     }
 
     private func openPurchaseView() {
-        // PurchaseViewを表示する実装
+        showingPurchase = true
     }
 }
 

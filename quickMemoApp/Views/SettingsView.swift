@@ -1,6 +1,7 @@
 import SwiftUI
 import EventKit
 import UniformTypeIdentifiers
+import StoreKit
 
 struct SettingsView: View {
     @StateObject private var calendarService = CalendarService.shared
@@ -18,17 +19,48 @@ struct SettingsView: View {
     @State private var showingWatchSettings = false
     @State private var showingExportOptions = false
     @State private var exportFormat: ExportManager.ExportFormat = .json
+    @State private var exportType: ExportManager.ExportType = .currentMemos
     @State private var isExporting = false
     @State private var exportedFileURL: URL?
     @State private var showingShareSheet = false
     @State private var showingExportError = false
     @State private var exportErrorMessage = ""
+    @State private var showingDataDiagnostic = false
+    @State private var isBackingUp = false
+    @State private var isRestoring = false
+    @State private var showingBackupResult = false
+    @State private var backupResultMessage = ""
+    @State private var backupInfo: (date: Date?, memosCount: Int, categoriesCount: Int, deviceID: String?)?
+    @StateObject private var cloudKitManager = CloudKitManager.shared
     @AppStorage("calendar_sync_mode") private var syncMode = "normal"
     @AppStorage("app_language") private var selectedLanguage = LocalizationManager.shared.currentLanguage
 
     var body: some View {
         NavigationStack {
             List {
+                // アカウントセクション（iCloud状態表示）
+                Section {
+                    HStack {
+                        Image(systemName: "icloud.fill")
+                            .font(.title2)
+                            .foregroundColor(.blue)
+                        VStack(alignment: .leading, spacing: 4) {
+                            Text("iCloudアカウント")
+                                .font(.subheadline)
+                                .fontWeight(.medium)
+                            Text("data_sync_usage".localized)
+                                .font(.caption)
+                                .foregroundColor(.secondary)
+                        }
+                        Spacer()
+                    }
+                } header: {
+                    Label("settings_account".localized, systemImage: "person.circle")
+                } footer: {
+                    Text("settings_account_footer".localized)
+                        .font(.system(size: 12))
+                }
+
                 // Pro版セクション
                 if !purchaseManager.isProVersion {
                     Section {
@@ -55,8 +87,43 @@ struct SettingsView: View {
                             }
                         }
                         .foregroundColor(.primary)
+
+                        // 購入の復元ボタンを追加
+                        Button(action: {
+                            Task {
+                                await purchaseManager.restorePurchases()
+                            }
+                        }) {
+                            HStack {
+                                Image(systemName: "arrow.clockwise.circle")
+                                    .foregroundColor(.blue)
+                                Text("purchase_restore".localized)
+                                    .foregroundColor(.blue)
+                                Spacer()
+                            }
+                        }
+                        
+                        // サブスクリプション管理（App Store）
+                        Button(action: {
+                            if let url = URL(string: "https://apps.apple.com/account/subscriptions") {
+                                UIApplication.shared.open(url)
+                            }
+                        }) {
+                            HStack {
+                                Image(systemName: "person.badge.key.fill")
+                                    .foregroundColor(.blue)
+                                Text("subscription_manage".localized)
+                                    .foregroundColor(.blue)
+                                Spacer()
+                                Image(systemName: "arrow.up.forward.square")
+                                    .foregroundColor(.secondary)
+                            }
+                        }
                     } header: {
                         Label("settings_upgrade".localized, systemImage: "star")
+                    } footer: {
+                        Text("settings_restore_footer".localized)
+                            .font(.system(size: 12))
                     }
                 } else {
                     Section {
@@ -66,6 +133,39 @@ struct SettingsView: View {
                             Text("settings_pro_active".localized)
                                 .font(.headline)
                             Spacer()
+                        }
+
+                        // Pro版でも復元ボタンを表示（別デバイスでの復元用）
+                        Button(action: {
+                            Task {
+                                await purchaseManager.restorePurchases()
+                            }
+                        }) {
+                            HStack {
+                                Image(systemName: "arrow.clockwise.circle")
+                                    .foregroundColor(.blue)
+                                Text("settings_restore_purchases".localized)
+                                    .font(.subheadline)
+                                    .foregroundColor(.blue)
+                                Spacer()
+                            }
+                        }
+                        
+                        // サブスクリプション管理（App Store）
+                        Button(action: {
+                            if let url = URL(string: "https://apps.apple.com/account/subscriptions") {
+                                UIApplication.shared.open(url)
+                            }
+                        }) {
+                            HStack {
+                                Image(systemName: "person.badge.key.fill")
+                                    .foregroundColor(.blue)
+                                Text("subscription_manage".localized)
+                                    .foregroundColor(.blue)
+                                Spacer()
+                                Image(systemName: "arrow.up.forward.square")
+                                    .foregroundColor(.secondary)
+                            }
                         }
                     } header: {
                         Label("settings_pro_version".localized, systemImage: "star.fill")
@@ -313,8 +413,9 @@ struct SettingsView: View {
 
                 // データ管理セクション
                 Section {
-                    // エクスポートボタン
+                    // 現在のメモエクスポート
                     Button(action: {
+                        exportType = .currentMemos
                         showingExportOptions = true
                     }) {
                         HStack {
@@ -329,12 +430,271 @@ struct SettingsView: View {
                     }
                     .disabled(DataManager.shared.memos.isEmpty)
 
+                    // 削除履歴エクスポート
+                    Button(action: {
+                        exportType = .archivedMemos
+                        showingExportOptions = true
+                    }) {
+                        HStack {
+                            Image(systemName: "clock.arrow.circlepath")
+                                .foregroundColor(.orange)
+                            Text("export_archive_history".localized)
+                            Spacer()
+                            Text("\(DataManager.shared.archivedMemos.count)\("items_count".localized)")
+                                .font(.caption)
+                                .foregroundColor(.secondary)
+                        }
+                    }
+                    .disabled(DataManager.shared.archivedMemos.isEmpty)
+
+                    // すべてのデータエクスポート
+                    Button(action: {
+                        exportType = .all
+                        showingExportOptions = true
+                    }) {
+                        HStack {
+                            Image(systemName: "archivebox")
+                                .foregroundColor(.purple)
+                            Text("export_all_data".localized)
+                            Spacer()
+                            Text("\(DataManager.shared.memos.count + DataManager.shared.archivedMemos.count)\("items_count".localized)")
+                                .font(.caption)
+                                .foregroundColor(.secondary)
+                        }
+                    }
+                    .disabled(DataManager.shared.memos.isEmpty && DataManager.shared.archivedMemos.isEmpty)
+
                     // インポートボタン
                 } header: {
                     Label("settings_data_management".localized, systemImage: "externaldrive")
                 } footer: {
                     Text("settings_export_footer".localized)
                         .font(.system(size: 12))
+                }
+
+                // ☁️ iCloudバックアップセクション（Pro版のみ）
+                if purchaseManager.isProVersion {
+                    Section {
+                        // バックアップ状態
+                        HStack {
+                            Image(systemName: "icloud.fill")
+                                .foregroundColor(.blue)
+                            VStack(alignment: .leading, spacing: 2) {
+                                Text("iCloudバックアップ")
+                                    .font(.subheadline)
+                                if let date = cloudKitManager.lastBackupDate ?? UserDefaults.standard.object(forKey: "lastCloudBackupDate") as? Date {
+                                    Text("最終バックアップ: \(date.formatted(date: .abbreviated, time: .shortened))")
+                                        .font(.caption)
+                                        .foregroundColor(.secondary)
+                                } else {
+                                    Text("no_backup".localized)
+                                        .font(.caption)
+                                        .foregroundColor(.secondary)
+                                }
+                            }
+                            Spacer()
+                            if cloudKitManager.isSyncing || isBackingUp {
+                                ProgressView()
+                                    .scaleEffect(0.8)
+                            } else {
+                                switch cloudKitManager.backupStatus {
+                                case .success:
+                                    Image(systemName: "checkmark.circle.fill")
+                                        .foregroundColor(.green)
+                                case .failed:
+                                    Image(systemName: "exclamationmark.circle.fill")
+                                        .foregroundColor(.red)
+                                case .noAccount:
+                                    Image(systemName: "person.crop.circle.badge.xmark")
+                                        .foregroundColor(.orange)
+                                default:
+                                    EmptyView()
+                                }
+                            }
+                        }
+
+                        // 今すぐバックアップ
+                        Button(action: {
+                            performBackup()
+                        }) {
+                            HStack {
+                                Image(systemName: "icloud.and.arrow.up")
+                                    .foregroundColor(.blue)
+                                Text("backup_now".localized)
+                                Spacer()
+                                if isBackingUp {
+                                    ProgressView()
+                                        .scaleEffect(0.8)
+                                }
+                            }
+                        }
+                        .disabled(isBackingUp || isRestoring)
+
+                        // iCloudから復元
+                        Button(action: {
+                            performRestore()
+                        }) {
+                            HStack {
+                                Image(systemName: "icloud.and.arrow.down")
+                                    .foregroundColor(.blue)
+                                Text("iCloudから復元")
+                                Spacer()
+                                if isRestoring {
+                                    ProgressView()
+                                        .scaleEffect(0.8)
+                                }
+                            }
+                        }
+                        .disabled(isBackingUp || isRestoring)
+                    } header: {
+                        Label("iCloud同期", systemImage: "icloud")
+                    } footer: {
+                        Text("Pro版ではデータが自動的にiCloudにバックアップされます。アプリを閉じる時に自動保存されます。")
+                            .font(.system(size: 12))
+                    }
+                }
+
+                // 🚨 データ復元セクション
+                Section {
+                    // データ診断ビュー
+                    Button(action: {
+                        showingDataDiagnostic = true
+                    }) {
+                        HStack {
+                            Image(systemName: "stethoscope")
+                                .foregroundColor(.blue)
+                            VStack(alignment: .leading, spacing: 2) {
+                                Text("data_diagnostic_restore".localized)
+                                    .foregroundColor(.primary)
+                                Text("check_storage_restore".localized)
+                                    .font(.caption)
+                                    .foregroundColor(.secondary)
+                            }
+                            Spacer()
+                            Image(systemName: "chevron.right")
+                                .font(.caption)
+                                .foregroundColor(.secondary)
+                        }
+                    }
+
+                    // 旧データからの復元
+                    Button(action: {
+                        attemptDataRecovery()
+                    }) {
+                        HStack {
+                            Image(systemName: "arrow.counterclockwise.circle.fill")
+                                .foregroundColor(.orange)
+                            VStack(alignment: .leading, spacing: 2) {
+                                Text("restore_old_version_data".localized)
+                                    .foregroundColor(.primary)
+                                Text("if_data_lost_after_update".localized)
+                                    .font(.caption)
+                                    .foregroundColor(.secondary)
+                            }
+                            Spacer()
+                        }
+                    }
+                } header: {
+                    Label("データの復元", systemImage: "arrow.uturn.backward.circle")
+                } footer: {
+                    Text("restore_after_update_description".localized)
+                        .font(.system(size: 12))
+                }
+
+                // デバッグセクション（DEBUG環境のみ）
+                #if DEBUG
+                Section {
+                    // 購入状態のリセット
+                    Button(action: {
+                        Task {
+                            await resetPurchaseState()
+                        }
+                    }) {
+                        HStack {
+                            Image(systemName: "trash.circle.fill")
+                                .foregroundColor(.red)
+                            Text("reset_purchase_status".localized)
+                            Spacer()
+                        }
+                    }
+
+                    // CloudKitレコードの削除
+                    Button(action: {
+                        Task {
+                            await deleteCloudKitRecord()
+                        }
+                    }) {
+                        HStack {
+                            Image(systemName: "icloud.slash")
+                                .foregroundColor(.orange)
+                            Text("CloudKitレコードを削除")
+                            Spacer()
+                        }
+                    }
+
+                    // Pro版の切り替え（テスト用）
+                    Toggle(isOn: $purchaseManager.isProVersion) {
+                        HStack {
+                            Image(systemName: "star.circle")
+                                .foregroundColor(.purple)
+                            Text("Pro版モード（テスト用）")
+                        }
+                    }
+
+                    // Sandboxトランザクションのクリア
+                    Button(action: {
+                        Task {
+                            await clearSandboxTransactions()
+                        }
+                    }) {
+                        HStack {
+                            Image(systemName: "arrow.counterclockwise.circle")
+                                .foregroundColor(.blue)
+                            Text("Sandboxトランザクションをクリア")
+                            Spacer()
+                        }
+                    }
+
+                    // デバッグ情報の表示
+                    Button(action: {
+                        printDebugInfo()
+                    }) {
+                        HStack {
+                            Image(systemName: "info.circle")
+                                .foregroundColor(.green)
+                            Text("output_debug_info".localized)
+                            Spacer()
+                        }
+                    }
+                } header: {
+                    Label("デバッグツール", systemImage: "hammer.circle")
+                        .foregroundColor(.orange)
+                } footer: {
+                    Text("debug_features_description".localized)
+                        .font(.caption)
+                }
+                #endif
+
+                // 法的情報セクション
+                Section {
+                    HStack {
+                        Image(systemName: "hand.raised")
+                            .foregroundColor(.blue)
+                        Link("privacy_policy".localized, destination: URL(string: "https://yok1012.github.io/quickMemoPrivacypolicy/")!)
+                        Spacer()
+                        Image(systemName: "arrow.up.forward.square")
+                            .foregroundColor(.secondary)
+                    }
+                    HStack {
+                        Image(systemName: "doc.text")
+                            .foregroundColor(.blue)
+                        Link("terms_of_use".localized, destination: URL(string: "https://www.apple.com/legal/internet-services/itunes/dev/stdeula/")!)
+                        Spacer()
+                        Image(systemName: "arrow.up.forward.square")
+                            .foregroundColor(.secondary)
+                    }
+                } header: {
+                    Label("legal_info".localized, systemImage: "doc.plaintext")
                 }
 
                 // アプリ情報セクション
@@ -370,15 +730,15 @@ struct SettingsView: View {
             .sheet(isPresented: $showingWatchSettings) {
                 WatchSettingsView()
             }
+            .sheet(isPresented: $showingDataDiagnostic) {
+                DataDiagnosticView()
+            }
             .alert("settings_connection_test_result".localized, isPresented: $showTestResult) {
                 Button(localizationManager.localizedString(for: "ok")) {
                     showTestResult = false
                 }
             } message: {
                 Text(testResultMessage)
-            }
-            .sheet(isPresented: $showingPermissionRequest) {
-                CalendarPermissionView()
             }
             .alert("settings_force_sync".localized, isPresented: $showingForceSyncAlert) {
                 Button("settings_start_sync".localized) {
@@ -412,6 +772,11 @@ struct SettingsView: View {
                 Button(localizationManager.localizedString(for: "ok")) {}
             } message: {
                 Text(exportErrorMessage)
+            }
+            .alert("iCloudバックアップ", isPresented: $showingBackupResult) {
+                Button("OK") {}
+            } message: {
+                Text(backupResultMessage)
             }
         }
     }
@@ -806,6 +1171,213 @@ struct SettingsView: View {
         }
     }
 
+    // MARK: - Data Recovery Functions
+
+    private func attemptDataRecovery() {
+        print("🔄 Starting manual data recovery...")
+
+        // マイグレーションフラグをリセットして再実行
+        DataManager.shared.resetMigrationFlag()
+
+        // 全復元を試行
+        let result = DataManager.shared.attemptFullDataRecovery()
+
+        // アラートを表示
+        let message: String
+        if result.categories > 0 || result.memos > 0 {
+            message = "復元完了:\nカテゴリー: \(result.categories)件\nメモ: \(result.memos)件"
+            print("✅ Recovery successful: \(result.categories) categories, \(result.memos) memos")
+        } else {
+            message = "復元可能なデータが見つかりませんでした。\n\n以前のデータが標準のUserDefaultsに保存されていない可能性があります。"
+            print("⚠️ No data found to recover")
+        }
+
+        // UIAlertControllerを使用してアラートを表示
+        if let windowScene = UIApplication.shared.connectedScenes.first as? UIWindowScene,
+           let window = windowScene.windows.first,
+           let viewController = window.rootViewController {
+            let alert = UIAlertController(title: "データ復元", message: message, preferredStyle: .alert)
+            alert.addAction(UIAlertAction(title: "OK", style: .default))
+            viewController.present(alert, animated: true)
+        }
+    }
+
+    private func performBackup() {
+        isBackingUp = true
+
+        Task {
+            // 🚨 バックアップ前にデータの状態を確認
+            let memosCount = DataManager.shared.memos.count
+            let categoriesCount = DataManager.shared.categories.count
+
+            // データが空の場合は警告して中止
+            if memosCount == 0 && categoriesCount == 0 {
+                await MainActor.run {
+                    isBackingUp = false
+                    backupResultMessage = "⚠️ バックアップするデータがありません。\n\nメモ: 0件\nカテゴリー: 0件\n\nメモまたはカテゴリーを追加してからバックアップしてください。"
+                    showingBackupResult = true
+                }
+                return
+            }
+
+            let success = await DataManager.shared.backupToiCloud()
+
+            // バックアップ後、実際にCloudKitにデータが保存されたか確認
+            var verificationInfo: String = ""
+            if success {
+                if let info = await CloudKitManager.shared.getBackupInfo() {
+                    verificationInfo = "\n\n【CloudKit確認】\nメモ: \(info.memosCount)件\nカテゴリー: \(info.categoriesCount)件\n日時: \(info.date?.formatted() ?? "不明")"
+
+                    // 保存されたデータが元のデータと一致するか確認
+                    if info.memosCount != memosCount || info.categoriesCount != categoriesCount {
+                        verificationInfo += "\n\n⚠️ 警告: 保存されたデータ数が一致しません！\n元のメモ: \(memosCount)件, 元のカテゴリー: \(categoriesCount)件"
+                    }
+                } else {
+                    verificationInfo = "\n\n⚠️ CloudKitからバックアップ情報を取得できませんでした"
+                }
+            }
+
+            await MainActor.run {
+                isBackingUp = false
+
+                if success {
+                    backupResultMessage = "バックアップが完了しました。\n\nメモ: \(memosCount)件\nカテゴリー: \(categoriesCount)件\(verificationInfo)"
+                } else {
+                    // CloudKitManagerからの具体的なエラーメッセージを使用
+                    if let error = cloudKitManager.syncError {
+                        backupResultMessage = error
+                    } else {
+                        backupResultMessage = "バックアップに失敗しました。\n\n設定アプリでiCloudにサインインしていることを確認してください。"
+                    }
+                }
+                showingBackupResult = true
+            }
+        }
+    }
+
+    private func performRestore() {
+        isRestoring = true
+
+        Task {
+            // まずバックアップの詳細診断を実行
+            let diagInfo = await CloudKitManager.shared.diagnoseBackup()
+
+            let result = await DataManager.shared.restoreFromiCloud()
+
+            await MainActor.run {
+                isRestoring = false
+
+                if result.memos > 0 || result.categories > 0 {
+                    backupResultMessage = "復元が完了しました。\n\nメモ: \(result.memos)件\nカテゴリー: \(result.categories)件"
+                } else {
+                    // 詳細な診断情報を表示
+                    backupResultMessage = "復元可能なバックアップが見つかりませんでした。\n\n【診断結果】\n\(diagInfo)"
+
+                    // CloudKitManagerからの具体的なエラーメッセージも追加
+                    if let error = cloudKitManager.syncError {
+                        backupResultMessage += "\n\n【エラー】\n\(error)"
+                    }
+                }
+                showingBackupResult = true
+            }
+        }
+    }
+
+    // MARK: - Debug Functions
+    #if DEBUG
+    private func resetPurchaseState() async {
+        print("🔧 Debug: 購入状態をリセット開始")
+
+        // PurchaseManagerのデバッグリセット機能を使用
+        await purchaseManager.debugResetPurchaseState()
+
+        // StoreKitの更新をスキップ（購入テストを可能にする）
+        purchaseManager.debugSetSkipStoreKit(true)
+
+        // UserDefaultsから購入情報を削除
+        UserDefaults.standard.removeObject(forKey: "isProVersion")
+        UserDefaults.standard.removeObject(forKey: "lastTransactionID")
+        UserDefaults.standard.removeObject(forKey: "debugProMode")
+        UserDefaults.standard.synchronize()
+
+        // App Groupの共有UserDefaultsもクリア
+        if let sharedDefaults = UserDefaults(suiteName: "group.yokAppDev.quickMemoApp") {
+            sharedDefaults.removeObject(forKey: "isPurchased")
+            sharedDefaults.synchronize()
+        }
+
+        // すべての未完了トランザクションを完了としてマーク
+        // （これにより次回の購入試行が可能になる）
+        for await result in Transaction.unfinished {
+            switch result {
+            case let .verified(transaction):
+                print("  - 未完了トランザクションを完了: \(transaction.id)")
+                await transaction.finish()
+            case let .unverified(transaction, _):
+                print("  - 未検証トランザクションを完了: \(transaction.id)")
+                await transaction.finish()
+            }
+        }
+
+        print("✅ Debug: 購入状態リセット完了")
+        print("ℹ️ Debug: StoreKit更新がスキップされています。購入テストが可能です。")
+    }
+
+    private func deleteCloudKitRecord() async {
+        print("🔧 Debug: CloudKitレコード削除開始")
+        await CloudKitManager.shared.clearSubscriptionStatus()
+        print("✅ Debug: CloudKitレコード削除完了")
+    }
+
+    private func clearSandboxTransactions() async {
+        print("🔧 Debug: Sandboxトランザクションクリア開始")
+
+        // すべての未完了トランザクションを完了としてマーク
+        for await result in Transaction.unfinished {
+            switch result {
+            case let .verified(transaction):
+                print("  - 未完了トランザクションを完了: \(transaction.id)")
+                await transaction.finish()
+            case .unverified:
+                break
+            }
+        }
+
+        // 購入マネージャーをリセット
+        await purchaseManager.restorePurchases()
+
+        print("✅ Debug: Sandboxトランザクションクリア完了")
+    }
+
+    private func printDebugInfo() {
+        print("\n========== デバッグ情報 ==========")
+        print("📱 App Info:")
+        print("  - Pro版: \(purchaseManager.isProVersion)")
+        print("  - UserDefaults isProVersion: \(UserDefaults.standard.bool(forKey: "isProVersion"))")
+
+        print("\n☁️ CloudKit:")
+        CloudKitManager.shared.printDebugInfo()
+
+        print("\n💰 StoreKit:")
+        Task {
+            print("  - 現在のエンタイトルメント:")
+            for await result in Transaction.currentEntitlements {
+                switch result {
+                case let .verified(transaction):
+                    print("    • ID: \(transaction.id)")
+                    print("      Product: \(transaction.productID)")
+                    print("      Date: \(transaction.purchaseDate)")
+                    print("      Revoked: \(transaction.revocationDate != nil)")
+                case .unverified:
+                    print("    • 未検証のトランザクション")
+                }
+            }
+        }
+
+        print("==================================\n")
+    }
+    #endif
+
     // MARK: - Export/Import Functions
 
     @MainActor
@@ -813,7 +1385,15 @@ struct SettingsView: View {
         isExporting = true
 
         do {
-            let url = try ExportManager.shared.exportMemos(format: exportFormat)
+            let url: URL
+            switch exportType {
+            case .currentMemos:
+                url = try ExportManager.shared.exportMemos(format: exportFormat)
+            case .archivedMemos:
+                url = try ExportManager.shared.exportArchivedMemos(format: exportFormat)
+            case .all:
+                url = try ExportManager.shared.exportAllData(format: exportFormat)
+            }
             exportedFileURL = url
             showingShareSheet = true
         } catch {
@@ -845,3 +1425,4 @@ struct ShareSheet: UIViewControllerRepresentable {
 #Preview {
     SettingsView()
 }
+

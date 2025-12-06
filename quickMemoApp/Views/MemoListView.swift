@@ -1,7 +1,7 @@
 import SwiftUI
 
 struct MemoListView: View {
-    @StateObject private var dataManager = DataManager.shared
+    @ObservedObject private var dataManager = DataManager.shared
     let selectedCategory: String
     let searchText: String
     @State private var editingMemo: QuickMemo? = nil
@@ -49,19 +49,22 @@ struct MemoRow: View {
     @ObservedObject private var localizationManager = LocalizationManager.shared
 
     private var categoryColor: Color {
-        let key = LocalizedCategories.baseKey(forLocalizedName: memo.primaryCategory) ?? "custom"
-        switch key {
-        case "work": return Color(hex: "#007AFF")
-        case "personal": return Color(hex: "#34C759")
-        case "idea": return Color(hex: "#FF9500")
-        case "people": return Color(hex: "#AF52DE")
-        case "other": return Color(hex: "#8E8E93")
-        default: return Color(hex: "#8E8E93")
+        // DataManagerからカテゴリーを検索して色を取得
+        if let category = DataManager.shared.getCategory(named: memo.primaryCategory) {
+            return Color(hex: category.color)
         }
+        // フォールバック：デフォルトカテゴリーの色
+        let key = LocalizedCategories.baseKey(forLocalizedName: memo.primaryCategory) ?? "other"
+        return Color(hex: LocalizedCategories.colorHex(for: key))
     }
 
     private var categoryIcon: String {
-        let key = LocalizedCategories.baseKey(forLocalizedName: memo.primaryCategory) ?? memo.primaryCategory
+        // DataManagerからカテゴリーを検索してアイコンを取得
+        if let category = DataManager.shared.getCategory(named: memo.primaryCategory) {
+            return category.icon
+        }
+        // フォールバック：デフォルトカテゴリーのアイコン
+        let key = LocalizedCategories.baseKey(forLocalizedName: memo.primaryCategory) ?? "other"
         return LocalizedCategories.iconName(for: key)
     }
 
@@ -91,13 +94,13 @@ struct MemoRow: View {
                     Text(memo.content)
                         .font(.system(size: 14))
                         .foregroundColor(.secondary)
-                        .lineLimit(1)
+                        .lineLimit(3)  // 1行から3行に増やす
                         .multilineTextAlignment(.leading)
                 } else {
                     Text(memo.content)
                         .font(.system(size: 16, weight: .medium))
                         .foregroundColor(.primary)
-                        .lineLimit(2)
+                        .lineLimit(4)  // 2行から4行に増やす
                         .multilineTextAlignment(.leading)
                 }
                 

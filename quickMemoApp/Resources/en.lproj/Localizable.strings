@@ -161,6 +161,15 @@
 "settings_pro_features" = "Pro-only Features";
 "settings_pro_features_list" = "Unlock unlimited memos, categories, custom tags, and iCloud sync.";
 "settings_pro_only" = "Pro Only";
+"settings_account" = "Account";
+"settings_sign_in_apple" = "Sign in with Apple";
+"settings_sign_in_apple_desc" = "Access subscription benefits on other devices (optional)";
+"settings_signed_in" = "Signed In";
+"settings_account_sync_enabled" = "Account sync enabled";
+"settings_sign_out" = "Sign Out";
+"settings_account_footer" = "Sign in is optional. Use it to sync purchase status across devices.";
+"settings_restore_footer" = "Restore purchases made with the same Apple ID.";
+"settings_restore_purchases" = "Restore Purchases";
 "settings_force_sync" = "Force Sync";
 "settings_sync_mode" = "Sync Mode";
 "settings_sync_settings" = "Sync Settings";
@@ -257,11 +266,52 @@
 
 // MARK: - Purchase
 "purchase" = "Purchase";
+"purchase_unlock_description" = "Unlock all features to get the most out of QuickMemo";
+"purchase_pro_features" = "Pro Features";
+"purchase_unlimited_memos" = "Unlimited Memos";
+"purchase_unlimited_memos_desc" = "Create more than 100 memos";
+"purchase_unlimited_categories" = "Unlimited Categories";
+"purchase_unlimited_categories_desc" = "Add and edit categories freely";
+"purchase_unlimited_tags" = "Unlimited Tags";
+"purchase_unlimited_tags_desc" = "Add more than 15 tags per memo";
+"purchase_icloud_sync" = "iCloud Sync";
+"purchase_icloud_sync_desc" = "Auto-sync across all devices";
+"purchase_widget_customize" = "Widget Customization";
+"purchase_widget_customize_desc" = "Customize widget appearance";
+"purchase_watch_pro" = "Apple Watch Pro";
+"purchase_watch_pro_desc" = "Customize categories";
+"purchase_data_export" = "Data Export";
+"purchase_data_export_desc" = "Backup in CSV/JSON format";
+"purchase_buy" = "Buy";
+"purchase_one_time" = "One-time purchase for lifetime access";
+"purchase_no_products" = "Unable to fetch product information";
+"purchase_network_error" = "Please check your network connection";
+"purchase_retry" = "Retry";
+"purchase_restore" = "Restore Purchases";
+"purchase_restore_description" = "Restore previous purchases here";
+"purchase_completed" = "Purchased";
+"purchase_status" = "Purchase Status";
+"purchase_success_message" = "Purchase completed! All features are now available.";
+"purchase_cancelled" = "Purchase cancelled";
 "restore_purchases" = "Restore Purchases";
 "purchased" = "Purchased";
 "purchase_failed" = "Purchase Failed";
 "restore_failed" = "Restore Failed";
 "one_time_purchase" = "One-time purchase for permanent access to all features";
+"purchase_other_devices_title" = "Using on Other Devices";
+"purchase_same_apple_id_title" = "Restore with Same Apple ID";
+"purchase_same_apple_id_desc" = "On other devices, restore purchases with the same Apple ID";
+"purchase_sign_in_apple_title" = "Sign in with Apple (Optional)";
+"purchase_sign_in_apple_desc" = "Access across devices with different Apple IDs (Coming soon)";
+"purchase_coming_soon" = "Coming Soon";
+"purchase_restore_subtitle" = "Restore Previous Purchases";
+"purchase_restore_notice" = "Restoration requires signing in with the same Apple ID";
+"purchase_monthly_subscription" = "Monthly Subscription";
+"purchase_onetime" = "One-time Purchase";
+"purchase_period_day" = "day";
+"purchase_period_week" = "week";
+"purchase_period_month" = "month";
+"purchase_period_year" = "year";
 
 // MARK: - Limits
 "memo_limit_reached" = "Memo Limit Reached";
@@ -332,6 +382,15 @@
 "tag_delete_confirm" = "Delete \"%@\"?";
 "no_tags" = "No tags";
 "add_tag" = "Add Tag";
+"tags" = "Tags";
+"search_tags" = "Search Tags";
+"no_tags_yet" = "No tags yet";
+"tags_will_appear_here" = "Add #tags to your memos and they will appear here";
+"delete_tag_title" = "Delete Tag";
+"delete_tag_message" = "Delete tag \"%@\"?";
+"add_tag_to_category" = "Add tag to this category";
+"tag_name" = "Tag Name";
+"tag_add_hint" = "Tags with # in memos will be automatically recognized";
 "shopping" = "Shopping";
 "schedule" = "Schedule";
 "memory" = "Memories";
@@ -358,3 +417,71 @@
 "scribble_input" = "Scribble";
 "scribble_placeholder" = "Write here";
 "preview" = "Preview";
+
+// MARK: - Account Management
+"account_delete" = "Delete Account";
+"account_delete_confirm_title" = "Are you sure you want to delete your account?";
+"account_delete_confirm_message" = "Your account and related data will be deleted and cannot be recovered.";
+"account_delete_confirm_button" = "Confirm Deletion";
+
+// MARK: - Subscription Management
+"subscription_manage" = "Manage Subscriptions";
+
+// MARK: - Legal
+"legal_info" = "Legal Information";
+"privacy_policy" = "Privacy Policy";
+"terms_of_use" = "Terms of Use (EULA)";
+
+// MARK: - Subscription Details
+"subscription_info_title" = "Subscription Information";
+"subscription_info_auto_renew" = "• Subscriptions automatically renew unless canceled at least 24 hours before the end of the current period.";
+"subscription_info_cancel" = "• You can cancel anytime from Settings > Apple ID > Subscriptions.";
+"subscription_info_manage" = "• Payment will be charged to your Apple ID account at confirmation of purchase.";
+"subscription_monthly_details" = "QuickMemo Pro Monthly Subscription";
+"subscription_price_format" = "Price: %@/month";
+"subscription_auto_renew_monthly" = "Automatically renews every month";
+"subscription_notice_detailed" = "Your account will be charged for renewal within 24 hours prior to the end of the current period. Manage your subscription and auto-renewal settings in Account Settings.";
+
+// MARK: - Additional UI Strings
+"edit_memo" = "Edit Memo";
+"update" = "Update";
+"new_category" = "New";
+"select_category_title" = "Select Category";
+"select_category_subtitle" = "Choose a memo type";
+"category_not_found" = "Category not found";
+"new_memo" = "New Memo";
+"category_settings" = "Category Settings";
+"debug_settings" = "Debug Settings";
+"max_categories_reached" = "Maximum reached";
+"widget_display_categories" = "Widget Display Categories";
+"widget_free_version_notice" = "Free version shows only the currently selected category";
+"widget_updated" = "Widget display categories updated";
+"widget_can_select_freely" = "Choose any categories freely";
+"calendar_permission_description" = "Allow access in Settings app to enable automatic event creation.";
+"calendar_auto_save_description" = "Created memos are automatically saved as calendar events and can be viewed chronologically";
+"category_filter" = "Category";
+"tag_filter" = "Tags";
+"date_filter" = "Date";
+"clear_filters" = "Clear Filters";
+"no_search_results" = "No search results found";
+"change_search_conditions" = "Try changing your search criteria";
+"data_sync_usage" = "Used for data synchronization";
+"export_archive_history" = "Export Archive History";
+"export_all_data" = "Export All Data";
+"delete_memo_title" = "Delete Memo";
+"memo_duration" = "Calendar Duration";
+"no_backup" = "No backup";
+"backup_now" = "Backup Now";
+"data_diagnostic_restore" = "Data Diagnostics & Restore";
+"check_storage_restore" = "Check storage locations and attempt restoration";
+"restore_old_version_data" = "Restore Data from Old Version";
+"if_data_lost_after_update" = "If data disappeared after update";
+"restore_after_update_description" = "If data disappeared after an update, you can attempt restoration from here.";
+"reset_purchase_status" = "Reset Purchase Status";
+"output_debug_info" = "Output Debug Info";
+"debug_features_description" = "Debug features for development. Not visible in production.";
+
+// MARK: - Widget
+"widget_open_app" = "Open App";
+"widget_tap_to_add_memo" = "Tap to add memo";
+"widget_description" = "Quickly add memos";

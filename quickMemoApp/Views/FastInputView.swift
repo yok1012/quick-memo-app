@@ -2,7 +2,7 @@ import SwiftUI
 
 struct FastInputView: View {
     @Environment(\.dismiss) private var dismiss
-    @StateObject private var dataManager = DataManager.shared
+    @ObservedObject private var dataManager = DataManager.shared
     @StateObject private var quickInputManager = QuickInputManager.shared
     @StateObject private var purchaseManager = PurchaseManager.shared
     @StateObject private var localizationManager = LocalizationManager.shared

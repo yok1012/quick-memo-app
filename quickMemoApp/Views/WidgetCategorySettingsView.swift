@@ -2,12 +2,13 @@ import SwiftUI
 
 struct WidgetCategorySettingsView: View {
     @Environment(\.dismiss) private var dismiss
-    @StateObject private var dataManager = DataManager.shared
+    @ObservedObject private var dataManager = DataManager.shared
     @StateObject private var purchaseManager = PurchaseManager.shared
 
     @State private var selectedCategories: Set<String> = []
     @State private var showingPurchaseAlert = false
     @State private var showingSaveConfirmation = false
+    @State private var showingPurchase = false
 
     init() {
         // Load current widget categories
@@ -19,7 +20,7 @@ struct WidgetCategorySettingsView: View {
         NavigationStack {
             VStack {
                 if !purchaseManager.isProVersion {
-                    ProUpgradeCard()
+                    ProUpgradeCard(onTapUpgrade: { showingPurchase = true })
                 }
 
                 List {
@@ -35,10 +36,10 @@ struct WidgetCategorySettingsView: View {
                             )
                         }
                     } header: {
-                        Text("ウィジェットに表示するカテゴリー")
+                        Text("widget_display_categories".localized)
                     } footer: {
                         if !purchaseManager.isProVersion {
-                            Text("無料版では現在選択されているカテゴリーのみ表示されます")
+                            Text("widget_free_version_notice".localized)
                                 .foregroundColor(.secondary)
                         } else {
                             Text("最大4つまで選択できます")
@@ -65,7 +66,7 @@ struct WidgetCategorySettingsView: View {
             }
             .alert("Pro版が必要です", isPresented: $showingPurchaseAlert) {
                 Button("Pro版を見る") {
-                    // Open purchase view
+                    showingPurchase = true
                 }
                 Button("キャンセル", role: .cancel) { }
             } message: {
@@ -76,7 +77,10 @@ struct WidgetCategorySettingsView: View {
                     dismiss()
                 }
             } message: {
-                Text("ウィジェットに表示されるカテゴリーが更新されました")
+                Text("widget_updated".localized)
+            }
+            .sheet(isPresented: $showingPurchase) {
+                PurchaseView()
             }
         }
     }
@@ -158,6 +162,8 @@ struct CategorySelectionRow: View {
 }
 
 struct ProUpgradeCard: View {
+    let onTapUpgrade: () -> Void
+
     var body: some View {
         HStack {
             VStack(alignment: .leading, spacing: 4) {
@@ -167,21 +173,23 @@ struct ProUpgradeCard: View {
                     Text("Pro版限定機能")
                         .font(.headline)
                 }
-                Text("カテゴリーを自由に選択できます")
+                Text("widget_can_select_freely".localized)
                     .font(.caption)
                     .foregroundColor(.secondary)
             }
 
             Spacer()
 
-            Text("アップグレード")
-                .font(.caption)
-                .fontWeight(.semibold)
-                .foregroundColor(.white)
-                .padding(.horizontal, 12)
-                .padding(.vertical, 6)
-                .background(Color.blue)
-                .cornerRadius(12)
+            Button(action: onTapUpgrade) {
+                Text("upgrade".localized)
+                    .font(.caption)
+                    .fontWeight(.semibold)
+                    .foregroundColor(.white)
+                    .padding(.horizontal, 12)
+                    .padding(.vertical, 6)
+                    .background(Color.blue)
+                    .cornerRadius(12)
+            }
         }
         .padding()
         .background(Color(.systemGray6))

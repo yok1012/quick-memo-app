@@ -2,8 +2,8 @@ import SwiftUI
 
 struct CategoryManagementView: View {
     @Environment(\.dismiss) private var dismiss
-    @StateObject private var dataManager = DataManager.shared
-    @StateObject private var purchaseManager = PurchaseManager.shared
+    @ObservedObject private var dataManager = DataManager.shared
+    @ObservedObject private var purchaseManager = PurchaseManager.shared
     @State private var editMode: EditMode = .inactive
     @State private var showingAddCategory = false
     @State private var showingEditCategory = false
@@ -14,83 +14,122 @@ struct CategoryManagementView: View {
 
     var body: some View {
         NavigationStack {
-            List {
-                ForEach(dataManager.categories.sorted(by: { $0.order < $1.order })) { category in
-                    CategoryRow(
-                        category: category,
-                        onEdit: {
-                            selectedCategory = category
-                            showingEditCategory = true
-                        },
-                        onDelete: {
-                            if dataManager.canDeleteCategory(category) {
-                                categoryToDelete = category
-                                showingDeleteAlert = true
-                            }
-                        }
-                    )
-                    .deleteDisabled(!dataManager.canDeleteCategory(category))
-                }
-                .onMove(perform: purchaseManager.isProVersion ? moveCategories : nil)
-                .onDelete(perform: purchaseManager.isProVersion ? deleteCategories : nil)
-            }
-            .listStyle(InsetGroupedListStyle())
-            .navigationTitle("category_management".localized)
-            .toolbar {
-                ToolbarItem(placement: .navigationBarLeading) {
-                    Button("close".localized) {
-                        dismiss()
+            if dataManager.categories.isEmpty {
+                // カテゴリーが空の場合のビュー
+                VStack(spacing: 20) {
+                    Image(systemName: "folder.badge.questionmark")
+                        .font(.system(size: 60))
+                        .foregroundColor(.gray)
+                    
+                    Text("category_not_found".localized)
+                        .font(.headline)
+                    
+                    Button(action: {
+                        dataManager.forceReloadCategories()
+                    }) {
+                        Label("reload_categories".localized, systemImage: "arrow.clockwise")
+                            .padding()
+                            .background(Color.blue)
+                            .foregroundColor(.white)
+                            .cornerRadius(10)
                     }
                 }
+                .padding()
+                .navigationTitle("category_management".localized)
+                .toolbar {
+                    ToolbarItem(placement: .navigationBarLeading) {
+                        Button("close".localized) {
+                            dismiss()
+                        }
+                    }
+                }
+                .onAppear {
+                    print("⚠️ CategoryManagementView: No categories found")
+                    dataManager.diagnoseAndRepairCategories()
+                }
+            } else {
+                List {
+                    ForEach(dataManager.categories.sorted(by: { $0.order < $1.order })) { category in
+                        CategoryRow(
+                            category: category,
+                            onEdit: {
+                                selectedCategory = category
+                                showingEditCategory = true
+                            },
+                            onDelete: {
+                                if dataManager.canDeleteCategory(category) {
+                                    categoryToDelete = category
+                                    showingDeleteAlert = true
+                                }
+                            }
+                        )
+                        .deleteDisabled(!dataManager.canDeleteCategory(category))
+                    }
+                    .onMove(perform: moveCategories)
+                    .onDelete(perform: deleteCategories)
+                }
+                .listStyle(InsetGroupedListStyle())
+                .navigationTitle("category_management".localized)
+                .toolbar {
+                    ToolbarItem(placement: .navigationBarLeading) {
+                        Button("close".localized) {
+                            dismiss()
+                        }
+                    }
 
-                ToolbarItem(placement: .navigationBarTrailing) {
-                    HStack(spacing: 16) {
-                        if purchaseManager.isProVersion {
+                    ToolbarItem(placement: .navigationBarTrailing) {
+                        HStack(spacing: 16) {
+                            // Allow editing for all users
                             EditButton()
-                        }
 
-                        Button(action: {
-                            if purchaseManager.isProVersion {
-                                showingAddCategory = true
-                            } else {
-                                showingProAlert = true
+                            Button(action: {
+                                // Allow adding categories for all users
+                                // Free users can have up to 5 categories
+                                if !purchaseManager.isProVersion && dataManager.categories.count >= 5 {
+                                    showingProAlert = true
+                                } else {
+                                    showingAddCategory = true
+                                }
+                            }) {
+                                Image(systemName: "plus")
                             }
-                        }) {
-                            Image(systemName: "plus")
                         }
                     }
                 }
-            }
-            .environment(\.editMode, $editMode)
-            .sheet(isPresented: $showingAddCategory) {
-                AddCategoryView()
-            }
-            .sheet(item: $selectedCategory) { category in
-                EditCategoryView(category: category)
-            }
-            .alert("category_delete_confirm".localized, isPresented: $showingDeleteAlert) {
-                Button("cancel".localized, role: .cancel) {
-                    categoryToDelete = nil
+                .environment(\.editMode, $editMode)
+                .sheet(isPresented: $showingAddCategory) {
+                    AddCategoryView()
                 }
-                Button("delete".localized, role: .destructive) {
+                .sheet(item: $selectedCategory) { category in
+                    EditCategoryView(category: category)
+                }
+                .alert("category_delete_confirm".localized, isPresented: $showingDeleteAlert) {
+                    Button("cancel".localized, role: .cancel) {
+                        categoryToDelete = nil
+                    }
+                    Button("delete".localized, role: .destructive) {
+                        if let category = categoryToDelete {
+                            deleteCategory(category)
+                        }
+                    }
+                } message: {
                     if let category = categoryToDelete {
-                        deleteCategory(category)
+                        let memoCount = dataManager.memos.filter { $0.primaryCategory == category.name }.count
+                        if memoCount > 0 {
+                            Text(String(format: "delete_category_with_memos".localized, category.name, memoCount))
+                        } else {
+                            Text(String(format: "delete_category_confirm_message".localized, category.name))
+                        }
                     }
                 }
-            } message: {
-                if let category = categoryToDelete {
-                    let memoCount = dataManager.memos.filter { $0.primaryCategory == category.name }.count
-                    if memoCount > 0 {
-                        Text(String(format: "delete_category_with_memos".localized, category.name, memoCount))
-                    } else {
-                        Text(String(format: "delete_category_confirm_message".localized, category.name))
-                    }
+                .alert("category_pro_required".localized, isPresented: $showingProAlert) {
+                    Button("OK", role: .cancel) { }
+                } message: {
+                    Text("category_free_limit_message".localized)
                 }
-            }
-            .alert("category_pro_required".localized, isPresented: $showingProAlert) {
-                Button("OK", role: .cancel) { }
-            } message: {
-                Text("category_free_limit_message".localized)
+                .onAppear {
+                    print("✅ CategoryManagementView: Found \(dataManager.categories.count) categories")
+                }
             }
         }
     }
@@ -135,7 +174,8 @@ struct CategoryRow: View {
     let onEdit: () -> Void
     let onDelete: () -> Void
 
-    @StateObject private var dataManager = DataManager.shared
+    @ObservedObject private var dataManager = DataManager.shared
+    @State private var showingTagManagement = false
 
     var body: some View {
         HStack {
@@ -162,7 +202,16 @@ struct CategoryRow: View {
                     .font(.system(size: 14))
                     .foregroundColor(.secondary)
 
-                if category.name != "other".localized && PurchaseManager.shared.isProVersion {
+                // タグ管理ボタン
+                Button(action: { showingTagManagement = true }) {
+                    Image(systemName: "tag")
+                        .font(.system(size: 16))
+                        .foregroundColor(Color(hex: category.color))
+                }
+                .buttonStyle(BorderlessButtonStyle())
+
+                // Allow editing for all non-"other" categories
+                if category.name != "other".localized {
                     Button(action: onEdit) {
                         Image(systemName: "pencil")
                             .font(.system(size: 16))
@@ -173,6 +222,9 @@ struct CategoryRow: View {
             }
         }
         .padding(.vertical, 4)
+        .sheet(isPresented: $showingTagManagement) {
+            CategoryTagManagementView(category: category)
+        }
     }
 
     private var memoCount: Int {
@@ -182,7 +234,7 @@ struct CategoryRow: View {
 
 struct AddCategoryView: View {
     @Environment(\.dismiss) private var dismiss
-    @StateObject private var dataManager = DataManager.shared
+    @ObservedObject private var dataManager = DataManager.shared
 
     @State private var categoryName = ""
     @State private var selectedIcon = "folder"
@@ -313,7 +365,7 @@ struct AddCategoryView: View {
 
 struct EditCategoryView: View {
     @Environment(\.dismiss) private var dismiss
-    @StateObject private var dataManager = DataManager.shared
+    @ObservedObject private var dataManager = DataManager.shared
 
     let category: Category
     @State private var categoryName: String

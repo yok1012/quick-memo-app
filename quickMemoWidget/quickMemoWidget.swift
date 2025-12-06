@@ -1,6 +1,44 @@
 import WidgetKit
 import SwiftUI
 
+// String Extension for Localization
+extension String {
+    var localized: String {
+        // Get language preference from App Group UserDefaults
+        let appGroupIdentifier = "group.yokAppDev.quickMemoApp"
+        let languageCode: String
+
+        if let userDefaults = UserDefaults(suiteName: appGroupIdentifier),
+           let savedLanguage = userDefaults.string(forKey: "app_language"),
+           savedLanguage != "device" {
+            languageCode = savedLanguage
+        } else {
+            languageCode = Locale.current.language.languageCode?.identifier ?? "ja"
+        }
+
+        // Map language codes to bundle paths
+        let bundlePath: String
+        switch languageCode {
+        case "en":
+            bundlePath = "en.lproj"
+        case "zh-Hans", "zh":
+            bundlePath = "zh-Hans.lproj"
+        default:
+            bundlePath = "ja.lproj"
+        }
+
+        // Try to load from specific language bundle
+        if let path = Bundle.main.path(forResource: bundlePath.replacingOccurrences(of: ".lproj", with: ""), ofType: "lproj"),
+           let bundle = Bundle(path: path) {
+            let localizedString = NSLocalizedString(self, bundle: bundle, comment: "")
+            return localizedString != self ? localizedString : self
+        }
+
+        // Fallback to default localization
+        return NSLocalizedString(self, comment: "")
+    }
+}
+
 // Data Model (Widget用の軽量版)
 struct Category: Codable {
     let id: UUID
@@ -89,7 +127,7 @@ struct QuickMemoProvider: TimelineProvider {
         if let data = userDefaults.data(forKey: "categories"),
            let categories = try? JSONDecoder().decode([Category].self, from: data) {
             // Free users get the default categories they currently have
-            let defaultNames = ["仕事", "プライベート", "アイデア", "その他"]
+            let defaultNames = ["work".localized, "personal".localized, "idea".localized, "other".localized]
             return defaultNames.compactMap { name in
                 categories.first { $0.name == name }
             }.prefix(4).map { $0 }
@@ -100,10 +138,10 @@ struct QuickMemoProvider: TimelineProvider {
 
     private func sampleCategories() -> [Category] {
         return [
-            Category(name: "仕事", icon: "briefcase", color: "#007AFF", order: 0, defaultTags: []),
-            Category(name: "プライベート", icon: "house", color: "#34C759", order: 1, defaultTags: []),
-            Category(name: "アイデア", icon: "lightbulb", color: "#FF9500", order: 2, defaultTags: []),
-            Category(name: "その他", icon: "folder", color: "#8E8E93", order: 3, defaultTags: [])
+            Category(name: "work".localized, icon: "briefcase", color: "#007AFF", order: 0, defaultTags: []),
+            Category(name: "personal".localized, icon: "house", color: "#34C759", order: 1, defaultTags: []),
+            Category(name: "idea".localized, icon: "lightbulb", color: "#FF9500", order: 2, defaultTags: []),
+            Category(name: "other".localized, icon: "folder", color: "#8E8E93", order: 3, defaultTags: [])
         ]
     }
 }
@@ -188,7 +226,7 @@ struct SmallWidgetView: View {
                         Image(systemName: "star.fill")
                             .font(.system(size: 12))
                             .foregroundColor(.yellow)
-                        Text("Pro版へ")
+                        Text("upgrade_to_pro".localized)
                             .font(.system(size: 11, weight: .semibold))
                             .foregroundColor(.white)
                     }
@@ -259,7 +297,7 @@ struct LargeWidgetView: View {
                 Spacer()
 
                 Link(destination: URL(string: "quickmemo://open")!) {
-                    Text("アプリを開く")
+                    Text("widget_open_app".localized)
                         .font(.system(size: 14, weight: .medium))
                         .foregroundColor(.blue)
                 }
@@ -295,7 +333,7 @@ struct LargeWidgetView: View {
             Spacer()
 
             HStack {
-                Text("タップしてメモを追加")
+                Text("widget_tap_to_add_memo".localized)
                     .font(.system(size: 12))
                     .foregroundColor(.secondary)
                 Spacer()
@@ -314,8 +352,8 @@ struct QuickMemoWidget: Widget {
         StaticConfiguration(kind: kind, provider: QuickMemoProvider()) { entry in
             QuickMemoWidgetEntryView(entry: entry)
         }
-        .configurationDisplayName("Quick Memo")
-        .description("素早くメモを追加できます")
+        .configurationDisplayName("quick_memo".localized)
+        .description("widget_description".localized)
         .supportedFamilies([.systemSmall, .systemMedium, .systemLarge])
     }
 }
@@ -324,10 +362,10 @@ struct QuickMemoWidget: Widget {
 struct QuickMemoWidget_Previews: PreviewProvider {
     static var previews: some View {
         QuickMemoWidgetEntryView(entry: QuickMemoEntry(date: Date(), categories: [
-            Category(name: "仕事", icon: "briefcase", color: "#007AFF", order: 0, defaultTags: []),
-            Category(name: "プライベート", icon: "house", color: "#34C759", order: 1, defaultTags: []),
-            Category(name: "アイデア", icon: "lightbulb", color: "#FF9500", order: 2, defaultTags: []),
-            Category(name: "その他", icon: "folder", color: "#8E8E93", order: 3, defaultTags: [])
+            Category(name: "work".localized, icon: "briefcase", color: "#007AFF", order: 0, defaultTags: []),
+            Category(name: "personal".localized, icon: "house", color: "#34C759", order: 1, defaultTags: []),
+            Category(name: "idea".localized, icon: "lightbulb", color: "#FF9500", order: 2, defaultTags: []),
+            Category(name: "other".localized, icon: "folder", color: "#8E8E93", order: 3, defaultTags: [])
         ]))
         .previewContext(WidgetPreviewContext(family: .systemSmall))
         .containerBackground(.fill.tertiary, for: .widget)

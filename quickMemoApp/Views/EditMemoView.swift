@@ -2,7 +2,7 @@ import SwiftUI
 
 struct EditMemoView: View {
     @Environment(\.dismiss) private var dismiss
-    @StateObject private var dataManager = DataManager.shared
+    @ObservedObject private var dataManager = DataManager.shared
     @StateObject private var purchaseManager = PurchaseManager.shared
     
     @State private var memoText: String
@@ -68,15 +68,15 @@ struct EditMemoView: View {
             
             Spacer()
             
-            Text("メモを編集")
+            Text("edit_memo".localized)
                 .font(.system(size: 18, weight: .semibold))
-            
+
             Spacer()
-            
+
             Button(action: {
                 updateMemo()
             }) {
-                Text("更新")
+                Text("update".localized)
                     .font(.system(size: 16, weight: .bold))
                     .foregroundColor(.white)
                     .padding(.horizontal, 16)
@@ -175,7 +175,7 @@ struct EditMemoView: View {
                             HStack(spacing: 4) {
                                 Image(systemName: "plus")
                                     .font(.system(size: 11, weight: .medium))
-                                Text("新規")
+                                Text("new_category".localized)
                                     .font(.system(size: 13, weight: .medium))
                             }
                             .foregroundColor(.blue)
@@ -228,7 +228,7 @@ struct EditMemoView: View {
     
     private var durationSection: some View {
         VStack(alignment: .leading, spacing: 8) {
-            Text("カレンダーの期間")
+            Text("memo_duration".localized)
                 .font(.system(size: 14, weight: .medium))
                 .foregroundColor(.secondary)
                 .padding(.horizontal, 20)
@@ -260,7 +260,7 @@ struct EditMemoView: View {
             HStack {
                 Image(systemName: "trash")
                     .font(.system(size: 16))
-                Text("メモを削除")
+                Text("delete_memo_title".localized)
                     .font(.system(size: 16, weight: .medium))
             }
             .foregroundColor(.red)

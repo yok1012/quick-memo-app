@@ -161,6 +161,15 @@
 "settings_pro_features" = "专业版功能";
 "settings_pro_features_list" = "解锁无限备忘录、类别、自定义标签和 iCloud 同步。";
 "settings_pro_only" = "仅限专业版";
+"settings_account" = "账户";
+"settings_sign_in_apple" = "使用Apple ID登录";
+"settings_sign_in_apple_desc" = "在其他设备上访问订阅权益（可选）";
+"settings_signed_in" = "已登录";
+"settings_account_sync_enabled" = "账户同步已启用";
+"settings_sign_out" = "退出登录";
+"settings_account_footer" = "登录是可选的。可用于跨设备同步购买状态。";
+"settings_restore_footer" = "恢复使用相同Apple ID购买的内容。";
+"settings_restore_purchases" = "恢复购买";
 "settings_force_sync" = "强制同步";
 "settings_sync_mode" = "同步模式";
 "settings_sync_settings" = "同步设置";
@@ -257,11 +266,52 @@
 
 // MARK: - Purchase
 "purchase" = "购买";
+"purchase_unlock_description" = "解锁所有功能，充分利用QuickMemo";
+"purchase_pro_features" = "专业版功能";
+"purchase_unlimited_memos" = "无限备忘录";
+"purchase_unlimited_memos_desc" = "创建超过100个备忘录";
+"purchase_unlimited_categories" = "无限分类";
+"purchase_unlimited_categories_desc" = "自由添加和编辑分类";
+"purchase_unlimited_tags" = "无限标签";
+"purchase_unlimited_tags_desc" = "每个备忘录可添加超过15个标签";
+"purchase_icloud_sync" = "iCloud同步";
+"purchase_icloud_sync_desc" = "所有设备自动同步";
+"purchase_widget_customize" = "小组件自定义";
+"purchase_widget_customize_desc" = "自定义小组件外观";
+"purchase_watch_pro" = "Apple Watch专业版";
+"purchase_watch_pro_desc" = "自定义分类";
+"purchase_data_export" = "数据导出";
+"purchase_data_export_desc" = "CSV/JSON格式备份";
+"purchase_buy" = "购买";
+"purchase_one_time" = "一次购买，终身使用";
+"purchase_no_products" = "无法获取产品信息";
+"purchase_network_error" = "请检查您的网络连接";
+"purchase_retry" = "重试";
+"purchase_restore" = "恢复购买";
+"purchase_restore_description" = "在此恢复之前的购买";
+"purchase_completed" = "已购买";
+"purchase_status" = "购买状态";
+"purchase_success_message" = "购买完成！所有功能现已可用。";
+"purchase_cancelled" = "购买已取消";
 "restore_purchases" = "恢复购买";
 "purchased" = "已购买";
 "purchase_failed" = "购买失败";
 "restore_failed" = "恢复失败";
 "one_time_purchase" = "一次购买永久使用所有功能";
+"purchase_other_devices_title" = "在其他设备上使用";
+"purchase_same_apple_id_title" = "使用相同Apple ID恢复";
+"purchase_same_apple_id_desc" = "在其他设备上，请使用相同Apple ID执行『恢复购买』";
+"purchase_sign_in_apple_title" = "Sign in with Apple（可选）";
+"purchase_sign_in_apple_desc" = "即使 Apple ID 不同也可通过账户注册使用（即将推出）";
+"purchase_coming_soon" = "即将推出";
+"purchase_restore_subtitle" = "恢复之前的购买";
+"purchase_restore_notice" = "恢复需要使用相同Apple ID登录";
+"purchase_monthly_subscription" = "月度订阅";
+"purchase_onetime" = "一次性购买";
+"purchase_period_day" = "天";
+"purchase_period_week" = "周";
+"purchase_period_month" = "月";
+"purchase_period_year" = "年";
 
 // MARK: - Limits
 "memo_limit_reached" = "已达到备忘录上限";
@@ -332,6 +382,15 @@
 "tag_delete_confirm" = "删除\"%@\"？";
 "no_tags" = "没有标签";
 "add_tag" = "添加标签";
+"tags" = "标签";
+"search_tags" = "搜索标签";
+"no_tags_yet" = "还没有标签";
+"tags_will_appear_here" = "在备忘录中添加#标签，它们将显示在这里";
+"delete_tag_title" = "删除标签";
+"delete_tag_message" = "删除标签\"%@\"？";
+"add_tag_to_category" = "向此类别添加标签";
+"tag_name" = "标签名称";
+"tag_add_hint" = "备忘录中带#的标签将自动识别";
 "shopping" = "购物";
 "schedule" = "日程";
 "memory" = "回忆";
@@ -358,3 +417,71 @@
 "scribble_input" = "手写输入";
 "scribble_placeholder" = "请在此书写";
 "preview" = "预览";
+
+// MARK: - Account Management
+"account_delete" = "删除账户";
+"account_delete_confirm_title" = "您确定要删除账户吗？";
+"account_delete_confirm_message" = "您的账户和相关数据将被删除且无法恢复。";
+"account_delete_confirm_button" = "确认删除";
+
+// MARK: - Subscription Management
+"subscription_manage" = "管理订阅";
+
+// MARK: - Legal
+"legal_info" = "法律信息";
+"privacy_policy" = "隐私政策";
+"terms_of_use" = "使用条款 (EULA)";
+
+// MARK: - Subscription Details
+"subscription_info_title" = "订阅信息";
+"subscription_info_auto_renew" = "• 除非在当前期限结束前24小时内取消，否则将自动续订。";
+"subscription_info_cancel" = "• 您可以随时从设置 > Apple ID > 订阅中取消。";
+"subscription_info_manage" = "• 确认购买时将从您的Apple ID账户扣款。";
+"subscription_monthly_details" = "QuickMemo Pro 月度订阅";
+"subscription_price_format" = "价格：%@/月";
+"subscription_auto_renew_monthly" = "每月自动续订";
+"subscription_notice_detailed" = "在当前期限结束前24小时内将收取续订费用。您可以在账户设置中管理订阅和自动续订设置。";
+
+// MARK: - Additional UI Strings
+"edit_memo" = "编辑备忘录";
+"update" = "更新";
+"new_category" = "新建";
+"select_category_title" = "选择类别";
+"select_category_subtitle" = "请选择备忘录类型";
+"category_not_found" = "未找到类别";
+"new_memo" = "新备忘录";
+"category_settings" = "类别设置";
+"debug_settings" = "调试设置";
+"max_categories_reached" = "已达到最大数量";
+"widget_display_categories" = "小组件显示类别";
+"widget_free_version_notice" = "免费版仅显示当前选择的类别";
+"widget_updated" = "小组件显示类别已更新";
+"widget_can_select_freely" = "可以自由选择类别";
+"calendar_permission_description" = "在设置应用中允许访问即可启用自动创建事件功能。";
+"calendar_auto_save_description" = "创建的备忘录会自动保存为日历事件，可按时间顺序查看";
+"category_filter" = "类别";
+"tag_filter" = "标签";
+"date_filter" = "日期";
+"clear_filters" = "清除筛选";
+"no_search_results" = "未找到搜索结果";
+"change_search_conditions" = "请尝试更改搜索条件";
+"data_sync_usage" = "用于数据同步";
+"export_archive_history" = "导出存档历史";
+"export_all_data" = "导出所有数据";
+"delete_memo_title" = "删除备忘录";
+"memo_duration" = "日历时长";
+"no_backup" = "无备份";
+"backup_now" = "立即备份";
+"data_diagnostic_restore" = "数据诊断和恢复";
+"check_storage_restore" = "检查存储位置并尝试恢复";
+"restore_old_version_data" = "恢复旧版本数据";
+"if_data_lost_after_update" = "更新后数据丢失的情况";
+"restore_after_update_description" = "如果更新后数据丢失，可以在此尝试恢复。";
+"reset_purchase_status" = "重置购买状态";
+"output_debug_info" = "输出调试信息";
+"debug_features_description" = "开发用调试功能。生产环境中不可见。";
+
+// MARK: - Widget
+"widget_open_app" = "打开应用";
+"widget_tap_to_add_memo" = "点击添加备忘录";
+"widget_description" = "快速添加备忘录";

@@ -24,7 +24,10 @@ class NotificationManager: NSObject, ObservableObject {
         super.init()
         loadSettings()
         isInitializing = false
-        
+
+        // 初期化時に通知権限の状態を確認
+        checkAndUpdateNotificationStatus()
+
         // 通知の登録を遅延実行（より長い遅延）
         DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) { [weak self] in
             self?.setupPurchaseStatusObserver()
@@ -46,6 +49,41 @@ class NotificationManager: NSObject, ObservableObject {
         ) { [weak self] _ in
             guard let self = self else { return }
             // 必要に応じて処理を追加
+        }
+    }
+
+    private func checkAndUpdateNotificationStatus() {
+        UNUserNotificationCenter.current().getNotificationSettings { [weak self] settings in
+            guard let self = self else { return }
+
+            DispatchQueue.main.async {
+                // 権限状態に基づいて設定を更新
+                switch settings.authorizationStatus {
+                case .authorized:
+                    print("📱 Notification permission: Authorized")
+                    // 設定がオンで権限もある場合、通知をスケジュール
+                    if self.isNotificationEnabled {
+                        self.scheduleNotifications()
+                    }
+                case .denied:
+                    print("❌ Notification permission: Denied")
+                    // 権限が拒否されている場合は設定をオフに
+                    self.isNotificationEnabled = false
+                    self.saveSettings()
+                case .notDetermined:
+                    print("⚠️ Notification permission: Not determined")
+                    // 未設定の場合は何もしない
+                case .provisional:
+                    print("📱 Notification permission: Provisional")
+                    if self.isNotificationEnabled {
+                        self.scheduleNotifications()
+                    }
+                case .ephemeral:
+                    print("📱 Notification permission: Ephemeral")
+                @unknown default:
+                    print("❓ Notification permission: Unknown")
+                }
+            }
         }
     }
     
@@ -249,12 +287,17 @@ class NotificationManager: NSObject, ObservableObject {
             UNUserNotificationCenter.current().add(request) { error in
                 queue.async(flags: .barrier) {
                     if let error = error {
+                        print("❌ Failed to schedule notification \(index): \(error.localizedDescription)")
                     } else {
                         successCount += 1
+                        print("✅ Notification scheduled for: \(date)")
                     }
-                    
+
                     pendingRequests -= 1
                     if pendingRequests == 0 {
+                        print("📅 Total notifications scheduled: \(successCount) of \(totalCount)")
+                        // デバッグ: 登録された通知を確認
+                        self.printPendingNotifications()
                     }
                 }
             }
@@ -305,6 +348,47 @@ class NotificationManager: NSObject, ObservableObject {
     
     func cancelAllNotifications() {
         UNUserNotificationCenter.current().removeAllPendingNotificationRequests()
+    }
+
+    // MARK: - Debug Methods
+
+    func printPendingNotifications() {
+        UNUserNotificationCenter.current().getPendingNotificationRequests { requests in
+            print("📱 Pending notifications: \(requests.count)")
+            for request in requests.prefix(5) { // 最初の5件のみ表示
+                if let trigger = request.trigger as? UNCalendarNotificationTrigger,
+                   let nextTriggerDate = trigger.nextTriggerDate() {
+                    print("  - \(request.identifier): \(nextTriggerDate)")
+                }
+            }
+        }
+    }
+
+    func checkNotificationStatus(completion: @escaping (String) -> Void) {
+        UNUserNotificationCenter.current().getNotificationSettings { settings in
+            var status = "通知状態: "
+            switch settings.authorizationStatus {
+            case .authorized:
+                status += "許可済み ✅"
+            case .denied:
+                status += "拒否されています ❌"
+            case .notDetermined:
+                status += "未設定 ⚠️"
+            case .provisional:
+                status += "仮許可"
+            case .ephemeral:
+                status += "一時的"
+            @unknown default:
+                status += "不明"
+            }
+
+            UNUserNotificationCenter.current().getPendingNotificationRequests { requests in
+                status += "\n登録済み通知: \(requests.count)件"
+                DispatchQueue.main.async {
+                    completion(status)
+                }
+            }
+        }
     }
     
     // MARK: - Test Notification

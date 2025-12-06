@@ -187,6 +187,15 @@
 "settings_pro_features" = "Proで解放される機能";
 "settings_pro_features_list" = "無制限のメモ・カテゴリー、カスタムタグ、iCloud同期などが利用できます。";
 "settings_pro_only" = "Pro限定";
+"settings_account" = "アカウント";
+"settings_sign_in_apple" = "Sign in with Appleでサインイン";
+"settings_sign_in_apple_desc" = "他デバイスでサブスク特典を利用できます（任意）";
+"settings_signed_in" = "サインイン済み";
+"settings_account_sync_enabled" = "アカウント同期が有効";
+"settings_sign_out" = "サインアウト";
+"settings_account_footer" = "サインインは任意です。他デバイスでの購入状態の同期に利用できます。";
+"settings_restore_footer" = "同じApple IDで以前購入した場合は復元できます。";
+"settings_restore_purchases" = "購入を復元";
 "settings_force_sync" = "強制同期";
 "settings_sync_mode" = "同期モード";
 "settings_sync_settings" = "同期設定";
@@ -283,11 +292,52 @@
 
 // MARK: - Purchase
 "purchase" = "購入する";
+"purchase_unlock_description" = "すべての機能を解放してQuickMemoを最大限に活用しましょう";
+"purchase_pro_features" = "Pro版の機能";
+"purchase_unlimited_memos" = "無制限のメモ";
+"purchase_unlimited_memos_desc" = "100個以上のメモを作成可能";
+"purchase_unlimited_categories" = "無制限のカテゴリー";
+"purchase_unlimited_categories_desc" = "カテゴリーを自由に追加・編集";
+"purchase_unlimited_tags" = "無制限のタグ";
+"purchase_unlimited_tags_desc" = "メモあたり15個以上のタグを追加可能";
+"purchase_icloud_sync" = "iCloud同期";
+"purchase_icloud_sync_desc" = "すべてのデバイスで自動同期";
+"purchase_widget_customize" = "ウィジェットカスタマイズ";
+"purchase_widget_customize_desc" = "ウィジェット表示をカスタマイズ";
+"purchase_watch_pro" = "Apple Watch Pro";
+"purchase_watch_pro_desc" = "カテゴリーをカスタマイズ可能";
+"purchase_data_export" = "データエクスポート";
+"purchase_data_export_desc" = "CSV/JSON形式でバックアップ";
+"purchase_buy" = "購入";
+"purchase_one_time" = "一度の購入ですべての機能が永続的に利用可能";
+"purchase_no_products" = "商品情報を取得できません";
+"purchase_network_error" = "ネットワーク接続を確認してください";
+"purchase_retry" = "再試行";
+"purchase_restore" = "購入を復元";
+"purchase_restore_description" = "以前購入した場合はここから復元";
+"purchase_completed" = "購入済み";
+"purchase_status" = "購入状況";
+"purchase_success_message" = "購入が完了しました！すべての機能が利用可能になりました。";
+"purchase_cancelled" = "購入がキャンセルされました";
 "restore_purchases" = "購入を復元";
 "purchased" = "購入済み";
 "purchase_failed" = "購入に失敗しました";
 "restore_failed" = "復元に失敗しました";
 "one_time_purchase" = "一度の購入ですべての機能が永続的に利用可能";
+"purchase_other_devices_title" = "他のデバイスでの利用方法";
+"purchase_same_apple_id_title" = "同じApple IDで復元";
+"purchase_same_apple_id_desc" = "他のデバイスでは、同じApple IDで『購入を復元』を実行してください";
+"purchase_sign_in_apple_title" = "Sign in with Apple（任意）";
+"purchase_sign_in_apple_desc" = "Apple IDが異なる場合でも、アカウント登録で利用可能（今後実装予定）";
+"purchase_coming_soon" = "近日公開";
+"purchase_restore_subtitle" = "以前の購入を復元";
+"purchase_restore_notice" = "復元には同じApple IDでのサインインが必要です";
+"purchase_monthly_subscription" = "月額サブスクリプション";
+"purchase_onetime" = "買い切りライセンス";
+"purchase_period_day" = "日";
+"purchase_period_week" = "週";
+"purchase_period_month" = "月";
+"purchase_period_year" = "年";
 
 // MARK: - Limits
 "memo_limit_reached" = "メモの上限に達しました";
@@ -358,6 +408,15 @@
 "tag_delete_confirm" = "「%@」を削除してもよろしいですか？";
 "no_tags" = "タグがありません";
 "add_tag" = "タグを追加";
+"tags" = "タグ";
+"search_tags" = "タグを検索";
+"no_tags_yet" = "まだタグがありません";
+"tags_will_appear_here" = "メモに#タグを追加すると、ここに表示されます";
+"delete_tag_title" = "タグを削除";
+"delete_tag_message" = "タグ「%@」を削除しますか？";
+"add_tag_to_category" = "このカテゴリーにタグを追加";
+"tag_name" = "タグ名";
+"tag_add_hint" = "メモに#を付けて入力すると自動的にタグとして認識されます";
 "shopping" = "買い物";
 "other" = "その他";
 "voice_input" = "音声入力";
@@ -365,3 +424,94 @@
 "scribble_input" = "手書き入力";
 "scribble_placeholder" = "ここに書いてください";
 "preview" = "プレビュー";
+
+// MARK: - Account Management
+"account_delete" = "アカウントを削除";
+"account_delete_confirm_title" = "本当にアカウントを削除しますか？";
+"account_delete_confirm_message" = "アカウントと関連データは削除され、復元できません。";
+"account_delete_confirm_button" = "削除を確定";
+
+// MARK: - Subscription Management
+"subscription_manage" = "サブスクリプションを管理";
+
+// MARK: - Legal
+"legal_info" = "法的情報";
+"privacy_policy" = "プライバシーポリシー";
+"terms_of_use" = "利用規約 (EULA)";
+
+// MARK: - Subscription Details
+"subscription_info_title" = "サブスクリプションについて";
+"subscription_info_auto_renew" = "• 現在の期間の終了24時間前までにキャンセルしない限り、自動的に更新されます。";
+"subscription_info_cancel" = "• 設定 > Apple ID > サブスクリプション からいつでもキャンセルできます。";
+"subscription_info_manage" = "• 購入確認時にApple IDアカウントに請求されます。";
+"subscription_monthly_details" = "QuickMemo Pro 月額サブスクリプション";
+"subscription_price_format" = "料金：%@/月";
+"subscription_auto_renew_monthly" = "毎月自動更新";
+"subscription_notice_detailed" = "現在の期間終了の24時間前以内に更新料金が請求されます。アカウント設定でサブスクリプションと自動更新の設定を管理できます。";
+
+// MARK: - Data Diagnostic
+"data_diagnostic" = "データ診断";
+"current_data_status" = "現在のデータ状態";
+"categories" = "カテゴリー";
+"memos" = "メモ";
+"scanning_storage" = "保存場所をスキャン中...";
+"scan_all_locations" = "保存場所をスキャン";
+"storage_locations" = "保存場所";
+"storage_scan_description" = "アプリ内の複数の保存場所をスキャンしてデータを検索します。";
+"data_recovery" = "データ復旧";
+"no_recoverable_data" = "復旧可能なデータが見つかりません";
+"debug_info" = "デバッグ情報";
+"reset_migration_flag" = "マイグレーションフラグをリセット";
+"recovery_result" = "復旧結果";
+"recovered_items" = "%d件のデータを復旧しました";
+"no_data_recovered" = "復旧可能なデータがありませんでした";
+"location_info" = "場所情報";
+"categories_found" = "カテゴリー";
+"memos_found" = "メモ";
+"raw_data_categories" = "生データ（カテゴリー）";
+"raw_data_memos" = "生データ（メモ）";
+"data_detail" = "データ詳細";
+
+// MARK: - Additional UI Strings
+"edit_memo" = "メモを編集";
+"update" = "更新";
+"new_category" = "新規";
+"select_category_title" = "カテゴリを選択";
+"select_category_subtitle" = "メモの種類を選んでください";
+"category_not_found" = "カテゴリーが見つかりません";
+"new_memo" = "新しいメモ";
+"category_settings" = "カテゴリー設定";
+"debug_settings" = "デバッグ設定";
+"max_categories_reached" = "最大数に達しました";
+"widget_display_categories" = "ウィジェットに表示するカテゴリー";
+"widget_free_version_notice" = "無料版では現在選択されているカテゴリーのみ表示されます";
+"widget_updated" = "ウィジェットに表示されるカテゴリーが更新されました";
+"widget_can_select_freely" = "カテゴリーを自由に選択できます";
+"calendar_permission_description" = "設定アプリからアクセスを許可すると、予定の自動作成が利用できます。";
+"calendar_auto_save_description" = "作成したメモが自動的にカレンダーイベントとして保存され、時系列で確認できます";
+"category_filter" = "カテゴリ";
+"tag_filter" = "タグ";
+"date_filter" = "日付";
+"clear_filters" = "フィルターをクリア";
+"no_search_results" = "検索結果が見つかりません";
+"change_search_conditions" = "検索条件を変更してお試しください";
+"data_sync_usage" = "データ同期に使用されます";
+"export_archive_history" = "削除履歴をエクスポート";
+"export_all_data" = "すべてのデータをエクスポート";
+"delete_memo_title" = "メモを削除";
+"memo_duration" = "カレンダーの期間";
+"no_backup" = "バックアップなし";
+"backup_now" = "今すぐバックアップ";
+"data_diagnostic_restore" = "データ診断・復元";
+"check_storage_restore" = "保存場所を確認して復元を試みる";
+"restore_old_version_data" = "旧バージョンのデータを復元";
+"if_data_lost_after_update" = "アップデート後にデータが消えた場合";
+"restore_after_update_description" = "アップデート後にデータが消えた場合、ここから復元を試みることができます。";
+"reset_purchase_status" = "購入状態をリセット";
+"output_debug_info" = "デバッグ情報を出力";
+"debug_features_description" = "開発用のデバッグ機能です。本番環境では表示されません。";
+
+// MARK: - Widget
+"widget_open_app" = "アプリを開く";
+"widget_tap_to_add_memo" = "タップしてメモを追加";
+"widget_description" = "素早くメモを追加できます";

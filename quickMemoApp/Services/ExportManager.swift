@@ -11,6 +11,12 @@ class ExportManager {
         case json
     }
 
+    enum ExportType {
+        case currentMemos
+        case archivedMemos
+        case all
+    }
+
     enum ExportError: LocalizedError {
         case noData
         case encodingError
@@ -59,7 +65,76 @@ class ExportManager {
         }
     }
 
+    @MainActor
+    func exportArchivedMemos(format: ExportFormat) throws -> URL {
+        let archivedMemos = DataManager.shared.archivedMemos
+
+        guard !archivedMemos.isEmpty else {
+            throw ExportError.noData
+        }
+
+        // アーカイブからメモを抽出
+        let memosToExport = archivedMemos.map { $0.originalMemo }
+
+        let fileName: String
+        let fileData: Data
+
+        switch format {
+        case .csv:
+            fileName = "QuickMemo_Archive_\(dateString()).csv"
+            fileData = try createArchivedCSVData(from: archivedMemos)
+        case .json:
+            fileName = "QuickMemo_Archive_\(dateString()).json"
+            fileData = try createArchivedJSONData(from: archivedMemos)
+        }
+
+        let tempDirectory = FileManager.default.temporaryDirectory
+        let fileURL = tempDirectory.appendingPathComponent(fileName)
+
+        do {
+            try fileData.write(to: fileURL)
+            return fileURL
+        } catch {
+            throw ExportError.fileCreationError
+        }
+    }
+
+    @MainActor
+    func exportAllData(format: ExportFormat) throws -> URL {
+        let currentMemos = DataManager.shared.memos
+        let archivedMemos = DataManager.shared.archivedMemos
+
+        guard !currentMemos.isEmpty || !archivedMemos.isEmpty else {
+            throw ExportError.noData
+        }
+
+        let fileName: String
+        let fileData: Data
+
+        switch format {
+        case .csv:
+            fileName = "QuickMemo_All_\(dateString()).csv"
+            fileData = try createAllDataCSV(currentMemos: currentMemos, archivedMemos: archivedMemos)
+        case .json:
+            fileName = "QuickMemo_All_\(dateString()).json"
+            fileData = try createAllDataJSON(currentMemos: currentMemos, archivedMemos: archivedMemos)
+        }
+
+        let tempDirectory = FileManager.default.temporaryDirectory
+        let fileURL = tempDirectory.appendingPathComponent(fileName)
+
+        do {
+            try fileData.write(to: fileURL)
+            return fileURL
+        } catch {
+            throw ExportError.fileCreationError
+        }
+    }
+
     private func createCSVData(from memos: [QuickMemo]) throws -> Data {
+        // UTF-8 BOMを追加（Excelで日本語を正しく表示するため）
+        var csvData = Data([0xEF, 0xBB, 0xBF])
+
         var csvString = "ID,タイトル,内容,カテゴリー,タグ,作成日時,更新日時,カレンダーイベントID,期間(分)\n"
 
         let dateFormatter = ISO8601DateFormatter()
@@ -78,11 +153,12 @@ class ExportManager {
             csvString += "\(memo.id),\(title),\(content),\(category),\(tags),\(createdAt),\(updatedAt),\(calendarEventId),\(duration)\n"
         }
 
-        guard let data = csvString.data(using: .utf8) else {
+        guard let stringData = csvString.data(using: .utf8) else {
             throw ExportError.encodingError
         }
 
-        return data
+        csvData.append(stringData)
+        return csvData
     }
 
     private func createJSONData(from memos: [QuickMemo]) throws -> Data {
@@ -122,6 +198,122 @@ class ExportManager {
             return "\"\(escaped)\""
         }
         return field
+    }
+
+    private func createArchivedCSVData(from archivedMemos: [ArchivedMemo]) throws -> Data {
+        // UTF-8 BOMを追加（Excelで日本語を正しく表示するため）
+        var csvData = Data([0xEF, 0xBB, 0xBF])
+
+        var csvString = "ID,タイトル,内容,カテゴリー,タグ,作成日時,更新日時,削除日時,カレンダーイベントID,期間(分)\n"
+
+        let dateFormatter = ISO8601DateFormatter()
+        dateFormatter.formatOptions = [.withInternetDateTime, .withFractionalSeconds]
+
+        for archived in archivedMemos {
+            let memo = archived.originalMemo
+            let title = escapeCSVField(memo.title)
+            let content = escapeCSVField(memo.content)
+            let category = escapeCSVField(memo.primaryCategory)
+            let tags = memo.tags.joined(separator: ";")
+            let createdAt = dateFormatter.string(from: memo.createdAt)
+            let updatedAt = dateFormatter.string(from: memo.updatedAt)
+            let deletedAt = dateFormatter.string(from: archived.deletedAt)
+            let calendarEventId = memo.calendarEventId ?? ""
+            let duration = String(memo.durationMinutes)
+
+            csvString += "\(memo.id),\(title),\(content),\(category),\(tags),\(createdAt),\(updatedAt),\(deletedAt),\(calendarEventId),\(duration)\n"
+        }
+
+        guard let stringData = csvString.data(using: .utf8) else {
+            throw ExportError.encodingError
+        }
+
+        csvData.append(stringData)
+        return csvData
+    }
+
+    private func createArchivedJSONData(from archivedMemos: [ArchivedMemo]) throws -> Data {
+        let exportData = ArchivedExportData(
+            exportDate: Date(),
+            version: "1.0",
+            archivedMemos: archivedMemos
+        )
+
+        let encoder = JSONEncoder()
+        encoder.outputFormatting = [.prettyPrinted, .sortedKeys]
+        encoder.dateEncodingStrategy = .iso8601
+
+        do {
+            return try encoder.encode(exportData)
+        } catch {
+            throw ExportError.encodingError
+        }
+    }
+
+    private func createAllDataCSV(currentMemos: [QuickMemo], archivedMemos: [ArchivedMemo]) throws -> Data {
+        // UTF-8 BOMを追加
+        var csvData = Data([0xEF, 0xBB, 0xBF])
+
+        var csvString = "Type,ID,タイトル,内容,カテゴリー,タグ,作成日時,更新日時,削除日時,カレンダーイベントID,期間(分)\n"
+
+        let dateFormatter = ISO8601DateFormatter()
+        dateFormatter.formatOptions = [.withInternetDateTime, .withFractionalSeconds]
+
+        // 現在のメモ
+        for memo in currentMemos {
+            let title = escapeCSVField(memo.title)
+            let content = escapeCSVField(memo.content)
+            let category = escapeCSVField(memo.primaryCategory)
+            let tags = memo.tags.joined(separator: ";")
+            let createdAt = dateFormatter.string(from: memo.createdAt)
+            let updatedAt = dateFormatter.string(from: memo.updatedAt)
+            let calendarEventId = memo.calendarEventId ?? ""
+            let duration = String(memo.durationMinutes)
+
+            csvString += "Current,\(memo.id),\(title),\(content),\(category),\(tags),\(createdAt),\(updatedAt),,\(calendarEventId),\(duration)\n"
+        }
+
+        // アーカイブメモ
+        for archived in archivedMemos {
+            let memo = archived.originalMemo
+            let title = escapeCSVField(memo.title)
+            let content = escapeCSVField(memo.content)
+            let category = escapeCSVField(memo.primaryCategory)
+            let tags = memo.tags.joined(separator: ";")
+            let createdAt = dateFormatter.string(from: memo.createdAt)
+            let updatedAt = dateFormatter.string(from: memo.updatedAt)
+            let deletedAt = dateFormatter.string(from: archived.deletedAt)
+            let calendarEventId = memo.calendarEventId ?? ""
+            let duration = String(memo.durationMinutes)
+
+            csvString += "Archived,\(memo.id),\(title),\(content),\(category),\(tags),\(createdAt),\(updatedAt),\(deletedAt),\(calendarEventId),\(duration)\n"
+        }
+
+        guard let stringData = csvString.data(using: .utf8) else {
+            throw ExportError.encodingError
+        }
+
+        csvData.append(stringData)
+        return csvData
+    }
+
+    private func createAllDataJSON(currentMemos: [QuickMemo], archivedMemos: [ArchivedMemo]) throws -> Data {
+        let exportData = AllDataExport(
+            exportDate: Date(),
+            version: "1.0",
+            currentMemos: currentMemos,
+            archivedMemos: archivedMemos
+        )
+
+        let encoder = JSONEncoder()
+        encoder.outputFormatting = [.prettyPrinted, .sortedKeys]
+        encoder.dateEncodingStrategy = .iso8601
+
+        do {
+            return try encoder.encode(exportData)
+        } catch {
+            throw ExportError.encodingError
+        }
     }
 
     private func dateString() -> String {
@@ -205,7 +397,7 @@ class ExportManager {
                 createdAt: timestamp,
                 updatedAt: lastModified ?? timestamp,
                 calendarEventId: calendarEventId,
-                durationMinutes: 30
+                durationMinutes: durationMinutes  // 修正: 正しく値を使用
             )
             memos.append(memo)
         }
@@ -249,6 +441,19 @@ struct ExportData: Codable {
     let exportDate: Date
     let version: String
     let memos: [ExportMemo]
+}
+
+struct ArchivedExportData: Codable {
+    let exportDate: Date
+    let version: String
+    let archivedMemos: [ArchivedMemo]
+}
+
+struct AllDataExport: Codable {
+    let exportDate: Date
+    let version: String
+    let currentMemos: [QuickMemo]
+    let archivedMemos: [ArchivedMemo]
 }
 
 struct ExportMemo: Codable {

@@ -53,6 +53,19 @@ struct QuickMemo: Identifiable, Codable {
     }
 }
 
+// MARK: - Archived Memo (削除履歴用)
+struct ArchivedMemo: Identifiable, Codable {
+    let id: UUID
+    let originalMemo: QuickMemo
+    let deletedAt: Date
+
+    init(memo: QuickMemo) {
+        self.id = UUID()
+        self.originalMemo = memo
+        self.deletedAt = Date()
+    }
+}
+
 struct Category: Identifiable, Codable {
     let id: UUID
     var name: String
@@ -62,8 +75,22 @@ struct Category: Identifiable, Codable {
     var defaultTags: [String]
     var isDefault: Bool = false  // Track if this is a default category
     var baseKey: String? = nil   // Base localization key for default categories
+    var hiddenTags: Set<String> = []  // 非表示にするタグのセット
 
-    init(name: String, icon: String, color: String, order: Int, defaultTags: [String], isDefault: Bool = false, baseKey: String? = nil) {
+    // 明示的なCodingKeysを定義（エンコード/デコードの安定性を確保）
+    enum CodingKeys: String, CodingKey {
+        case id
+        case name
+        case icon
+        case color
+        case order
+        case defaultTags
+        case isDefault
+        case baseKey
+        case hiddenTags
+    }
+
+    init(name: String, icon: String, color: String, order: Int, defaultTags: [String], isDefault: Bool = false, baseKey: String? = nil, hiddenTags: Set<String> = []) {
         self.id = UUID()
         self.name = name
         self.icon = icon
@@ -72,9 +99,10 @@ struct Category: Identifiable, Codable {
         self.defaultTags = defaultTags
         self.isDefault = isDefault
         self.baseKey = baseKey
+        self.hiddenTags = hiddenTags
     }
 
-    init(id: UUID, name: String, icon: String, color: String, order: Int, defaultTags: [String], isDefault: Bool = false, baseKey: String? = nil) {
+    init(id: UUID, name: String, icon: String, color: String, order: Int, defaultTags: [String], isDefault: Bool = false, baseKey: String? = nil, hiddenTags: Set<String> = []) {
         self.id = id
         self.name = name
         self.icon = icon
@@ -83,6 +111,7 @@ struct Category: Identifiable, Codable {
         self.defaultTags = defaultTags
         self.isDefault = isDefault
         self.baseKey = baseKey
+        self.hiddenTags = hiddenTags
     }
 
     // Custom decoder for backward compatibility
@@ -96,5 +125,21 @@ struct Category: Identifiable, Codable {
         defaultTags = try container.decode([String].self, forKey: .defaultTags)
         isDefault = try container.decodeIfPresent(Bool.self, forKey: .isDefault) ?? false
         baseKey = try container.decodeIfPresent(String.self, forKey: .baseKey)
+        // hiddenTagsが存在しない古いデータの場合は空のセットをデフォルトとする
+        hiddenTags = try container.decodeIfPresent(Set<String>.self, forKey: .hiddenTags) ?? []
+    }
+
+    // Custom encoder to ensure all fields are properly encoded
+    func encode(to encoder: Encoder) throws {
+        var container = encoder.container(keyedBy: CodingKeys.self)
+        try container.encode(id, forKey: .id)
+        try container.encode(name, forKey: .name)
+        try container.encode(icon, forKey: .icon)
+        try container.encode(color, forKey: .color)
+        try container.encode(order, forKey: .order)
+        try container.encode(defaultTags, forKey: .defaultTags)
+        try container.encode(isDefault, forKey: .isDefault)
+        try container.encodeIfPresent(baseKey, forKey: .baseKey)
+        try container.encode(hiddenTags, forKey: .hiddenTags)
     }
 }

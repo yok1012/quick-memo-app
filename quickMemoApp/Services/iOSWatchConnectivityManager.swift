@@ -219,7 +219,7 @@ extension iOSWatchConnectivityManager: WCSessionDelegate {
         guard WCSession.default.isWatchAppInstalled else { return }
 
         Task { @MainActor in
-            var isPro = PurchaseManager.shared.isPurchased("pro.quickmemo.monthly")
+            var isPro = PurchaseManager.shared.isProVersion
 
             #if DEBUG
             // デバッグモードの場合、デバッグ設定も確認
@@ -247,3 +247,4 @@ extension iOSWatchConnectivityManager: WCSessionDelegate {
         }
     }
 }
+

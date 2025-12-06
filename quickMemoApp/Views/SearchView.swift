@@ -1,7 +1,7 @@
 import SwiftUI
 
 struct SearchView: View {
-    @StateObject private var dataManager = DataManager.shared
+    @ObservedObject private var dataManager = DataManager.shared
     
     @State private var searchText = ""
     @State private var selectedCategories: Set<String> = []
@@ -77,7 +77,7 @@ struct SearchView: View {
         }) {
             HStack(spacing: 6) {
                 Image(systemName: "folder")
-                Text("カテゴリ")
+                Text("category_filter".localized)
                 if !selectedCategories.isEmpty {
                     Text("(\(selectedCategories.count))")
                         .fontWeight(.semibold)
@@ -114,7 +114,7 @@ struct SearchView: View {
         }) {
             HStack(spacing: 6) {
                 Image(systemName: "tag")
-                Text("タグ")
+                Text("tag_filter".localized)
                 if !selectedTags.isEmpty {
                     Text("(\(selectedTags.count))")
                         .fontWeight(.semibold)
@@ -137,7 +137,7 @@ struct SearchView: View {
         }) {
             HStack(spacing: 6) {
                 Image(systemName: "calendar")
-                Text("日付")
+                Text("date_filter".localized)
                 if startDate != nil || endDate != nil {
                     Image(systemName: "checkmark.circle.fill")
                         .font(.caption2)
@@ -160,7 +160,7 @@ struct SearchView: View {
         }) {
             HStack(spacing: 6) {
                 Image(systemName: "xmark.circle.fill")
-                Text("フィルターをクリア")
+                Text("clear_filters".localized)
             }
             .font(.caption)
             .foregroundColor(.red)
@@ -195,11 +195,11 @@ struct SearchView: View {
                         .font(.system(size: 48))
                         .foregroundColor(.secondary)
                     
-                    Text("検索結果が見つかりません")
+                    Text("no_search_results".localized)
                         .font(.headline)
                         .foregroundColor(.secondary)
-                    
-                    Text("検索条件を変更してお試しください")
+
+                    Text("change_search_conditions".localized)
                         .font(.subheadline)
                         .foregroundColor(.secondary)
                         .multilineTextAlignment(.center)
@@ -303,7 +303,7 @@ struct DateRangePickerView: View {
 struct TagPickerView: View {
     @Binding var selectedTags: Set<String>
     @Environment(\.dismiss) private var dismiss
-    @StateObject private var dataManager = DataManager.shared
+    @ObservedObject private var dataManager = DataManager.shared
     
     private var availableTags: [String] {
         dataManager.getAllTags()

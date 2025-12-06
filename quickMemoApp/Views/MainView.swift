@@ -1,14 +1,13 @@
 import SwiftUI
 
 struct MainView: View {
-    @StateObject private var dataManager = DataManager.shared
+    @EnvironmentObject var dataManager: DataManager
     @StateObject private var localizationManager = LocalizationManager.shared
     @EnvironmentObject var deepLinkManager: DeepLinkManager
     @State private var selectedCategory: String = "category_all".localized
     @State private var showingCategorySelection = false
     @State private var showingFastInput = false
     @State private var searchText = ""
-    @State private var showingCalendarPermission = false
     @State private var showingSearch = false
     @State private var showingTagManagement = false
     @State private var showingSettings = false
@@ -90,7 +89,6 @@ struct MainView: View {
                 }
             }
             .onAppear {
-                checkCalendarPermission()
                 setupNotificationObservers()
             }
             .onChange(of: deepLinkManager.pendingAction) { action in
@@ -112,9 +110,6 @@ struct MainView: View {
                     .onDisappear {
                         deepLinkCategory = nil
                     }
-            }
-            .sheet(isPresented: $showingCalendarPermission) {
-                CalendarPermissionView()
             }
             .sheet(isPresented: $showingSearch) {
                 SearchView()
@@ -193,29 +188,26 @@ struct MainView: View {
                 showingLimitAlert = true
             }
         }) {
-            Image(systemName: "plus")
-                .font(.system(size: 28, weight: .medium))
-                .foregroundColor(.white)
-                .frame(width: 64, height: 64)
-                .background(
-                    Circle()
-                        .fill(Color.blue)
-                        .shadow(color: .blue.opacity(0.3), radius: 8, x: 0, y: 4)
-                )
+            HStack(spacing: 8) {
+                Image(systemName: "plus.circle.fill")
+                    .font(.system(size: 20, weight: .medium))
+                Text("add_memo".localized)
+                    .font(.system(size: 16, weight: .semibold))
+            }
+            .foregroundColor(.white)
+            .padding(.horizontal, 20)
+            .padding(.vertical, 12)
+            .background(
+                Capsule()
+                    .fill(Color.blue)
+                    .shadow(color: .blue.opacity(0.3), radius: 8, x: 0, y: 4)
+            )
         }
         .padding(.bottom, 34)
         .scaleEffect(1.0)
         .onTapGesture {
             withAnimation(.spring(response: 0.3, dampingFraction: 0.6)) {
                 showingFastInput = true
-            }
-        }
-    }
-    
-    private func checkCalendarPermission() {
-        DispatchQueue.main.asyncAfter(deadline: .now() + 1.0) {
-            if !calendarService.hasCalendarAccess {
-                showingCalendarPermission = true
             }
         }
     }
