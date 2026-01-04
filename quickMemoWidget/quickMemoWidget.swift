@@ -16,26 +16,55 @@ extension String {
             languageCode = Locale.current.language.languageCode?.identifier ?? "ja"
         }
 
-        // Map language codes to bundle paths
-        let bundlePath: String
+        // Map language codes to bundle resource names
+        let resourceName: String
         switch languageCode {
         case "en":
-            bundlePath = "en.lproj"
+            resourceName = "en"
         case "zh-Hans", "zh":
-            bundlePath = "zh-Hans.lproj"
+            resourceName = "zh-Hans"
         default:
-            bundlePath = "ja.lproj"
+            resourceName = "ja"
         }
 
-        // Try to load from specific language bundle
-        if let path = Bundle.main.path(forResource: bundlePath.replacingOccurrences(of: ".lproj", with: ""), ofType: "lproj"),
+        // Try to load from specific language bundle in widget's Resources folder
+        if let path = Bundle.main.path(forResource: resourceName, ofType: "lproj"),
            let bundle = Bundle(path: path) {
             let localizedString = NSLocalizedString(self, bundle: bundle, comment: "")
-            return localizedString != self ? localizedString : self
+            if localizedString != self {
+                return localizedString
+            }
         }
 
-        // Fallback to default localization
-        return NSLocalizedString(self, comment: "")
+        // Fallback: Try loading from main bundle directly
+        let localizedString = NSLocalizedString(self, bundle: Bundle.main, comment: "")
+        if localizedString != self {
+            return localizedString
+        }
+
+        // Final fallback: return hardcoded translations for essential keys
+        return getHardcodedLocalization(key: self, languageCode: languageCode)
+    }
+
+    private func getHardcodedLocalization(key: String, languageCode: String) -> String {
+        let translations: [String: [String: String]] = [
+            "work": ["ja": "仕事", "en": "Work", "zh-Hans": "工作"],
+            "personal": ["ja": "プライベート", "en": "Personal", "zh-Hans": "私人"],
+            "idea": ["ja": "アイデア", "en": "Ideas", "zh-Hans": "灵感"],
+            "other": ["ja": "その他", "en": "Other", "zh-Hans": "其他"],
+            "quick_memo": ["ja": "Quick Memo", "en": "Quick Memo", "zh-Hans": "Quick Memo"],
+            "widget_open_app": ["ja": "アプリを開く", "en": "Open App", "zh-Hans": "打开应用"],
+            "widget_tap_to_add_memo": ["ja": "タップしてメモを追加", "en": "Tap to add memo", "zh-Hans": "点击添加备忘录"],
+            "widget_description": ["ja": "素早くメモを追加できます", "en": "Quickly add memos", "zh-Hans": "快速添加备忘录"],
+            "upgrade_to_pro": ["ja": "Pro版にアップグレード", "en": "Upgrade to Pro", "zh-Hans": "升级到Pro版"]
+        ]
+
+        if let translation = translations[key]?[languageCode] {
+            return translation
+        } else if let jaTranslation = translations[key]?["ja"] {
+            return jaTranslation
+        }
+        return key
     }
 }
 
@@ -109,7 +138,7 @@ struct QuickMemoProvider: TimelineProvider {
         }
 
         // Check if user is Pro version
-        let isProVersion = userDefaults.bool(forKey: "is_pro_version")
+        let isProVersion = userDefaults.bool(forKey: "is_pro_version") || userDefaults.bool(forKey: "isPurchased")
 
         // Load selected widget categories if Pro, otherwise use default
         if isProVersion,
@@ -117,10 +146,10 @@ struct QuickMemoProvider: TimelineProvider {
            let selectedCategoryNames = try? JSONDecoder().decode([String].self, from: selectedData),
            let categoriesData = userDefaults.data(forKey: "categories"),
            let allCategories = try? JSONDecoder().decode([Category].self, from: categoriesData) {
-            // Return selected categories in order
+            // Return selected categories in order (up to 8 for large widget)
             return selectedCategoryNames.compactMap { name in
                 allCategories.first { $0.name == name }
-            }
+            }.prefix(8).map { $0 }
         }
 
         // For free users or fallback: return default categories
@@ -287,45 +316,82 @@ struct MediumWidgetView: View {
 struct LargeWidgetView: View {
     let categories: [Category]
 
+    // 8項目以上あるかどうかでレイアウトを切り替え
+    private var useCompactLayout: Bool {
+        categories.count > 4
+    }
+
     var body: some View {
-        VStack(spacing: 12) {
+        VStack(spacing: useCompactLayout ? 6 : 12) {
             HStack {
                 Image(systemName: "square.and.pencil")
-                    .font(.system(size: 20, weight: .bold))
+                    .font(.system(size: useCompactLayout ? 16 : 20, weight: .bold))
                 Text("Quick Memo")
-                    .font(.system(size: 18, weight: .bold))
+                    .font(.system(size: useCompactLayout ? 14 : 18, weight: .bold))
                 Spacer()
 
                 Link(destination: URL(string: "quickmemo://open")!) {
                     Text("widget_open_app".localized)
-                        .font(.system(size: 14, weight: .medium))
+                        .font(.system(size: useCompactLayout ? 12 : 14, weight: .medium))
                         .foregroundColor(.blue)
                 }
             }
             .foregroundColor(.primary)
 
-            VStack(spacing: 10) {
-                ForEach(categories, id: \.id) { category in
-                    Link(destination: URL(string: "quickmemo://add?category=\(category.name.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed) ?? "")")!) {
-                        HStack {
-                            Image(systemName: category.icon)
-                                .font(.system(size: 22))
-                                .foregroundColor(Color(hex: category.color))
-                                .frame(width: 30)
+            if useCompactLayout {
+                // 8項目表示用のグリッドレイアウト
+                LazyVGrid(columns: [GridItem(.flexible()), GridItem(.flexible())], spacing: 6) {
+                    ForEach(categories.prefix(8), id: \.id) { category in
+                        Link(destination: URL(string: "quickmemo://add?category=\(category.name.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed) ?? "")")!) {
+                            HStack(spacing: 6) {
+                                Image(systemName: category.icon)
+                                    .font(.system(size: 16))
+                                    .foregroundColor(Color(hex: category.color))
+                                    .frame(width: 20)
 
-                            Text(category.name)
-                                .font(.system(size: 16, weight: .medium))
-                                .foregroundColor(.primary)
+                                Text(category.name)
+                                    .font(.system(size: 13, weight: .medium))
+                                    .foregroundColor(.primary)
+                                    .lineLimit(1)
 
-                            Spacer()
+                                Spacer()
 
-                            Image(systemName: "plus.circle.fill")
-                                .font(.system(size: 22))
-                                .foregroundColor(Color(hex: category.color))
+                                Image(systemName: "plus.circle.fill")
+                                    .font(.system(size: 16))
+                                    .foregroundColor(Color(hex: category.color))
+                            }
+                            .padding(.horizontal, 8)
+                            .padding(.vertical, 10)
+                            .background(Color(.secondarySystemBackground))
+                            .cornerRadius(8)
                         }
-                        .padding(12)
-                        .background(Color(.secondarySystemBackground))
-                        .cornerRadius(10)
+                    }
+                }
+            } else {
+                // 4項目以下の通常レイアウト
+                VStack(spacing: 10) {
+                    ForEach(categories, id: \.id) { category in
+                        Link(destination: URL(string: "quickmemo://add?category=\(category.name.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed) ?? "")")!) {
+                            HStack {
+                                Image(systemName: category.icon)
+                                    .font(.system(size: 22))
+                                    .foregroundColor(Color(hex: category.color))
+                                    .frame(width: 30)
+
+                                Text(category.name)
+                                    .font(.system(size: 16, weight: .medium))
+                                    .foregroundColor(.primary)
+
+                                Spacer()
+
+                                Image(systemName: "plus.circle.fill")
+                                    .font(.system(size: 22))
+                                    .foregroundColor(Color(hex: category.color))
+                            }
+                            .padding(12)
+                            .background(Color(.secondarySystemBackground))
+                            .cornerRadius(10)
+                        }
                     }
                 }
             }
@@ -334,12 +400,12 @@ struct LargeWidgetView: View {
 
             HStack {
                 Text("widget_tap_to_add_memo".localized)
-                    .font(.system(size: 12))
+                    .font(.system(size: useCompactLayout ? 10 : 12))
                     .foregroundColor(.secondary)
                 Spacer()
             }
         }
-        .padding()
+        .padding(useCompactLayout ? 12 : 16)
     }
 }
 

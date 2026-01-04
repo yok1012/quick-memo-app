@@ -1,0 +1,17 @@
+/*
+  Localizable.strings (English)
+  quickMemoWidget
+*/
+
+// Categories
+"work" = "Work";
+"personal" = "Personal";
+"idea" = "Ideas";
+"other" = "Other";
+
+// Widget UI
+"quick_memo" = "Quick Memo";
+"widget_open_app" = "Open App";
+"widget_tap_to_add_memo" = "Tap to add memo";
+"widget_description" = "Quickly add memos";
+"upgrade_to_pro" = "Upgrade to Pro";

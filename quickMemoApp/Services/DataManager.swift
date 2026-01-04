@@ -1477,32 +1477,108 @@ class DataManager: ObservableObject {
     }
     
     // MARK: - Purchase Validation
-    
+
     @MainActor
     func canAddMemo() -> Bool {
-        return purchaseManager.canCreateMoreMemos(currentCount: memos.count)
+        // Pro版は無制限
+        if purchaseManager.isProVersion {
+            return true
+        }
+
+        // 無料版の通常枠（100個まで）
+        if memos.count < 100 {
+            return true
+        }
+
+        // 報酬メモがあれば作成可能
+        return RewardManager.shared.hasRewardMemos
+    }
+
+    /// メモ作成時にどの枠を使用するか決定し、必要に応じて報酬メモを消費
+    /// - Returns: メモを作成できる場合はtrue
+    @MainActor
+    func consumeMemoSlotIfNeeded() -> Bool {
+        // Pro版は消費不要
+        if purchaseManager.isProVersion {
+            return true
+        }
+
+        // 無料版の通常枠内
+        if memos.count < 100 {
+            return true
+        }
+
+        // 報酬メモを消費
+        return RewardManager.shared.consumeRewardMemo()
+    }
+
+    /// メモ作成時の枠タイプを取得
+    @MainActor
+    func getMemoSlotType() -> MemoSlotType {
+        return RewardManager.shared.determineMemoSlotType(
+            currentMemoCount: memos.count,
+            isProVersion: purchaseManager.isProVersion
+        )
     }
     
     @MainActor
     func canAddCategory() -> Bool {
-        return purchaseManager.canCreateMoreCategories(currentCount: categories.count)
+        // Pro版は無制限
+        if purchaseManager.isProVersion {
+            return true
+        }
+
+        // 無料版の通常枠（5個まで）
+        if categories.count < 5 {
+            return true
+        }
+
+        // 報酬カテゴリーがあれば作成可能
+        return RewardManager.shared.hasRewardCategories
     }
-    
+
+    /// カテゴリー作成時にどの枠を使用するか決定し、必要に応じて報酬カテゴリーを消費
+    /// - Returns: カテゴリーを作成できる場合はtrue
+    @MainActor
+    func consumeCategorySlotIfNeeded() -> Bool {
+        // Pro版は消費不要
+        if purchaseManager.isProVersion {
+            return true
+        }
+
+        // 無料版の通常枠内
+        if categories.count < 5 {
+            return true
+        }
+
+        // 報酬カテゴリーを消費
+        return RewardManager.shared.consumeRewardCategory()
+    }
+
+    /// カテゴリー作成時の枠タイプを取得
+    @MainActor
+    func getCategorySlotType() -> CategorySlotType {
+        return RewardManager.shared.determineCategorySlotType(
+            currentCategoryCount: categories.count,
+            isProVersion: purchaseManager.isProVersion
+        )
+    }
+
     @MainActor
     func canUseAdvancedTags() -> Bool {
         return purchaseManager.canUseAdvancedFeatures()
     }
-    
+
     @MainActor
     func canUseCalendarIntegration() -> Bool {
         return purchaseManager.canUseAdvancedFeatures()
     }
-    
+
     @MainActor
     func canUseDeepLinks() -> Bool {
         return purchaseManager.canUseAdvancedFeatures()
     }
-    
+
     @MainActor
     func getRemainingMemoCount() -> Int? {
         if purchaseManager.isProVersion {
@@ -1510,13 +1586,17 @@ class DataManager: ObservableObject {
         }
         return max(0, 100 - memos.count)
     }
-    
+
     @MainActor
     func getRemainingCategoryCount() -> Int? {
         if purchaseManager.isProVersion {
             return nil // Unlimited
         }
-        return max(0, 5 - categories.count)
+        // 基本枠5 + リワード枠
+        let baseLimit = 5
+        let rewardSlots = RewardManager.shared.rewardCategoryCount
+        let totalLimit = baseLimit + rewardSlots
+        return max(0, totalLimit - categories.count)
     }
 
     // MARK: - Widget Management

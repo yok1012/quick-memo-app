@@ -83,12 +83,11 @@ struct CategoryManagementView: View {
                             EditButton()
 
                             Button(action: {
-                                // Allow adding categories for all users
-                                // Free users can have up to 5 categories
-                                if !purchaseManager.isProVersion && dataManager.categories.count >= 5 {
-                                    showingProAlert = true
-                                } else {
+                                // Use DataManager's canAddCategory() which considers reward slots
+                                if dataManager.canAddCategory() {
                                     showingAddCategory = true
+                                } else {
+                                    showingProAlert = true
                                 }
                             }) {
                                 Image(systemName: "plus")
@@ -341,6 +340,16 @@ struct AddCategoryView: View {
             showingError = true
             return
         }
+
+        // Check if user can add more categories
+        if !dataManager.canAddCategory() {
+            errorMessage = "category_limit_error".localized
+            showingError = true
+            return
+        }
+
+        // Consume reward category slot if needed
+        _ = dataManager.consumeCategorySlotIfNeeded()
 
         // Parse tags
         let tags = defaultTags

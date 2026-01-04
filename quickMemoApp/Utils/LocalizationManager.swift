@@ -1,5 +1,6 @@
 import Foundation
 import SwiftUI
+import WidgetKit
 
 class LocalizationManager: ObservableObject {
     static let shared = LocalizationManager()
@@ -21,6 +22,8 @@ class LocalizationManager: ObservableObject {
         if storedLanguage == "device" || storedLanguage.isEmpty {
             // デバイス設定に従う
             followDeviceLanguage()
+            // App Groupにも保存
+            saveLanguageToAppGroup("device")
         } else {
             // 固定言語を使用
             currentLanguage = storedLanguage
@@ -47,6 +50,9 @@ class LocalizationManager: ObservableObject {
         // Bundleの言語設定を変更
         Bundle.setLanguage(currentLanguage)
 
+        // App GroupにもdeviceモードとしてのcurrentLanguageを保存（ウィジェット用）
+        saveLanguageToAppGroup(currentLanguage)
+
         // Force refresh
         DispatchQueue.main.async { [weak self] in
             self?.objectWillChange.send()
@@ -71,6 +77,9 @@ class LocalizationManager: ObservableObject {
             Bundle.setLanguage(language)
         }
 
+        // App Group UserDefaultsにも言語設定を保存（ウィジェット用）
+        saveLanguageToAppGroup(language)
+
         // Force all views to refresh
         DispatchQueue.main.async { [weak self] in
             self?.refreshID = UUID()
@@ -82,6 +91,22 @@ class LocalizationManager: ObservableObject {
 
         // Update default categories with new language
         updateDefaultCategories()
+
+        // ウィジェットを更新
+        reloadWidgets()
+    }
+
+    private func saveLanguageToAppGroup(_ language: String) {
+        let appGroupIdentifier = "group.yokAppDev.quickMemoApp"
+        if let userDefaults = UserDefaults(suiteName: appGroupIdentifier) {
+            userDefaults.set(language, forKey: "app_language")
+            userDefaults.synchronize()
+        }
+    }
+
+    private func reloadWidgets() {
+        // すべてのウィジェットのタイムラインを更新
+        WidgetCenter.shared.reloadAllTimelines()
     }
 
     func getLanguageName(for code: String) -> String {

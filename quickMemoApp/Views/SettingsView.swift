@@ -8,6 +8,8 @@ struct SettingsView: View {
     @StateObject private var purchaseManager = PurchaseManager.shared
     @StateObject private var notificationManager = NotificationManager.shared
     @StateObject private var localizationManager = LocalizationManager.shared
+    @StateObject private var rewardManager = RewardManager.shared
+    @StateObject private var dataManager = DataManager.shared
     @State private var isTestingConnection = false
     @State private var showTestResult = false
     @State private var testResultMessage = ""
@@ -17,6 +19,7 @@ struct SettingsView: View {
     @State private var showingPurchase = false
     @State private var showingWidgetSettings = false
     @State private var showingWatchSettings = false
+    @State private var showingRewardAd = false
     @State private var showingExportOptions = false
     @State private var exportFormat: ExportManager.ExportFormat = .json
     @State private var exportType: ExportManager.ExportType = .currentMemos
@@ -171,7 +174,49 @@ struct SettingsView: View {
                         Label("settings_pro_version".localized, systemImage: "star.fill")
                     }
                 }
-                
+
+                // リワード広告セクション（無料版ユーザーのみ表示）
+                if !purchaseManager.isProVersion {
+                    Section {
+                        Button(action: {
+                            showingRewardAd = true
+                        }) {
+                            HStack {
+                                Image(systemName: "gift.fill")
+                                    .foregroundColor(.orange)
+                                    .font(.title2)
+                                VStack(alignment: .leading, spacing: 4) {
+                                    Text("reward_ad_title".localized)
+                                        .font(.headline)
+                                        .foregroundColor(.primary)
+                                    Text("reward_ad_description".localized)
+                                        .font(.caption)
+                                        .foregroundColor(.secondary)
+                                }
+                                Spacer()
+                                // 現在のリワード枠数を表示
+                                if rewardManager.rewardMemoCount > 0 {
+                                    Text("\(rewardManager.rewardMemoCount)")
+                                        .font(.headline)
+                                        .foregroundColor(.white)
+                                        .padding(.horizontal, 10)
+                                        .padding(.vertical, 4)
+                                        .background(Color.orange)
+                                        .clipShape(Capsule())
+                                }
+                                Image(systemName: "chevron.right")
+                                    .font(.caption)
+                                    .foregroundColor(.secondary)
+                            }
+                        }
+                    } header: {
+                        Label("reward_ad_section".localized, systemImage: "play.rectangle.fill")
+                    } footer: {
+                        Text("reward_ad_footer".localized)
+                            .font(.system(size: 12))
+                    }
+                }
+
                 // 使用状況セクション
                 Section {
                     usageStatsView
@@ -423,12 +468,12 @@ struct SettingsView: View {
                                 .foregroundColor(.blue)
                             Text("settings_export_memos".localized)
                             Spacer()
-                            Text("\(DataManager.shared.memos.count)\("items_count".localized)")
+                            Text("\(dataManager.memos.count)\("items_count".localized)")
                                 .font(.caption)
                                 .foregroundColor(.secondary)
                         }
                     }
-                    .disabled(DataManager.shared.memos.isEmpty)
+                    .disabled(dataManager.memos.isEmpty)
 
                     // 削除履歴エクスポート
                     Button(action: {
@@ -440,12 +485,12 @@ struct SettingsView: View {
                                 .foregroundColor(.orange)
                             Text("export_archive_history".localized)
                             Spacer()
-                            Text("\(DataManager.shared.archivedMemos.count)\("items_count".localized)")
+                            Text("\(dataManager.archivedMemos.count)\("items_count".localized)")
                                 .font(.caption)
                                 .foregroundColor(.secondary)
                         }
                     }
-                    .disabled(DataManager.shared.archivedMemos.isEmpty)
+                    .disabled(dataManager.archivedMemos.isEmpty)
 
                     // すべてのデータエクスポート
                     Button(action: {
@@ -457,12 +502,12 @@ struct SettingsView: View {
                                 .foregroundColor(.purple)
                             Text("export_all_data".localized)
                             Spacer()
-                            Text("\(DataManager.shared.memos.count + DataManager.shared.archivedMemos.count)\("items_count".localized)")
+                            Text("\(dataManager.memos.count + dataManager.archivedMemos.count)\("items_count".localized)")
                                 .font(.caption)
                                 .foregroundColor(.secondary)
                         }
                     }
-                    .disabled(DataManager.shared.memos.isEmpty && DataManager.shared.archivedMemos.isEmpty)
+                    .disabled(dataManager.memos.isEmpty && dataManager.archivedMemos.isEmpty)
 
                     // インポートボタン
                 } header: {
@@ -732,6 +777,9 @@ struct SettingsView: View {
             }
             .sheet(isPresented: $showingDataDiagnostic) {
                 DataDiagnosticView()
+            }
+            .sheet(isPresented: $showingRewardAd) {
+                RewardAdView()
             }
             .alert("settings_connection_test_result".localized, isPresented: $showTestResult) {
                 Button(localizationManager.localizedString(for: "ok")) {
@@ -1042,22 +1090,35 @@ struct SettingsView: View {
                     Text("settings_memo_count".localized)
                         .font(.subheadline)
                         .foregroundColor(.secondary)
-                    
-                    if let remaining = DataManager.shared.getRemainingMemoCount() {
-                        Text("\(DataManager.shared.memos.count)/100")
-                            .font(.title3)
-                            .fontWeight(.semibold)
-                        Text("\("settings_remaining".localized) \(remaining) \("settings_items".localized)")
-                            .font(.caption)
-                            .foregroundColor(remaining <= 20 ? .orange : .secondary)
-                    } else {
+
+                    if purchaseManager.isProVersion {
                         HStack {
-                            Text("\(DataManager.shared.memos.count)")
+                            Text("\(dataManager.memos.count)")
                                 .font(.title3)
                                 .fontWeight(.semibold)
                             Text("settings_unlimited".localized)
                                 .font(.caption)
                                 .foregroundColor(.green)
+                        }
+                    } else {
+                        // 無料版: 基本枠100 + リワード枠
+                        let baseLimit = 100
+                        let rewardSlots = rewardManager.rewardMemoCount
+                        let totalLimit = baseLimit + rewardSlots
+                        let remaining = max(0, totalLimit - dataManager.memos.count)
+
+                        Text("\(dataManager.memos.count)/\(totalLimit)")
+                            .font(.title3)
+                            .fontWeight(.semibold)
+
+                        if rewardSlots > 0 {
+                            Text("\("settings_remaining".localized) \(remaining) \("settings_items".localized) (\("reward_slots".localized): +\(rewardSlots))")
+                                .font(.caption)
+                                .foregroundColor(remaining <= 20 ? .orange : .secondary)
+                        } else {
+                            Text("\("settings_remaining".localized) \(remaining) \("settings_items".localized)")
+                                .font(.caption)
+                                .foregroundColor(remaining <= 20 ? .orange : .secondary)
                         }
                     }
                 }
@@ -1069,22 +1130,35 @@ struct SettingsView: View {
                     Text("settings_category_count".localized)
                         .font(.subheadline)
                         .foregroundColor(.secondary)
-                    
-                    if let remaining = DataManager.shared.getRemainingCategoryCount() {
-                        Text("\(DataManager.shared.categories.count)/5")
-                            .font(.title3)
-                            .fontWeight(.semibold)
-                        Text("\("settings_remaining".localized) \(remaining) \("settings_items".localized)")
-                            .font(.caption)
-                            .foregroundColor(remaining == 0 ? .red : .secondary)
-                    } else {
+
+                    if purchaseManager.isProVersion {
                         HStack {
                             Text("settings_unlimited".localized)
                                 .font(.caption)
                                 .foregroundColor(.green)
-                            Text("\(DataManager.shared.categories.count)")
+                            Text("\(dataManager.categories.count)")
                                 .font(.title3)
                                 .fontWeight(.semibold)
+                        }
+                    } else {
+                        // 無料版: 基本枠5 + リワード枠
+                        let baseLimit = 5
+                        let rewardSlots = rewardManager.rewardCategoryCount
+                        let totalLimit = baseLimit + rewardSlots
+                        let remaining = max(0, totalLimit - dataManager.categories.count)
+
+                        Text("\(dataManager.categories.count)/\(totalLimit)")
+                            .font(.title3)
+                            .fontWeight(.semibold)
+
+                        if rewardSlots > 0 {
+                            Text("\("settings_remaining".localized) \(remaining) \("settings_items".localized) (\("reward_slots".localized): +\(rewardSlots))")
+                                .font(.caption)
+                                .foregroundColor(remaining == 0 ? .red : .secondary)
+                        } else {
+                            Text("\("settings_remaining".localized) \(remaining) \("settings_items".localized)")
+                                .font(.caption)
+                                .foregroundColor(remaining == 0 ? .red : .secondary)
                         }
                     }
                 }

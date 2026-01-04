@@ -1,0 +1,2 @@
+/* App Tracking Transparency permission message */
+"NSUserTrackingUsageDescription" = "We use tracking to show you personalized ads.";

@@ -15,15 +15,22 @@ struct quickMemoAppApp: App {
     @StateObject private var notificationManager = NotificationManager.shared
     @StateObject private var localizationManager = LocalizationManager.shared
     @StateObject private var dataManager = DataManager.shared
+    @StateObject private var adManager = AdMobManager.shared
+    @StateObject private var rewardManager = RewardManager.shared
 
     init() {
         // アプリ起動直後にPurchaseManagerを初期化してトランザクション監視を開始
         // @StateObjectは自動的に初期化されるが、明示的にアクセスして確実に初期化
         _ = PurchaseManager.shared
-        
+
         // DataManagerを確実に初期化（カテゴリーの読み込みを保証）
         _ = DataManager.shared
-        
+
+        // AdMob SDKを初期化（Pro版以外の場合）
+        if !PurchaseManager.shared.isProVersion {
+            AdMobManager.shared.initialize()
+        }
+
         // 初期化状態をログ出力
         print("🚀 App initialization - DataManager categories: \(DataManager.shared.categories.count)")
     }

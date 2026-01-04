@@ -1,0 +1,17 @@
+/*
+  Localizable.strings (Simplified Chinese)
+  quickMemoWidget
+*/
+
+// Categories
+"work" = "工作";
+"personal" = "私人";
+"idea" = "灵感";
+"other" = "其他";
+
+// Widget UI
+"quick_memo" = "Quick Memo";
+"widget_open_app" = "打开应用";
+"widget_tap_to_add_memo" = "点击添加备忘录";
+"widget_description" = "快速添加备忘录";
+"upgrade_to_pro" = "升级到Pro版";
