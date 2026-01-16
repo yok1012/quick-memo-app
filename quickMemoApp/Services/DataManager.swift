@@ -1602,28 +1602,91 @@ class DataManager: ObservableObject {
     // MARK: - Widget Management
 
     func getWidgetCategories() -> [String] {
+        print("🔍 DataManager.getWidgetCategories called")
+
         // Get selected widget categories from UserDefaults
         if let data = userDefaults.data(forKey: widgetCategoriesKey),
            let categories = try? JSONDecoder().decode([String].self, from: data) {
+            print("✅ DataManager: Found \(categories.count) widget categories")
+            print("✅ Categories: \(categories)")
             return categories
         }
+
         // Default to first 4 categories
-        return Array(categories.prefix(4).map { $0.name })
+        let defaultCategories = Array(categories.prefix(4).map { $0.name })
+        print("⚠️ DataManager: No widget categories found, returning default: \(defaultCategories)")
+        return defaultCategories
     }
 
     func saveWidgetCategories(_ categoryNames: [String]) {
+        print("🔧 DataManager.saveWidgetCategories called with \(categoryNames.count) categories")
+        print("🔧 Categories: \(categoryNames)")
+        print("🔧 Pro version: \(purchaseManager.isProVersion)")
+
         // Free users cannot customize widget categories
-        guard purchaseManager.isProVersion else { return }
+        guard purchaseManager.isProVersion else {
+            print("❌ DataManager: Not Pro version, cannot save widget categories")
+            return
+        }
 
         if let data = try? JSONEncoder().encode(categoryNames) {
             userDefaults.set(data, forKey: widgetCategoriesKey)
+            userDefaults.synchronize()
+            print("✅ DataManager: Saved \(categoryNames.count) categories to widget_categories")
             notifyWidgetUpdate()
+            print("✅ DataManager: Widget update notification sent")
+        } else {
+            print("❌ DataManager: Failed to encode widget categories")
         }
     }
 
     @MainActor
     func canCustomizeWidgetCategories() -> Bool {
         return purchaseManager.canCustomizeWidget()
+    }
+
+    // MARK: - Debug Methods
+
+    /// ウィジェット設定の診断情報を出力
+    func diagnoseWidgetSettings() {
+        print("🔍 ===== Widget Settings Diagnosis =====")
+        print("📊 Pro Version: \(purchaseManager.isProVersion)")
+        print("📊 App Group ID: \(appGroupIdentifier)")
+
+        // App Group UserDefaults の確認
+        if let sharedDefaults = UserDefaults(suiteName: appGroupIdentifier) {
+            print("✅ App Group UserDefaults accessible")
+
+            // Pro版状態の確認
+            let isPro1 = sharedDefaults.bool(forKey: "is_pro_version")
+            let isPro2 = sharedDefaults.bool(forKey: "isPurchased")
+            print("📊 is_pro_version: \(isPro1)")
+            print("📊 isPurchased: \(isPro2)")
+
+            // widget_categories の確認
+            if let data = sharedDefaults.data(forKey: "widget_categories"),
+               let categories = try? JSONDecoder().decode([String].self, from: data) {
+                print("✅ widget_categories found: \(categories)")
+            } else {
+                print("⚠️ widget_categories not found or decode failed")
+            }
+
+            // categories の確認
+            if let data = sharedDefaults.data(forKey: "categories") {
+                print("✅ categories data exists (\(data.count) bytes)")
+                if let categories = try? JSONDecoder().decode([Category].self, from: data) {
+                    print("✅ Decoded \(categories.count) categories")
+                } else {
+                    print("❌ Failed to decode categories")
+                }
+            } else {
+                print("⚠️ categories data not found")
+            }
+        } else {
+            print("❌ Failed to access App Group UserDefaults")
+        }
+
+        print("🔍 ===== End Diagnosis =====")
     }
     
     // MARK: - Diagnostic Methods

@@ -18,8 +18,9 @@ struct MainView: View {
     @State private var showingPurchase = false
     @State private var showingLimitAlert = false
     @State private var limitAlertMessage = ""
-    
-    
+    @State private var showingCategorySummary = false
+
+
     var body: some View {
         NavigationStack {
             VStack(spacing: 0) {
@@ -37,7 +38,16 @@ struct MainView: View {
             .toolbar {
                 ToolbarItem(placement: .navigationBarLeading) {
                     HStack(spacing: 16) {
-                        
+                        // AI要約ボタン（特定カテゴリー選択時のみ表示）
+                        if selectedCategory != "category_all".localized && !filteredMemosForSummary.isEmpty {
+                            Button(action: {
+                                showingCategorySummary = true
+                            }) {
+                                Image(systemName: "sparkles")
+                                    .foregroundColor(.purple)
+                            }
+                        }
+
                         Button(action: {
                             showingCategoryManagement = true
                         }) {
@@ -126,6 +136,11 @@ struct MainView: View {
             .sheet(isPresented: $showingPurchase) {
                 PurchaseView()
             }
+            .sheet(isPresented: $showingCategorySummary) {
+                if let category = selectedCategoryObject {
+                    CategorySummaryView(category: category, memos: filteredMemosForSummary)
+                }
+            }
             .alert("limit_reached".localized, isPresented: $showingLimitAlert) {
                 Button("pro_purchase".localized) {
                     showingPurchase = true
@@ -137,6 +152,14 @@ struct MainView: View {
         }
     }
     
+    private var filteredMemosForSummary: [QuickMemo] {
+        dataManager.filteredMemos(category: selectedCategory, searchText: "")
+    }
+
+    private var selectedCategoryObject: Category? {
+        dataManager.categories.first { $0.name == selectedCategory }
+    }
+
     private var categoryTabView: some View {
         ScrollView(.horizontal, showsIndicators: false) {
             HStack(spacing: 16) {

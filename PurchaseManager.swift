@@ -411,10 +411,17 @@ class PurchaseManager: NSObject, ObservableObject {
             // いずれかのPro版Product IDが購入済みかチェック
             self.isProVersion = !purchasedProductIDs.isDisjoint(with: allProductIDs)
 
+            print("📊 PurchaseManager: isProVersion = \(self.isProVersion)")
+            print("📊 PurchaseManager: purchasedProductIDs = \(purchasedProductIDs)")
 
             // App Groupに保存（Watch/Widget用）
             if let sharedDefaults = UserDefaults(suiteName: "group.yokAppDev.quickMemoApp") {
                 sharedDefaults.set(self.isProVersion, forKey: "isPurchased")
+                sharedDefaults.set(self.isProVersion, forKey: "is_pro_version")  // 両方のキーで保存
+                sharedDefaults.synchronize()
+                print("✅ PurchaseManager: Saved to App Group UserDefaults")
+            } else {
+                print("❌ PurchaseManager: Failed to access App Group UserDefaults")
             }
         }
     }

@@ -42,7 +42,7 @@ struct WidgetCategorySettingsView: View {
                             Text("widget_free_version_notice".localized)
                                 .foregroundColor(.secondary)
                         } else {
-                            Text("最大4つまで選択できます")
+                            Text("最大8つまで選択できます（大サイズウィジェット対応）")
                                 .foregroundColor(.secondary)
                         }
                     }
@@ -101,7 +101,8 @@ struct WidgetCategorySettingsView: View {
         }
 
         if isSelected {
-            if selectedCategories.count < 4 {
+            // Large widget can display up to 8 categories
+            if selectedCategories.count < 8 {
                 selectedCategories.insert(categoryName)
             }
         } else {
@@ -115,10 +116,16 @@ struct WidgetCategorySettingsView: View {
     }
 
     private func saveSettings() {
+        print("🔧 WidgetCategorySettingsView.saveSettings called")
+        print("🔧 Selected categories: \(selectedCategories)")
+        print("🔧 Pro version: \(purchaseManager.isProVersion)")
+
         let sortedCategories = dataManager.categories
             .filter { selectedCategories.contains($0.name) }
             .sorted(by: { $0.order < $1.order })
             .map { $0.name }
+
+        print("🔧 Sorted categories to save: \(sortedCategories)")
 
         dataManager.saveWidgetCategories(sortedCategories)
         showingSaveConfirmation = true

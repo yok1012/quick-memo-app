@@ -85,6 +85,21 @@ struct Category: Codable {
         self.order = order
         self.defaultTags = defaultTags
     }
+
+    // カスタムデコーダー：アプリ側の追加フィールド（isDefault, baseKey, hiddenTags）を無視
+    enum CodingKeys: String, CodingKey {
+        case id, name, icon, color, order, defaultTags
+    }
+
+    init(from decoder: Decoder) throws {
+        let container = try decoder.container(keyedBy: CodingKeys.self)
+        id = try container.decode(UUID.self, forKey: .id)
+        name = try container.decode(String.self, forKey: .name)
+        icon = try container.decode(String.self, forKey: .icon)
+        color = try container.decode(String.self, forKey: .color)
+        order = try container.decode(Int.self, forKey: .order)
+        defaultTags = try container.decode([String].self, forKey: .defaultTags)
+    }
 }
 
 // Color Extension
@@ -134,34 +149,47 @@ struct QuickMemoProvider: TimelineProvider {
     private func loadCategories() -> [Category] {
         let appGroupIdentifier = "group.yokAppDev.quickMemoApp"
         guard let userDefaults = UserDefaults(suiteName: appGroupIdentifier) else {
+            print("⚠️ Widget: Failed to load UserDefaults")
             return sampleCategories()
         }
 
         // Check if user is Pro version
         let isProVersion = userDefaults.bool(forKey: "is_pro_version") || userDefaults.bool(forKey: "isPurchased")
+        print("📊 Widget: Pro version = \(isProVersion)")
 
         // Load selected widget categories if Pro, otherwise use default
-        if isProVersion,
-           let selectedData = userDefaults.data(forKey: "widget_categories"),
-           let selectedCategoryNames = try? JSONDecoder().decode([String].self, from: selectedData),
-           let categoriesData = userDefaults.data(forKey: "categories"),
-           let allCategories = try? JSONDecoder().decode([Category].self, from: categoriesData) {
-            // Return selected categories in order (up to 8 for large widget)
-            return selectedCategoryNames.compactMap { name in
-                allCategories.first { $0.name == name }
-            }.prefix(8).map { $0 }
+        if isProVersion {
+            if let selectedData = userDefaults.data(forKey: "widget_categories"),
+               let selectedCategoryNames = try? JSONDecoder().decode([String].self, from: selectedData) {
+                print("✅ Widget: Found widget_categories: \(selectedCategoryNames)")
+
+                if let categoriesData = userDefaults.data(forKey: "categories"),
+                   let allCategories = try? JSONDecoder().decode([Category].self, from: categoriesData) {
+                    print("✅ Widget: Decoded \(allCategories.count) categories from UserDefaults")
+
+                    // Return selected categories in order (up to 8 for large widget)
+                    let result = selectedCategoryNames.compactMap { name in
+                        allCategories.first { $0.name == name }
+                    }
+                    print("✅ Widget: Returning \(result.count) selected categories")
+                    return Array(result.prefix(8))
+                } else {
+                    print("❌ Widget: Failed to decode categories from UserDefaults")
+                }
+            } else {
+                print("⚠️ Widget: No widget_categories found for Pro user")
+            }
         }
 
         // For free users or fallback: return default categories
         if let data = userDefaults.data(forKey: "categories"),
            let categories = try? JSONDecoder().decode([Category].self, from: data) {
-            // Free users get the default categories they currently have
-            let defaultNames = ["work".localized, "personal".localized, "idea".localized, "other".localized]
-            return defaultNames.compactMap { name in
-                categories.first { $0.name == name }
-            }.prefix(4).map { $0 }
+            print("📋 Widget: Using default categories (free user or fallback)")
+            // Return first 4 categories
+            return Array(categories.prefix(4).sorted(by: { $0.order < $1.order }))
         }
 
+        print("⚠️ Widget: Using sample categories (no data found)")
         return sampleCategories()
     }
 
@@ -275,6 +303,11 @@ struct SmallWidgetView: View {
 struct MediumWidgetView: View {
     let categories: [Category]
 
+    // Mediumウィジェットは最大4個まで表示
+    private var displayCategories: [Category] {
+        Array(categories.prefix(4))
+    }
+
     var body: some View {
         VStack(spacing: 10) {
             HStack {
@@ -287,7 +320,7 @@ struct MediumWidgetView: View {
             .foregroundColor(.primary)
 
             LazyVGrid(columns: [GridItem(.flexible()), GridItem(.flexible())], spacing: 8) {
-                ForEach(categories.prefix(4), id: \.id) { category in
+                ForEach(displayCategories, id: \.id) { category in
                     Link(destination: URL(string: "quickmemo://add?category=\(category.name.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed) ?? "")")!) {
                         HStack {
                             Image(systemName: category.icon)
@@ -299,8 +332,9 @@ struct MediumWidgetView: View {
                                 .font(.system(size: 14, weight: .medium))
                                 .foregroundColor(.primary)
                                 .lineLimit(1)
+                                .minimumScaleFactor(0.85)
 
-                            Spacer()
+                            Spacer(minLength: 2)
                         }
                         .padding(8)
                         .background(Color(.secondarySystemBackground))
@@ -316,96 +350,159 @@ struct MediumWidgetView: View {
 struct LargeWidgetView: View {
     let categories: [Category]
 
-    // 8項目以上あるかどうかでレイアウトを切り替え
-    private var useCompactLayout: Bool {
-        categories.count > 4
+    // 最大8個まで表示
+    private var displayCategories: [Category] {
+        Array(categories.prefix(8))
+    }
+
+    // グリッド行数
+    private var gridRowCount: Int {
+        (displayCategories.count + 1) / 2  // 切り上げ
+    }
+
+    // 5個以上で2列グリッドを使用
+    private var useGridLayout: Bool {
+        displayCategories.count >= 5
     }
 
     var body: some View {
-        VStack(spacing: useCompactLayout ? 6 : 12) {
-            HStack {
-                Image(systemName: "square.and.pencil")
-                    .font(.system(size: useCompactLayout ? 16 : 20, weight: .bold))
-                Text("Quick Memo")
-                    .font(.system(size: useCompactLayout ? 14 : 18, weight: .bold))
-                Spacer()
+        GeometryReader { geometry in
+            let availableHeight = geometry.size.height
+            let headerHeight: CGFloat = 28
+            let footerHeight: CGFloat = 20
+            let verticalPadding: CGFloat = useGridLayout ? 10 : 16
+            let contentHeight = availableHeight - headerHeight - footerHeight - (verticalPadding * 2)
 
-                Link(destination: URL(string: "quickmemo://open")!) {
-                    Text("widget_open_app".localized)
-                        .font(.system(size: useCompactLayout ? 12 : 14, weight: .medium))
-                        .foregroundColor(.blue)
+            VStack(spacing: 0) {
+                // ヘッダー
+                HStack {
+                    Image(systemName: "square.and.pencil")
+                        .font(.system(size: useGridLayout ? 16 : 20, weight: .bold))
+                    Text("Quick Memo")
+                        .font(.system(size: useGridLayout ? 14 : 18, weight: .bold))
+                    Spacer()
+
+                    Link(destination: URL(string: "quickmemo://open")!) {
+                        Text("widget_open_app".localized)
+                            .font(.system(size: useGridLayout ? 11 : 13, weight: .medium))
+                            .foregroundColor(.blue)
+                    }
                 }
-            }
-            .foregroundColor(.primary)
+                .foregroundColor(.primary)
+                .frame(height: headerHeight)
 
-            if useCompactLayout {
-                // 8項目表示用のグリッドレイアウト
-                LazyVGrid(columns: [GridItem(.flexible()), GridItem(.flexible())], spacing: 6) {
-                    ForEach(categories.prefix(8), id: \.id) { category in
-                        Link(destination: URL(string: "quickmemo://add?category=\(category.name.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed) ?? "")")!) {
-                            HStack(spacing: 6) {
-                                Image(systemName: category.icon)
-                                    .font(.system(size: 16))
-                                    .foregroundColor(Color(hex: category.color))
-                                    .frame(width: 20)
+                Spacer().frame(height: 8)
 
-                                Text(category.name)
-                                    .font(.system(size: 13, weight: .medium))
-                                    .foregroundColor(.primary)
-                                    .lineLimit(1)
+                if useGridLayout {
+                    // 5-8項目: 2列グリッドレイアウト（スペースを埋める）
+                    let spacing: CGFloat = 8
+                    let rowHeight = (contentHeight - (CGFloat(gridRowCount - 1) * spacing)) / CGFloat(gridRowCount)
 
-                                Spacer()
-
-                                Image(systemName: "plus.circle.fill")
-                                    .font(.system(size: 16))
-                                    .foregroundColor(Color(hex: category.color))
+                    VStack(spacing: spacing) {
+                        ForEach(0..<gridRowCount, id: \.self) { rowIndex in
+                            HStack(spacing: spacing) {
+                                ForEach(0..<2, id: \.self) { colIndex in
+                                    let index = rowIndex * 2 + colIndex
+                                    if index < displayCategories.count {
+                                        gridCategoryButton(displayCategories[index], height: rowHeight)
+                                    } else {
+                                        // 空のスペースを埋める（奇数個の場合）
+                                        Color.clear
+                                            .frame(height: rowHeight)
+                                    }
+                                }
                             }
-                            .padding(.horizontal, 8)
-                            .padding(.vertical, 10)
-                            .background(Color(.secondarySystemBackground))
-                            .cornerRadius(8)
+                        }
+                    }
+                } else {
+                    // 1-4項目: 縦並びレイアウト（スペースを埋める）
+                    let spacing: CGFloat = 10
+                    let itemHeight = (contentHeight - (CGFloat(displayCategories.count - 1) * spacing)) / CGFloat(displayCategories.count)
+
+                    VStack(spacing: spacing) {
+                        ForEach(displayCategories, id: \.id) { category in
+                            listCategoryButton(category, height: itemHeight)
                         }
                     }
                 }
-            } else {
-                // 4項目以下の通常レイアウト
-                VStack(spacing: 10) {
-                    ForEach(categories, id: \.id) { category in
-                        Link(destination: URL(string: "quickmemo://add?category=\(category.name.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed) ?? "")")!) {
-                            HStack {
-                                Image(systemName: category.icon)
-                                    .font(.system(size: 22))
-                                    .foregroundColor(Color(hex: category.color))
-                                    .frame(width: 30)
 
-                                Text(category.name)
-                                    .font(.system(size: 16, weight: .medium))
-                                    .foregroundColor(.primary)
+                Spacer().frame(height: 8)
 
-                                Spacer()
-
-                                Image(systemName: "plus.circle.fill")
-                                    .font(.system(size: 22))
-                                    .foregroundColor(Color(hex: category.color))
-                            }
-                            .padding(12)
-                            .background(Color(.secondarySystemBackground))
-                            .cornerRadius(10)
-                        }
-                    }
+                // フッター
+                HStack {
+                    Text("widget_tap_to_add_memo".localized)
+                        .font(.system(size: useGridLayout ? 10 : 12))
+                        .foregroundColor(.secondary)
+                    Spacer()
                 }
+                .frame(height: footerHeight)
             }
-
-            Spacer()
-
-            HStack {
-                Text("widget_tap_to_add_memo".localized)
-                    .font(.system(size: useCompactLayout ? 10 : 12))
-                    .foregroundColor(.secondary)
-                Spacer()
-            }
+            .padding(verticalPadding)
         }
-        .padding(useCompactLayout ? 12 : 16)
+    }
+
+    // グリッドレイアウト用のボタン（5-8個）
+    @ViewBuilder
+    private func gridCategoryButton(_ category: Category, height: CGFloat) -> some View {
+        let iconSize: CGFloat = min(22, height * 0.35)
+        let textSize: CGFloat = min(14, height * 0.25)
+
+        Link(destination: URL(string: "quickmemo://add?category=\(category.name.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed) ?? "")")!) {
+            HStack(spacing: 6) {
+                Image(systemName: category.icon)
+                    .font(.system(size: iconSize))
+                    .foregroundColor(Color(hex: category.color))
+                    .frame(width: iconSize + 4)
+
+                Text(category.name)
+                    .font(.system(size: textSize, weight: .medium))
+                    .foregroundColor(.primary)
+                    .lineLimit(1)
+                    .minimumScaleFactor(0.7)
+
+                Spacer(minLength: 2)
+
+                Image(systemName: "plus.circle.fill")
+                    .font(.system(size: iconSize))
+                    .foregroundColor(Color(hex: category.color))
+            }
+            .padding(.horizontal, 10)
+            .frame(height: height)
+            .background(Color(.secondarySystemBackground))
+            .cornerRadius(10)
+        }
+    }
+
+    // リストレイアウト用のボタン（1-4個）
+    @ViewBuilder
+    private func listCategoryButton(_ category: Category, height: CGFloat) -> some View {
+        let iconSize: CGFloat = min(26, height * 0.45)
+        let textSize: CGFloat = min(17, height * 0.30)
+
+        Link(destination: URL(string: "quickmemo://add?category=\(category.name.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed) ?? "")")!) {
+            HStack(spacing: 10) {
+                Image(systemName: category.icon)
+                    .font(.system(size: iconSize))
+                    .foregroundColor(Color(hex: category.color))
+                    .frame(width: iconSize + 8)
+
+                Text(category.name)
+                    .font(.system(size: textSize, weight: .medium))
+                    .foregroundColor(.primary)
+                    .lineLimit(1)
+                    .minimumScaleFactor(0.8)
+
+                Spacer()
+
+                Image(systemName: "plus.circle.fill")
+                    .font(.system(size: iconSize))
+                    .foregroundColor(Color(hex: category.color))
+            }
+            .padding(.horizontal, 14)
+            .frame(height: height)
+            .background(Color(.secondarySystemBackground))
+            .cornerRadius(12)
+        }
     }
 }
 

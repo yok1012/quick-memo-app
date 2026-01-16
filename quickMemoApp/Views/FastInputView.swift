@@ -19,9 +19,33 @@ struct FastInputView: View {
     @State private var newTagText = ""
     @State private var showingTagLimitAlert = false
     @State private var showingPurchase = false
-    
+    @State private var showingTagExtraction = false
+    @StateObject private var aiManager = AIManager.shared
+
+    // テキストエリアの高さ調整用
+    @AppStorage("fastInputTextAreaHeight") private var textAreaHeight: Double = 150
+    @State private var isDragging = false
+    private let minTextAreaHeight: CGFloat = 80
+    private let maxTextAreaHeight: CGFloat = 400
+
+    // ドラフト保存用
+    private let draftKey = "fastInputDraft"
+    @State private var hasDraft = false
+
     init(defaultCategory: String? = nil) {
-        _selectedCategory = State(initialValue: defaultCategory ?? QuickInputManager.shared.getQuickCategory())
+        let category = defaultCategory ?? QuickInputManager.shared.getQuickCategory()
+        _selectedCategory = State(initialValue: category)
+
+        // ドラフトがあれば読み込む
+        if let draftData = UserDefaults.standard.data(forKey: "fastInputDraft"),
+           let draft = try? JSONDecoder().decode(FastInputDraft.self, from: draftData) {
+            _memoTitle = State(initialValue: draft.title)
+            _memoText = State(initialValue: draft.content)
+            _selectedCategory = State(initialValue: draft.category)
+            _selectedTags = State(initialValue: Set(draft.tags))
+            _selectedDuration = State(initialValue: draft.duration)
+            _hasDraft = State(initialValue: true)
+        }
     }
     
     var body: some View {
@@ -133,7 +157,7 @@ struct FastInputView: View {
                         .padding(.vertical, 16)
                         .allowsHitTesting(false)
                 }
-                
+
                 TextEditor(text: $memoText)
                     .focused($isTextFieldFocused)
                     .font(.system(size: 18))
@@ -141,15 +165,21 @@ struct FastInputView: View {
                     .background(Color.clear)
                     .padding(.horizontal, 15)
                     .padding(.vertical, 11)
-                    .frame(minHeight: 100, maxHeight: 150)
+                    .frame(height: CGFloat(textAreaHeight))
                     .onReceive(NotificationCenter.default.publisher(for: UITextView.textDidBeginEditingNotification)) { _ in
                         isComposing = true
                     }
                     .onReceive(NotificationCenter.default.publisher(for: UITextView.textDidEndEditingNotification)) { _ in
                         isComposing = false
                     }
+                    .onChange(of: memoText) { _ in
+                        saveDraft()
+                    }
             }
-            
+
+            // 高さ調整用のドラッグハンドル
+            resizeHandle
+
             HStack {
                 Button(action: {
                     withAnimation(.easeInOut(duration: 0.2)) {
@@ -167,9 +197,23 @@ struct FastInputView: View {
                     }
                     .foregroundColor(.secondary)
                 }
-                
+
                 Spacer()
-                
+
+                if hasDraft {
+                    Button(action: {
+                        discardDraft()
+                    }) {
+                        HStack(spacing: 4) {
+                            Image(systemName: "trash")
+                                .font(.system(size: 11))
+                            Text("下書きを削除")
+                                .font(.system(size: 12))
+                        }
+                        .foregroundColor(.orange)
+                    }
+                }
+
                 if !selectedTags.isEmpty {
                     Text("memo_tags_count".localized(with: selectedTags.count))
                         .font(.system(size: 12))
@@ -180,12 +224,56 @@ struct FastInputView: View {
             .padding(.bottom, 12)
         }
     }
+
+    private var resizeHandle: some View {
+        HStack {
+            Spacer()
+            RoundedRectangle(cornerRadius: 2)
+                .fill(isDragging ? Color.blue : Color(.systemGray3))
+                .frame(width: 40, height: 4)
+            Spacer()
+        }
+        .frame(height: 20)
+        .contentShape(Rectangle())
+        .gesture(
+            DragGesture()
+                .onChanged { value in
+                    isDragging = true
+                    let newHeight = textAreaHeight + value.translation.height
+                    textAreaHeight = min(max(Double(minTextAreaHeight), newHeight), Double(maxTextAreaHeight))
+                }
+                .onEnded { _ in
+                    isDragging = false
+                }
+        )
+    }
     
     private var tagSection: some View {
         VStack(alignment: .leading, spacing: 12) {
             if let category = dataManager.getCategory(named: selectedCategory) {
                 ScrollView(.horizontal, showsIndicators: false) {
                     HStack(spacing: 8) {
+                        // AI抽出ボタン
+                        Button(action: {
+                            showingTagExtraction = true
+                        }) {
+                            HStack(spacing: 4) {
+                                Image(systemName: "sparkles")
+                                    .font(.system(size: 11, weight: .medium))
+                                Text("AI抽出")
+                                    .font(.system(size: 13, weight: .medium))
+                            }
+                            .foregroundColor(.purple)
+                            .padding(.horizontal, 10)
+                            .padding(.vertical, 5)
+                            .background(
+                                Capsule()
+                                    .fill(Color.purple.opacity(0.1))
+                            )
+                        }
+                        .disabled(memoText.trimmingCharacters(in: .whitespacesAndNewlines).count < 20)
+                        .opacity(memoText.trimmingCharacters(in: .whitespacesAndNewlines).count < 20 ? 0.5 : 1.0)
+
                         // 新規タグ追加ボタン
                         Button(action: {
                             showingAddTag = true
@@ -204,7 +292,7 @@ struct FastInputView: View {
                                     .stroke(Color.blue, lineWidth: 1.5)
                             )
                         }
-                        
+
                         ForEach(category.defaultTags, id: \.self) { tag in
                             QuickTagChip(
                                 tag: tag,
@@ -241,6 +329,9 @@ struct FastInputView: View {
         }
         .sheet(isPresented: $showingPurchase) {
             PurchaseView()
+        }
+        .sheet(isPresented: $showingTagExtraction) {
+            TagExtractionView(memoContent: memoText, categoryName: selectedCategory, selectedTags: $selectedTags)
         }
     }
     
@@ -298,7 +389,7 @@ struct FastInputView: View {
     private func saveMemo() {
         let trimmedText = memoText.trimmingCharacters(in: .whitespacesAndNewlines)
         guard !trimmedText.isEmpty else { return }
-        
+
         let memo = QuickMemo(
             title: memoTitle.trimmingCharacters(in: .whitespacesAndNewlines),  // タイトルを追加
             content: trimmedText,
@@ -306,10 +397,13 @@ struct FastInputView: View {
             tags: Array(selectedTags),
             durationMinutes: selectedDuration
         )
-        
+
         dataManager.addMemo(memo)
         quickInputManager.recordCategoryUsage(selectedCategory)
-        
+
+        // ドラフトをクリア
+        clearDraft()
+
         // カレンダー連携（権限がある場合のみ）
         if CalendarService.shared.hasCalendarAccess {
             Task {
@@ -327,7 +421,7 @@ struct FastInputView: View {
             }
         } else {
         }
-        
+
         dismiss()
     }
     
@@ -351,6 +445,53 @@ struct FastInputView: View {
         }
         newTagText = ""
     }
+
+    // MARK: - ドラフト管理
+
+    private func saveDraft() {
+        // 内容がある場合のみドラフトを保存
+        let hasContent = !memoText.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty ||
+                        !memoTitle.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty
+
+        if hasContent {
+            let draft = FastInputDraft(
+                title: memoTitle,
+                content: memoText,
+                category: selectedCategory,
+                tags: Array(selectedTags),
+                duration: selectedDuration
+            )
+            if let data = try? JSONEncoder().encode(draft) {
+                UserDefaults.standard.set(data, forKey: draftKey)
+                hasDraft = true
+            }
+        } else {
+            clearDraft()
+        }
+    }
+
+    private func discardDraft() {
+        // 入力内容をクリア
+        memoTitle = ""
+        memoText = ""
+        selectedTags = []
+        selectedDuration = 30
+        clearDraft()
+    }
+
+    private func clearDraft() {
+        UserDefaults.standard.removeObject(forKey: draftKey)
+        hasDraft = false
+    }
+}
+
+// MARK: - ドラフト用のデータ構造
+struct FastInputDraft: Codable {
+    let title: String
+    let content: String
+    let category: String
+    let tags: [String]
+    let duration: Int
 }
 
 struct CategoryChip: View {

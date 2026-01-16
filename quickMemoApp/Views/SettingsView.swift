@@ -418,6 +418,29 @@ struct SettingsView: View {
                     // Language changes immediately without restart
                 }
 
+                // AI機能設定セクション
+                Section {
+                    NavigationLink(destination: AISettingsView()) {
+                        HStack {
+                            Image(systemName: "sparkles")
+                                .foregroundColor(.purple)
+                            VStack(alignment: .leading, spacing: 4) {
+                                Text("AI機能設定")
+                                    .font(.subheadline)
+                                Text("タグ抽出・メモアレンジ・要約")
+                                    .font(.caption)
+                                    .foregroundColor(.secondary)
+                            }
+                            Spacer()
+                        }
+                    }
+                } header: {
+                    Label("AI機能", systemImage: "brain")
+                } footer: {
+                    Text("APIキーを設定してAI機能を利用できます。料金は各APIプロバイダーに直接お支払いください。")
+                        .font(.system(size: 12))
+                }
+
                 // カレンダー同期モード
                 Section {
                     Picker("settings_sync_mode".localized, selection: $syncMode) {
@@ -649,6 +672,18 @@ struct SettingsView: View {
                 // デバッグセクション（DEBUG環境のみ）
                 #if DEBUG
                 Section {
+                    // ウィジェット設定診断
+                    Button(action: {
+                        dataManager.diagnoseWidgetSettings()
+                    }) {
+                        HStack {
+                            Image(systemName: "stethoscope")
+                                .foregroundColor(.blue)
+                            Text("ウィジェット設定を診断")
+                            Spacer()
+                        }
+                    }
+
                     // 購入状態のリセット
                     Button(action: {
                         Task {
