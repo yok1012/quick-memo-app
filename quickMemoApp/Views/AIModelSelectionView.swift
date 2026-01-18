@@ -18,9 +18,9 @@ struct AIModelSelectionView: View {
 
         var displayName: String {
             switch self {
-            case .tagExtraction: return "タグ抽出"
-            case .memoArrange: return "メモアレンジ"
-            case .categorySummary: return "カテゴリー要約"
+            case .tagExtraction: return "ai_tag_extraction".localized
+            case .memoArrange: return "ai_memo_arrange".localized
+            case .categorySummary: return "ai_category_summary".localized
             }
         }
     }
@@ -48,7 +48,7 @@ struct AIModelSelectionView: View {
         NavigationView {
             Form {
                 // プロバイダー選択
-                Section("AIプロバイダー") {
+                Section("ai_provider".localized) {
                     ForEach(AIProvider.allCases, id: \.self) { provider in
                         Button(action: {
                             selectedProvider = provider
@@ -63,7 +63,7 @@ struct AIModelSelectionView: View {
                                         .font(.headline)
                                         .foregroundColor(.primary)
 
-                                    Text("モデル数: \(provider.availableModels.count)")
+                                    Text(String(format: "ai_model_count".localized, provider.availableModels.count))
                                         .font(.caption)
                                         .foregroundColor(.secondary)
                                 }
@@ -81,7 +81,7 @@ struct AIModelSelectionView: View {
                 }
 
                 // モデル選択
-                Section("モデル選択") {
+                Section("ai_model_selection".localized) {
                     ForEach(selectedProvider.availableModels) { model in
                         Button(action: {
                             selectedModelId = model.id
@@ -106,7 +106,7 @@ struct AIModelSelectionView: View {
                                     .foregroundColor(.secondary)
 
                                 HStack {
-                                    Text("入力: ")
+                                    Text("ai_input_label".localized + ": ")
                                         .font(.caption2)
                                         .foregroundColor(.secondary)
                                     +
@@ -115,7 +115,7 @@ struct AIModelSelectionView: View {
                                         .fontWeight(.medium)
                                         .foregroundColor(.green)
 
-                                    Text(" / 出力: ")
+                                    Text(" / " + "ai_output_label".localized + ": ")
                                         .font(.caption2)
                                         .foregroundColor(.secondary)
                                     +
@@ -124,7 +124,7 @@ struct AIModelSelectionView: View {
                                         .fontWeight(.medium)
                                         .foregroundColor(.green)
 
-                                    Text(" (per 1M tokens)")
+                                    Text(" " + "ai_per_1m_tokens".localized)
                                         .font(.caption2)
                                         .foregroundColor(.secondary)
                                 }
@@ -140,7 +140,7 @@ struct AIModelSelectionView: View {
                         HStack {
                             Image(systemName: "exclamationmark.triangle")
                                 .foregroundColor(.orange)
-                            Text("\(provider.displayName)のAPIキーが未設定です")
+                            Text(String(format: "ai_api_key_not_set".localized, provider.displayName))
                                 .font(.caption)
                                 .foregroundColor(.secondary)
                         }
@@ -151,13 +151,13 @@ struct AIModelSelectionView: View {
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {
                 ToolbarItem(placement: .cancellationAction) {
-                    Button("キャンセル") {
+                    Button("cancel".localized) {
                         dismiss()
                     }
                 }
 
                 ToolbarItem(placement: .confirmationAction) {
-                    Button("保存") {
+                    Button("save".localized) {
                         saveSelection()
                         dismiss()
                     }

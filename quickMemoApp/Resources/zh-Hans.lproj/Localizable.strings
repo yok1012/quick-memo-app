@@ -560,3 +560,193 @@
 "reward_watch_ad_button_category" = "观看视频获取%d个额度";
 "reward_category_success_title" = "获取成功！";
 "reward_category_success_message" = "您获得了%d个类别额度！";
+// MARK: - AI Features
+"ai_settings" = "AI设置";
+"ai_features" = "AI功能";
+"ai_feature_settings" = "AI功能设置";
+
+// MARK: - AI Settings
+"ai_api_key_management" = "API密钥管理";
+"ai_api_key_footer" = "API密钥安全存储在您的设备上。费用直接支付给各API提供商。";
+"ai_gemini_api_key" = "Gemini API密钥";
+"ai_claude_api_key" = "Claude API密钥";
+"ai_chatgpt_api_key" = "ChatGPT API密钥";
+"ai_api_key_input" = "输入API密钥";
+"ai_api_key_save_secure" = "API密钥安全存储在Keychain中。请勿与他人共享。";
+"ai_get_gemini_key" = "获取Gemini API密钥";
+"ai_get_claude_key" = "获取Claude API密钥";
+"ai_used_for_tag_extraction" = "用于标签提取";
+"ai_used_for_arrange_summary" = "用于备忘整理和摘要";
+"ai_used_for_all_features" = "可用于所有功能";
+
+// MARK: - AI Model Selection
+"ai_model_by_feature" = "按功能设置模型";
+"ai_provider" = "AI提供商";
+"ai_model_selection" = "模型选择";
+"ai_model_count" = "模型数: %d";
+"ai_api_key_not_set" = "%s API密钥未设置";
+"ai_input_cost" = "输入: ";
+"ai_output_cost" = " / 输出: ";
+"ai_per_1m_tokens" = " (每百万tokens)";
+
+// MARK: - AI Usage Stats
+"ai_usage_stats" = "使用统计";
+"ai_monthly_requests" = "本月请求数";
+"ai_remaining_requests" = "剩余请求数";
+"ai_monthly_limit" = "每月限额";
+"ai_total_tokens" = "总Tokens数";
+"ai_estimated_cost" = "估计成本";
+"ai_last_reset_date" = "上次重置日期";
+"ai_usage_by_type" = "按功能统计";
+"ai_times_count" = "%d次";
+"ai_usage_history_detail" = "详细使用历史";
+"ai_usage_history_footer" = "查看和导出所有请求日志";
+"ai_reset_usage_stats" = "重置使用统计";
+"ai_monthly_usage" = "本月使用: %d/%d";
+"ai_remaining" = "剩余: %d";
+
+// MARK: - Tag Extraction
+"ai_tag_extraction" = "标签提取";
+"ai_extracting_tags" = "AI正在提取标签...";
+"ai_extract_tags_from_memo" = "从备忘内容自动提取标签";
+"ai_extract_tags_description" = "Gemini AI分析您的备忘并建议相关标签";
+"ai_extract_tags_button" = "提取标签";
+"ai_extracted_tags_instruction" = "已从备忘内容中提取以下标签。点击要添加的标签。";
+"ai_suggested_tags" = "建议的标签";
+"ai_add_selected_tags" = "添加选中的标签 (%d)";
+"ai_memo_too_short" = "备忘内容太短。更详细的内容将提供更好的标签建议。";
+
+// MARK: - Memo Arrange
+"ai_memo_arrange" = "备忘整理";
+"ai_arranging_memo" = "处理中...";
+"ai_original_memo" = "原始备忘";
+"ai_select_preset" = "预设";
+"ai_preset_footer" = "从常用编辑模式中选择";
+"ai_arrange_memo" = "整理备忘";
+"ai_arrange_result" = "整理结果";
+"ai_arranged_memo" = "整理后";
+"ai_compare_original" = "与原始对比";
+"ai_hide_original" = "隐藏原始";
+"ai_apply_memo" = "应用此备忘";
+"ai_discard" = "丢弃";
+
+// Arrange Presets
+"ai_preset_summarize" = "摘要";
+"ai_preset_summarize_desc" = "简洁地总结在3行以内";
+"ai_preset_business" = "商务格式";
+"ai_preset_business_desc" = "转换为正式文本";
+"ai_preset_casual" = "休闲化";
+"ai_preset_casual_desc" = "使其友好";
+"ai_preset_expand" = "详细展开";
+"ai_preset_expand_desc" = "更具体地阐述";
+"ai_preset_bullets" = "项目符号";
+"ai_preset_bullets_desc" = "整理以提高可读性";
+"ai_preset_translate_en" = "翻译成英语";
+"ai_preset_translate_en_desc" = "翻译成英语";
+"ai_preset_translate_ja" = "翻译成日语";
+"ai_preset_translate_ja_desc" = "翻译成日语";
+
+// Custom Prompts
+"ai_custom_prompts" = "自定义提示";
+"ai_custom_prompt_footer" = "最多保存3个。左滑编辑/删除";
+"ai_add_custom_prompt" = "添加自定义提示";
+"ai_custom_prompt_count" = "%d/3";
+"ai_prompt_hints" = "提示创建技巧";
+"ai_temporary_instruction" = "临时指令（不保存）";
+"ai_temporary_instruction_footer" = "输入一次性指令。如果经常使用，请保存到自定义提示";
+
+// Custom Prompt Editor
+"ai_prompt_name" = "名称";
+"ai_prompt_name_placeholder" = "提示名称（例如：会议纪要格式）";
+"ai_prompt_name_footer" = "给它一个清晰简短的名称";
+"ai_prompt_icon" = "图标";
+"ai_prompt_content" = "提示内容";
+"ai_prompt_content_footer_hint" = "💡 提示:";
+"ai_prompt_content_footer_1" = "• 写清晰的指令，如\"请...\"";
+"ai_prompt_content_footer_2" = "• 指定输出格式可获得稳定结果";
+"ai_prompt_content_footer_3" = "• 示例：\"格式化为会议纪要，包含：日期、参与者、主题、决定、下一步行动\"";
+"ai_add_prompt" = "添加提示";
+"ai_edit_prompt" = "编辑提示";
+
+// Prompt Hints
+"ai_hint_basic_principle" = "基本原则";
+"ai_hint_basic_desc" = "有效的提示包括以下要素:";
+"ai_hint_purpose" = "目的: 明确您想要什么";
+"ai_hint_format" = "格式: 指定输出格式";
+"ai_hint_constraints" = "约束: 字数或条件";
+"ai_hint_tone" = "语气: 风格和语调";
+"ai_hint_example1" = "示例1: 会议纪要";
+"ai_hint_example2" = "示例2: 社交媒体帖子";
+"ai_hint_example3" = "示例3: 代码审查请求";
+"ai_hint_notes" = "注意事项";
+"ai_hint_note1" = "• 避免模糊指令（\"做好\"→NG）";
+"ai_hint_note2" = "• 指定具体条件";
+"ai_hint_note3" = "• 提供示例可提高准确性";
+
+// Claude Code Export
+"ai_claude_code_export" = "导出为Claude Code";
+"ai_claude_code_export_desc" = "复制为AI助手提示";
+"ai_external_ai_integration" = "外部AI集成";
+"ai_claude_code_export_title" = "Claude Code导出";
+"ai_export_template" = "模板";
+"ai_export_template_footer" = "为您的用例选择模板";
+"ai_additional_context" = "附加上下文（可选）";
+"ai_additional_context_footer" = "添加文件路径、相关信息等";
+"ai_generated_prompt" = "生成的提示";
+"ai_copy_to_clipboard" = "复制到剪贴板";
+"ai_copied" = "已复制！";
+
+// Export Templates
+"ai_template_general" = "通用";
+"ai_template_general_desc" = "通用任务请求";
+"ai_template_code_review" = "代码审查";
+"ai_template_code_review_desc" = "代码审查请求";
+"ai_template_bug_fix" = "错误修复";
+"ai_template_bug_fix_desc" = "错误调查和修复请求";
+"ai_template_feature" = "功能实现";
+"ai_template_feature_desc" = "新功能实现请求";
+"ai_template_refactor" = "重构";
+"ai_template_refactor_desc" = "代码改进请求";
+
+// MARK: - Category Summary
+"ai_category_summary" = "类别摘要";
+"ai_analyzing_category" = "AI正在分析类别...";
+"ai_analyzing_memos_count" = "正在分析%d条备忘";
+"ai_generate_summary" = "生成摘要";
+"ai_category_analysis_desc" = "分析%d条备忘以提取摘要和要点";
+"ai_memo_count_warning" = "少于3条备忘。添加更多以提高分析准确性。";
+"ai_overall_summary" = "整体摘要";
+"ai_key_points" = "要点";
+"ai_trends" = "趋势";
+"ai_statistics" = "统计";
+"ai_analyzed_memos" = "已分析备忘";
+"ai_key_points_count" = "要点";
+"ai_trends_count" = "趋势";
+"ai_memos_count_items" = "%d条备忘";
+"ai_items_count" = "%d项";
+
+// MARK: - AI Usage History
+"ai_usage_history" = "AI使用历史";
+"ai_all_period_stats" = "全部时间统计";
+"ai_total_requests" = "总请求数";
+"ai_total_cost" = "总成本";
+"ai_current_month_stats" = "本月统计";
+"ai_request_count" = "请求数";
+"ai_token_count" = "Tokens数";
+"ai_cost" = "成本";
+"ai_stats_by_feature" = "按功能统计";
+"ai_stats_by_provider" = "按提供商统计";
+"ai_recent_history" = "最近历史（最新50条）";
+"ai_export_csv" = "导出为CSV";
+"ai_clear_history" = "清除历史";
+"ai_error_message" = "错误: %@";
+"ai_tokens_display" = "Tokens: %@";
+"ai_in_out_tokens" = "in: %d / out: %d";
+
+// MARK: - AI Errors
+"ai_error" = "错误";
+"ai_api_key_saved" = "%@ API密钥已保存";
+"ai_api_key_deleted" = "%@ API密钥已删除";
+"ai_stats_reset" = "使用统计已重置";
+"ai_help" = "帮助";
+

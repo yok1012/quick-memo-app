@@ -560,3 +560,193 @@
 "reward_watch_ad_button_category" = "Watch Video for %d Slot";
 "reward_category_success_title" = "Success!";
 "reward_category_success_message" = "You earned %d category slot!";
+// MARK: - AI Features
+"ai_settings" = "AI Settings";
+"ai_features" = "AI Features";
+"ai_feature_settings" = "AI Feature Settings";
+
+// MARK: - AI Settings
+"ai_api_key_management" = "API Key Management";
+"ai_api_key_footer" = "API keys are securely stored on your device. You pay providers directly.";
+"ai_gemini_api_key" = "Gemini API Key";
+"ai_claude_api_key" = "Claude API Key";
+"ai_chatgpt_api_key" = "ChatGPT API Key";
+"ai_api_key_input" = "Enter API Key";
+"ai_api_key_save_secure" = "API keys are securely stored in Keychain. Do not share with others.";
+"ai_get_gemini_key" = "Get Gemini API Key";
+"ai_get_claude_key" = "Get Claude API Key";
+"ai_used_for_tag_extraction" = "Used for tag extraction";
+"ai_used_for_arrange_summary" = "Used for memo arrange & summary";
+"ai_used_for_all_features" = "Available for all features";
+
+// MARK: - AI Model Selection
+"ai_model_by_feature" = "Model Settings by Feature";
+"ai_provider" = "AI Provider";
+"ai_model_selection" = "Model Selection";
+"ai_model_count" = "Models: %d";
+"ai_api_key_not_set" = "%s API key not set";
+"ai_input_cost" = "Input: ";
+"ai_output_cost" = " / Output: ";
+"ai_per_1m_tokens" = " (per 1M tokens)";
+
+// MARK: - AI Usage Stats
+"ai_usage_stats" = "Usage Statistics";
+"ai_monthly_requests" = "Requests This Month";
+"ai_remaining_requests" = "Remaining Requests";
+"ai_monthly_limit" = "Monthly Limit";
+"ai_total_tokens" = "Total Tokens";
+"ai_estimated_cost" = "Estimated Cost";
+"ai_last_reset_date" = "Last Reset";
+"ai_usage_by_type" = "Usage by Feature";
+"ai_times_count" = "%d times";
+"ai_usage_history_detail" = "Detailed Usage History";
+"ai_usage_history_footer" = "View and export all request logs";
+"ai_reset_usage_stats" = "Reset Usage Statistics";
+"ai_monthly_usage" = "This month: %d/%d";
+"ai_remaining" = "Remaining: %d";
+
+// MARK: - Tag Extraction
+"ai_tag_extraction" = "Tag Extraction";
+"ai_extracting_tags" = "AI is extracting tags...";
+"ai_extract_tags_from_memo" = "Auto-extract tags from memo";
+"ai_extract_tags_description" = "Gemini AI analyzes your memo and suggests relevant tags";
+"ai_extract_tags_button" = "Extract Tags";
+"ai_extracted_tags_instruction" = "Tags extracted from your memo. Tap to add the ones you want.";
+"ai_suggested_tags" = "Suggested Tags";
+"ai_add_selected_tags" = "Add Selected Tags (%d)";
+"ai_memo_too_short" = "Memo is too short. More detailed content will provide better tag suggestions.";
+
+// MARK: - Memo Arrange
+"ai_memo_arrange" = "Memo Arrange";
+"ai_arranging_memo" = "Processing...";
+"ai_original_memo" = "Original Memo";
+"ai_select_preset" = "Presets";
+"ai_preset_footer" = "Choose from commonly used editing patterns";
+"ai_arrange_memo" = "Arrange Memo";
+"ai_arrange_result" = "Arranged Result";
+"ai_arranged_memo" = "After Arranging";
+"ai_compare_original" = "Compare with Original";
+"ai_hide_original" = "Hide Original";
+"ai_apply_memo" = "Apply This Memo";
+"ai_discard" = "Discard";
+
+// Arrange Presets
+"ai_preset_summarize" = "Summarize";
+"ai_preset_summarize_desc" = "Condense to 3 lines or less";
+"ai_preset_business" = "Business Format";
+"ai_preset_business_desc" = "Convert to formal text";
+"ai_preset_casual" = "Make Casual";
+"ai_preset_casual_desc" = "Make it friendly";
+"ai_preset_expand" = "Expand Details";
+"ai_preset_expand_desc" = "Elaborate more specifically";
+"ai_preset_bullets" = "Bullet Points";
+"ai_preset_bullets_desc" = "Organize for readability";
+"ai_preset_translate_en" = "Translate to English";
+"ai_preset_translate_en_desc" = "Translate to English";
+"ai_preset_translate_ja" = "Translate to Japanese";
+"ai_preset_translate_ja_desc" = "Translate to Japanese";
+
+// Custom Prompts
+"ai_custom_prompts" = "Custom Prompts";
+"ai_custom_prompt_footer" = "Save up to 3. Swipe left to edit/delete";
+"ai_add_custom_prompt" = "Add Custom Prompt";
+"ai_custom_prompt_count" = "%d/3";
+"ai_prompt_hints" = "Prompt Creation Tips";
+"ai_temporary_instruction" = "Temporary Instructions (not saved)";
+"ai_temporary_instruction_footer" = "Enter one-time instructions. Save to custom prompts if you use often";
+
+// Custom Prompt Editor
+"ai_prompt_name" = "Name";
+"ai_prompt_name_placeholder" = "Prompt name (e.g., Meeting Minutes Format)";
+"ai_prompt_name_footer" = "Give it a clear, short name";
+"ai_prompt_icon" = "Icon";
+"ai_prompt_content" = "Prompt Content";
+"ai_prompt_content_footer_hint" = "💡 Tip:";
+"ai_prompt_content_footer_1" = "• Write clear instructions like \"please do...\"";
+"ai_prompt_content_footer_2" = "• Specifying output format gives stable results";
+"ai_prompt_content_footer_3" = "• Example: \"Format as meeting minutes with: Date, Attendees, Topics, Decisions, Next Actions\"";
+"ai_add_prompt" = "Add Prompt";
+"ai_edit_prompt" = "Edit Prompt";
+
+// Prompt Hints
+"ai_hint_basic_principle" = "Basic Principles";
+"ai_hint_basic_desc" = "Effective prompts include these elements:";
+"ai_hint_purpose" = "Purpose: Be clear about what you want";
+"ai_hint_format" = "Format: Specify output format";
+"ai_hint_constraints" = "Constraints: Word count or conditions";
+"ai_hint_tone" = "Tone: Style and nuance";
+"ai_hint_example1" = "Example 1: Meeting Minutes";
+"ai_hint_example2" = "Example 2: Social Media Post";
+"ai_hint_example3" = "Example 3: Code Review Request";
+"ai_hint_notes" = "Notes";
+"ai_hint_note1" = "• Avoid vague instructions (\"make it nice\" → NG)";
+"ai_hint_note2" = "• Specify concrete conditions";
+"ai_hint_note3" = "• Providing examples increases accuracy";
+
+// Claude Code Export
+"ai_claude_code_export" = "Export for Claude Code";
+"ai_claude_code_export_desc" = "Copy as prompt for AI assistant";
+"ai_external_ai_integration" = "External AI Integration";
+"ai_claude_code_export_title" = "Claude Code Export";
+"ai_export_template" = "Template";
+"ai_export_template_footer" = "Select template for your use case";
+"ai_additional_context" = "Additional Context (Optional)";
+"ai_additional_context_footer" = "Add file paths, related info, etc.";
+"ai_generated_prompt" = "Generated Prompt";
+"ai_copy_to_clipboard" = "Copy to Clipboard";
+"ai_copied" = "Copied!";
+
+// Export Templates
+"ai_template_general" = "General";
+"ai_template_general_desc" = "General task request";
+"ai_template_code_review" = "Code Review";
+"ai_template_code_review_desc" = "Code review request";
+"ai_template_bug_fix" = "Bug Fix";
+"ai_template_bug_fix_desc" = "Bug investigation & fix request";
+"ai_template_feature" = "Feature Implementation";
+"ai_template_feature_desc" = "New feature implementation request";
+"ai_template_refactor" = "Refactoring";
+"ai_template_refactor_desc" = "Code improvement request";
+
+// MARK: - Category Summary
+"ai_category_summary" = "Category Summary";
+"ai_analyzing_category" = "AI is analyzing category...";
+"ai_analyzing_memos_count" = "Analyzing %d memos";
+"ai_generate_summary" = "Generate Summary";
+"ai_category_analysis_desc" = "Analyze %d memos to extract summary and key points";
+"ai_memo_count_warning" = "Less than 3 memos. Add more for better analysis accuracy.";
+"ai_overall_summary" = "Overall Summary";
+"ai_key_points" = "Key Points";
+"ai_trends" = "Trends";
+"ai_statistics" = "Statistics";
+"ai_analyzed_memos" = "Analyzed Memos";
+"ai_key_points_count" = "Key Points";
+"ai_trends_count" = "Trends";
+"ai_memos_count_items" = "%d memos";
+"ai_items_count" = "%d items";
+
+// MARK: - AI Usage History
+"ai_usage_history" = "AI Usage History";
+"ai_all_period_stats" = "All-Time Statistics";
+"ai_total_requests" = "Total Requests";
+"ai_total_cost" = "Total Cost";
+"ai_current_month_stats" = "This Month's Statistics";
+"ai_request_count" = "Requests";
+"ai_token_count" = "Tokens";
+"ai_cost" = "Cost";
+"ai_stats_by_feature" = "Statistics by Feature";
+"ai_stats_by_provider" = "Statistics by Provider";
+"ai_recent_history" = "Recent History (Last 50)";
+"ai_export_csv" = "Export as CSV";
+"ai_clear_history" = "Clear History";
+"ai_error_message" = "Error: %@";
+"ai_tokens_display" = "Tokens: %@";
+"ai_in_out_tokens" = "in: %d / out: %d";
+
+// MARK: - AI Errors
+"ai_error" = "Error";
+"ai_api_key_saved" = "%@ API key saved";
+"ai_api_key_deleted" = "%@ API key deleted";
+"ai_stats_reset" = "Usage statistics reset";
+"ai_help" = "Help";
+

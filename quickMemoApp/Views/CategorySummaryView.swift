@@ -22,11 +22,11 @@ struct CategorySummaryView: View {
                             .scaleEffect(1.5)
                             .padding()
 
-                        Text("AIがカテゴリーを分析しています...")
+                        Text("ai_analyzing_category".localized)
                             .font(.subheadline)
                             .foregroundColor(.secondary)
 
-                        Text("\(memos.count)件のメモを解析中")
+                        Text(String(format: "ai_analyzing_count".localized, memos.count))
                             .font(.caption)
                             .foregroundColor(.secondary)
                     }
@@ -64,7 +64,7 @@ struct CategorySummaryView: View {
                             .padding(.top, 60)
 
                         VStack(spacing: 12) {
-                            Text("カテゴリー要約")
+                            Text("ai_category_summary".localized)
                                 .font(.title2)
                                 .fontWeight(.bold)
 
@@ -73,7 +73,7 @@ struct CategorySummaryView: View {
                                 .foregroundColor(.secondary)
                         }
 
-                        Text("\(memos.count)件のメモを分析して、要約と要点を抽出します")
+                        Text(String(format: "ai_summary_description".localized, memos.count))
                             .font(.subheadline)
                             .foregroundColor(.secondary)
                             .multilineTextAlignment(.center)
@@ -83,7 +83,7 @@ struct CategorySummaryView: View {
                             HStack {
                                 Image(systemName: "exclamationmark.triangle")
                                     .foregroundColor(.orange)
-                                Text("メモが3件未満です。より正確な分析には、もっとメモを追加してください。")
+                                Text("ai_few_memos_warning".localized)
                                     .font(.caption)
                             }
                             .padding()
@@ -95,7 +95,7 @@ struct CategorySummaryView: View {
                         Button(action: generateSummary) {
                             HStack {
                                 Image(systemName: "wand.and.stars")
-                                Text("要約を生成")
+                                Text("ai_generate_summary".localized)
                             }
                             .font(.headline)
                             .foregroundColor(.white)
@@ -113,11 +113,11 @@ struct CategorySummaryView: View {
                     }
                 }
             }
-            .navigationTitle("カテゴリー要約")
+            .navigationTitle("ai_category_summary".localized)
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {
                 ToolbarItem(placement: .cancellationAction) {
-                    Button("閉じる") {
+                    Button("close".localized) {
                         dismiss()
                     }
                 }
@@ -130,8 +130,8 @@ struct CategorySummaryView: View {
                     }
                 }
             }
-            .alert("エラー", isPresented: $showError) {
-                Button("OK", role: .cancel) {}
+            .alert("ai_error".localized, isPresented: $showError) {
+                Button("ok".localized, role: .cancel) {}
             } message: {
                 Text(errorMessage)
             }
@@ -151,7 +151,7 @@ struct CategorySummaryView: View {
                     .font(.title2)
                     .fontWeight(.bold)
 
-                Text("\(memos.count)件のメモ")
+                Text(String(format: "ai_memo_count".localized, memos.count))
                     .font(.caption)
                     .foregroundColor(.secondary)
             }
@@ -168,7 +168,7 @@ struct CategorySummaryView: View {
             HStack {
                 Image(systemName: "doc.text")
                     .foregroundColor(.blue)
-                Text("全体の要約")
+                Text("ai_overall_summary".localized)
                     .font(.headline)
             }
 
@@ -185,7 +185,7 @@ struct CategorySummaryView: View {
             HStack {
                 Image(systemName: "list.bullet.clipboard")
                     .foregroundColor(.green)
-                Text("主な要点")
+                Text("ai_key_points".localized)
                     .font(.headline)
             }
 
@@ -214,7 +214,7 @@ struct CategorySummaryView: View {
             HStack {
                 Image(systemName: "chart.line.uptrend.xyaxis")
                     .foregroundColor(.orange)
-                Text("トレンド")
+                Text("ai_trends".localized)
                     .font(.headline)
             }
 
@@ -240,15 +240,15 @@ struct CategorySummaryView: View {
             HStack {
                 Image(systemName: "chart.bar")
                     .foregroundColor(.purple)
-                Text("統計情報")
+                Text("ai_statistics".localized)
                     .font(.headline)
             }
 
             VStack(spacing: 8) {
-                statisticRow(label: "分析メモ数", value: "\(result.totalMemos)件")
-                statisticRow(label: "要点数", value: "\(result.keyPoints.count)件")
+                statisticRow(label: "ai_analyzed_memos".localized, value: String(format: "ai_count_items".localized, result.totalMemos))
+                statisticRow(label: "ai_key_point_count".localized, value: String(format: "ai_count_items".localized, result.keyPoints.count))
                 if let trends = result.trends {
-                    statisticRow(label: "トレンド数", value: "\(trends.count)件")
+                    statisticRow(label: "ai_trend_count".localized, value: String(format: "ai_count_items".localized, trends.count))
                 }
             }
             .padding()
@@ -276,13 +276,13 @@ struct CategorySummaryView: View {
                     .font(.caption)
                     .foregroundColor(.secondary)
 
-                Text("今月の使用: \(aiManager.usageStats.totalRequests)/\(aiManager.usageStats.monthlyLimit)")
+                Text(String(format: "ai_monthly_usage".localized, aiManager.usageStats.totalRequests, aiManager.usageStats.monthlyLimit))
                     .font(.caption)
                     .foregroundColor(.secondary)
 
                 Spacer()
 
-                Text("残り: \(aiManager.usageStats.remainingRequests)")
+                Text(String(format: "ai_remaining".localized, aiManager.usageStats.remainingRequests))
                     .font(.caption)
                     .foregroundColor(aiManager.usageStats.isQuotaExceeded ? .red : .green)
             }
@@ -319,12 +319,12 @@ struct CategorySummaryView: View {
         guard let result = summaryResult else { return "" }
 
         var text = """
-        【\(category.name)カテゴリー要約】
+        【\(String(format: "ai_category_summary_title".localized, category.name))】
 
-        ■ 全体の要約
+        ■ \("ai_overall_summary".localized)
         \(result.summary)
 
-        ■ 主な要点
+        ■ \("ai_key_points".localized)
         """
 
         for (index, point) in result.keyPoints.enumerated() {
@@ -332,7 +332,7 @@ struct CategorySummaryView: View {
         }
 
         if let trends = result.trends, !trends.isEmpty {
-            text += "\n\n■ トレンド"
+            text += "\n\n■ \("ai_trends".localized)"
             for trend in trends {
                 text += "\n• \(trend)"
             }
@@ -341,8 +341,8 @@ struct CategorySummaryView: View {
         text += """
 
 
-        分析メモ数: \(result.totalMemos)件
-        生成日時: \(Date().formatted(date: .long, time: .shortened))
+        \("ai_analyzed_memos".localized): \(String(format: "ai_count_items".localized, result.totalMemos))
+        \("ai_generation_date".localized): \(Date().formatted(date: .long, time: .shortened))
         """
 
         return text

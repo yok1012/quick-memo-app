@@ -590,3 +590,193 @@
 "reward_watch_ad_button_category" = "動画を視聴して%d枠獲得";
 "reward_category_success_title" = "獲得完了！";
 "reward_category_success_message" = "%d個のカテゴリー枠を獲得しました！";
+// MARK: - AI Features
+"ai_settings" = "AI機能設定";
+"ai_features" = "AI機能";
+"ai_feature_settings" = "AI機能設定";
+
+// MARK: - AI Settings
+"ai_api_key_management" = "APIキー管理";
+"ai_api_key_footer" = "APIキーはお客様のデバイスに安全に保存されます。料金は各APIプロバイダーに直接お支払いください。";
+"ai_gemini_api_key" = "Gemini APIキー";
+"ai_claude_api_key" = "Claude APIキー";
+"ai_chatgpt_api_key" = "ChatGPT APIキー";
+"ai_api_key_input" = "APIキーを入力";
+"ai_api_key_save_secure" = "APIキーは安全にKeychainに保存されます。第三者に共有しないでください。";
+"ai_get_gemini_key" = "Gemini APIキーを取得";
+"ai_get_claude_key" = "Claude APIキーを取得";
+"ai_used_for_tag_extraction" = "タグ抽出に使用";
+"ai_used_for_arrange_summary" = "メモアレンジ・要約に使用";
+"ai_used_for_all_features" = "全機能に使用可能";
+
+// MARK: - AI Model Selection
+"ai_model_by_feature" = "機能別モデル設定";
+"ai_provider" = "AIプロバイダー";
+"ai_model_selection" = "モデル選択";
+"ai_model_count" = "モデル数: %d";
+"ai_api_key_not_set" = "%sのAPIキーが未設定です";
+"ai_input_cost" = "入力: ";
+"ai_output_cost" = " / 出力: ";
+"ai_per_1m_tokens" = " (per 1M tokens)";
+
+// MARK: - AI Usage Stats
+"ai_usage_stats" = "使用統計";
+"ai_monthly_requests" = "今月のリクエスト数";
+"ai_remaining_requests" = "残りリクエスト数";
+"ai_monthly_limit" = "月間制限";
+"ai_total_tokens" = "累計トークン数";
+"ai_estimated_cost" = "推定コスト";
+"ai_last_reset_date" = "最終リセット日";
+"ai_usage_by_type" = "機能別使用状況";
+"ai_times_count" = "%d回";
+"ai_usage_history_detail" = "詳細な使用履歴";
+"ai_usage_history_footer" = "すべてのリクエストログを確認・エクスポート";
+"ai_reset_usage_stats" = "使用統計をリセット";
+"ai_monthly_usage" = "今月の使用: %d/%d";
+"ai_remaining" = "残り: %d";
+
+// MARK: - Tag Extraction
+"ai_tag_extraction" = "タグ抽出";
+"ai_extracting_tags" = "AIがタグを抽出しています...";
+"ai_extract_tags_from_memo" = "メモ内容からタグを自動抽出";
+"ai_extract_tags_description" = "Gemini AIがメモを分析し、関連するタグを提案します";
+"ai_extract_tags_button" = "タグを抽出する";
+"ai_extracted_tags_instruction" = "メモ内容から以下のタグを抽出しました。追加したいタグをタップしてください。";
+"ai_suggested_tags" = "提案されたタグ";
+"ai_add_selected_tags" = "選択したタグを追加 (%d)";
+"ai_memo_too_short" = "メモの内容が短すぎます。より詳しい内容を書くと、より適切なタグが抽出できます。";
+
+// MARK: - Memo Arrange
+"ai_memo_arrange" = "メモアレンジ";
+"ai_arranging_memo" = "処理中...";
+"ai_original_memo" = "元のメモ";
+"ai_select_preset" = "プリセット";
+"ai_preset_footer" = "よく使われる編集パターンから選択できます";
+"ai_arrange_memo" = "メモをアレンジ";
+"ai_arrange_result" = "アレンジ結果";
+"ai_arranged_memo" = "アレンジ後";
+"ai_compare_original" = "元のメモと比較";
+"ai_hide_original" = "元のメモを隠す";
+"ai_apply_memo" = "このメモを適用";
+"ai_discard" = "破棄";
+
+// Arrange Presets
+"ai_preset_summarize" = "要約";
+"ai_preset_summarize_desc" = "3行以内で簡潔にまとめます";
+"ai_preset_business" = "ビジネス文書化";
+"ai_preset_business_desc" = "フォーマルな文章に変換します";
+"ai_preset_casual" = "カジュアル化";
+"ai_preset_casual_desc" = "親しみやすい文章にします";
+"ai_preset_expand" = "詳細化";
+"ai_preset_expand_desc" = "より具体的に展開します";
+"ai_preset_bullets" = "箇条書き化";
+"ai_preset_bullets_desc" = "見やすく整理します";
+"ai_preset_translate_en" = "英語に翻訳";
+"ai_preset_translate_en_desc" = "英語に翻訳します";
+"ai_preset_translate_ja" = "日本語に翻訳";
+"ai_preset_translate_ja_desc" = "日本語に翻訳します";
+
+// Custom Prompts
+"ai_custom_prompts" = "カスタムプロンプト";
+"ai_custom_prompt_footer" = "最大3つまで保存可能。左スワイプで編集・削除";
+"ai_add_custom_prompt" = "カスタムプロンプトを追加";
+"ai_custom_prompt_count" = "%d/3";
+"ai_prompt_hints" = "プロンプト作成のヒント";
+"ai_temporary_instruction" = "一時的な指示（保存されません）";
+"ai_temporary_instruction_footer" = "今回だけ使う指示を入力。よく使う場合は上のカスタムプロンプトに保存してください";
+
+// Custom Prompt Editor
+"ai_prompt_name" = "名前";
+"ai_prompt_name_placeholder" = "プロンプト名（例：議事録形式）";
+"ai_prompt_name_footer" = "わかりやすい短い名前をつけてください";
+"ai_prompt_icon" = "アイコン";
+"ai_prompt_content" = "プロンプト内容";
+"ai_prompt_content_footer_hint" = "💡 ヒント:";
+"ai_prompt_content_footer_1" = "• 「〜してください」のように明確な指示を書く";
+"ai_prompt_content_footer_2" = "• 出力形式を指定すると安定した結果に";
+"ai_prompt_content_footer_3" = "• 例: 「以下を議事録形式にまとめてください。日時、参加者、議題、決定事項、次回アクションの項目で整理してください。」";
+"ai_add_prompt" = "プロンプトを追加";
+"ai_edit_prompt" = "プロンプトを編集";
+
+// Prompt Hints
+"ai_hint_basic_principle" = "基本原則";
+"ai_hint_basic_desc" = "プロンプトには以下の要素を含めると効果的です：";
+"ai_hint_purpose" = "目的: 何をしたいか明確に";
+"ai_hint_format" = "形式: 出力の形式を指定";
+"ai_hint_constraints" = "制約: 文字数や条件を指定";
+"ai_hint_tone" = "トーン: 文体やニュアンス";
+"ai_hint_example1" = "例1: 議事録形式";
+"ai_hint_example2" = "例2: SNS投稿用";
+"ai_hint_example3" = "例3: コードレビュー依頼";
+"ai_hint_notes" = "注意点";
+"ai_hint_note1" = "• 曖昧な指示は避ける（「いい感じに」→NG）";
+"ai_hint_note2" = "• 具体的な条件を明示する";
+"ai_hint_note3" = "• 出力例を示すとより正確に";
+
+// Claude Code Export
+"ai_claude_code_export" = "Claude Code用プロンプト出力";
+"ai_claude_code_export_desc" = "AIアシスタント向けのプロンプトとしてコピー";
+"ai_external_ai_integration" = "外部AI連携";
+"ai_claude_code_export_title" = "Claude Code出力";
+"ai_export_template" = "テンプレート";
+"ai_export_template_footer" = "用途に合わせたテンプレートを選択してください";
+"ai_additional_context" = "追加コンテキスト（任意）";
+"ai_additional_context_footer" = "ファイルパス、関連する情報など補足事項があれば入力";
+"ai_generated_prompt" = "生成されるプロンプト";
+"ai_copy_to_clipboard" = "クリップボードにコピー";
+"ai_copied" = "コピーしました！";
+
+// Export Templates
+"ai_template_general" = "汎用";
+"ai_template_general_desc" = "汎用的なタスク依頼";
+"ai_template_code_review" = "コードレビュー";
+"ai_template_code_review_desc" = "コードのレビュー依頼";
+"ai_template_bug_fix" = "バグ修正";
+"ai_template_bug_fix_desc" = "バグの調査・修正依頼";
+"ai_template_feature" = "機能実装";
+"ai_template_feature_desc" = "新機能の実装依頼";
+"ai_template_refactor" = "リファクタリング";
+"ai_template_refactor_desc" = "コードの改善依頼";
+
+// MARK: - Category Summary
+"ai_category_summary" = "カテゴリー要約";
+"ai_analyzing_category" = "AIがカテゴリーを分析しています...";
+"ai_analyzing_memos_count" = "%d件のメモを解析中";
+"ai_generate_summary" = "要約を生成";
+"ai_category_analysis_desc" = "%d件のメモを分析して、要約と要点を抽出します";
+"ai_memo_count_warning" = "メモが3件未満です。より正確な分析には、もっとメモを追加してください。";
+"ai_overall_summary" = "全体の要約";
+"ai_key_points" = "主な要点";
+"ai_trends" = "トレンド";
+"ai_statistics" = "統計情報";
+"ai_analyzed_memos" = "分析メモ数";
+"ai_key_points_count" = "要点数";
+"ai_trends_count" = "トレンド数";
+"ai_memos_count_items" = "%d件のメモ";
+"ai_items_count" = "%d件";
+
+// MARK: - AI Usage History
+"ai_usage_history" = "AI使用履歴";
+"ai_all_period_stats" = "全期間の統計";
+"ai_total_requests" = "総リクエスト数";
+"ai_total_cost" = "総コスト";
+"ai_current_month_stats" = "今月の統計";
+"ai_request_count" = "リクエスト数";
+"ai_token_count" = "トークン数";
+"ai_cost" = "コスト";
+"ai_stats_by_feature" = "機能別統計";
+"ai_stats_by_provider" = "プロバイダー別統計";
+"ai_recent_history" = "直近の履歴 (最新50件)";
+"ai_export_csv" = "CSVでエクスポート";
+"ai_clear_history" = "履歴をクリア";
+"ai_error_message" = "エラー: %@";
+"ai_tokens_display" = "トークン: %@";
+"ai_in_out_tokens" = "in: %d / out: %d";
+
+// MARK: - AI Errors
+"ai_error" = "エラー";
+"ai_api_key_saved" = "%@ APIキーを保存しました";
+"ai_api_key_deleted" = "%@ APIキーを削除しました";
+"ai_stats_reset" = "使用統計をリセットしました";
+"ai_help" = "ヘルプ";
+

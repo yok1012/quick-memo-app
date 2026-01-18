@@ -28,11 +28,11 @@ struct AIUsageHistoryView: View {
                 }
                 .padding()
             }
-            .navigationTitle("AI使用履歴")
+            .navigationTitle("ai_usage_history".localized)
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {
                 ToolbarItem(placement: .cancellationAction) {
-                    Button("閉じる") {
+                    Button("close".localized) {
                         dismiss()
                     }
                 }
@@ -40,13 +40,13 @@ struct AIUsageHistoryView: View {
                 ToolbarItem(placement: .primaryAction) {
                     Menu {
                         Button(action: exportToCSV) {
-                            Label("CSVでエクスポート", systemImage: "square.and.arrow.up")
+                            Label("ai_export_csv".localized, systemImage: "square.and.arrow.up")
                         }
 
                         Divider()
 
                         Button(role: .destructive, action: clearHistory) {
-                            Label("履歴をクリア", systemImage: "trash")
+                            Label("ai_clear_history".localized, systemImage: "trash")
                         }
                     } label: {
                         Image(systemName: "ellipsis.circle")
@@ -63,19 +63,19 @@ struct AIUsageHistoryView: View {
 
     private var summarySection: some View {
         VStack(alignment: .leading, spacing: 12) {
-            Text("全期間の統計")
+            Text("ai_all_time_stats".localized)
                 .font(.headline)
 
             HStack(spacing: 20) {
                 StatCard(
-                    title: "総リクエスト数",
+                    title: "ai_total_requests".localized,
                     value: "\(aiManager.usageHistory.logs.count)",
                     icon: "number",
                     color: .blue
                 )
 
                 StatCard(
-                    title: "総コスト",
+                    title: "ai_total_cost".localized,
                     value: String(format: "$%.4f", totalCost),
                     icon: "dollarsign.circle",
                     color: .green
@@ -86,7 +86,7 @@ struct AIUsageHistoryView: View {
 
     private var currentMonthSection: some View {
         VStack(alignment: .leading, spacing: 12) {
-            Text("今月の統計")
+            Text("ai_this_month_stats".localized)
                 .font(.headline)
 
             let monthLogs = aiManager.usageHistory.currentMonthLogs()
@@ -95,14 +95,14 @@ struct AIUsageHistoryView: View {
 
             HStack(spacing: 20) {
                 StatCard(
-                    title: "リクエスト数",
+                    title: "ai_request_count".localized,
                     value: "\(monthLogs.count)",
                     icon: "calendar",
                     color: .purple
                 )
 
                 StatCard(
-                    title: "トークン数",
+                    title: "ai_token_count".localized,
                     value: formatNumber(monthTokens),
                     icon: "text.alignleft",
                     color: .orange
@@ -110,7 +110,7 @@ struct AIUsageHistoryView: View {
             }
 
             StatCard(
-                title: "コスト",
+                title: "ai_cost".localized,
                 value: String(format: "$%.4f", monthCost),
                 icon: "yensign.circle",
                 color: .green
@@ -120,7 +120,7 @@ struct AIUsageHistoryView: View {
 
     private var requestTypeStatsSection: some View {
         VStack(alignment: .leading, spacing: 12) {
-            Text("機能別統計")
+            Text("ai_stats_by_feature".localized)
                 .font(.headline)
 
             let stats = aiManager.usageHistory.statsByRequestType()
@@ -140,7 +140,7 @@ struct AIUsageHistoryView: View {
 
     private var providerStatsSection: some View {
         VStack(alignment: .leading, spacing: 12) {
-            Text("プロバイダー別統計")
+            Text("ai_stats_by_provider".localized)
                 .font(.headline)
 
             let stats = aiManager.usageHistory.statsByProvider()
@@ -160,7 +160,7 @@ struct AIUsageHistoryView: View {
 
     private var historyListSection: some View {
         VStack(alignment: .leading, spacing: 12) {
-            Text("直近の履歴 (最新50件)")
+            Text("ai_recent_history".localized)
                 .font(.headline)
 
             ForEach(Array(aiManager.usageHistory.logs.suffix(50).reversed())) { log in
@@ -230,9 +230,9 @@ struct RequestTypeStatRow: View {
 
     var displayType: String {
         switch type {
-        case "tag_extraction": return "タグ抽出"
-        case "memo_arrange": return "メモアレンジ"
-        case "category_summary": return "カテゴリー要約"
+        case "tag_extraction": return "ai_tag_extraction".localized
+        case "memo_arrange": return "ai_memo_arrange".localized
+        case "category_summary": return "ai_category_summary".localized
         default: return type
         }
     }
@@ -244,13 +244,13 @@ struct RequestTypeStatRow: View {
                     .font(.subheadline)
                     .fontWeight(.medium)
                 Spacer()
-                Text("\(count)回")
+                Text(String(format: "ai_times_count".localized, count))
                     .font(.caption)
                     .foregroundColor(.secondary)
             }
 
             HStack {
-                Text("トークン: \(formatNumber(tokens))")
+                Text(String(format: "ai_tokens_label".localized, formatNumber(tokens)))
                     .font(.caption2)
                     .foregroundColor(.secondary)
                 Spacer()
@@ -292,13 +292,13 @@ struct ProviderStatRow: View {
                     .font(.subheadline)
                     .fontWeight(.medium)
                 Spacer()
-                Text("\(count)回")
+                Text(String(format: "ai_times_count".localized, count))
                     .font(.caption)
                     .foregroundColor(.secondary)
             }
 
             HStack {
-                Text("トークン: \(formatNumber(tokens))")
+                Text(String(format: "ai_tokens_label".localized, formatNumber(tokens)))
                     .font(.caption2)
                     .foregroundColor(.secondary)
                 Spacer()
@@ -357,7 +357,7 @@ struct LogEntryRow: View {
             }
 
             if let errorMessage = log.errorMessage {
-                Text("エラー: \(errorMessage)")
+                Text(String(format: "ai_error_message".localized, errorMessage))
                     .font(.caption2)
                     .foregroundColor(.red)
                     .lineLimit(2)

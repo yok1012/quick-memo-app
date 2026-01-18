@@ -85,7 +85,7 @@ struct MemoArrangeView: View {
         NavigationView {
             List {
                 // 元のメモ
-                Section("元のメモ") {
+                Section("ai_original_memo".localized) {
                     Text(memoContent)
                         .font(.body)
                         .foregroundColor(.primary)
@@ -103,12 +103,12 @@ struct MemoArrangeView: View {
                                 .frame(width: 30)
 
                             VStack(alignment: .leading, spacing: 4) {
-                                Text("Claude Code用プロンプト出力")
+                                Text("ai_claude_code_export".localized)
                                     .font(.subheadline)
                                     .fontWeight(.medium)
                                     .foregroundColor(.primary)
 
-                                Text("AIアシスタント向けのプロンプトとしてコピー")
+                                Text("ai_claude_code_export_desc".localized)
                                     .font(.caption)
                                     .foregroundColor(.secondary)
                             }
@@ -120,7 +120,7 @@ struct MemoArrangeView: View {
                         }
                     }
                 } header: {
-                    Text("外部AI連携")
+                    Text("ai_external_integration".localized)
                 }
 
                 // プリセット選択
@@ -157,9 +157,9 @@ struct MemoArrangeView: View {
                         }
                     }
                 } header: {
-                    Text("プリセット")
+                    Text("ai_presets".localized)
                 } footer: {
-                    Text("よく使われる編集パターンから選択できます")
+                    Text("ai_presets_footer".localized)
                         .font(.caption)
                 }
 
@@ -201,14 +201,14 @@ struct MemoArrangeView: View {
                             Button(role: .destructive) {
                                 promptManager.deletePrompt(prompt)
                             } label: {
-                                Label("削除", systemImage: "trash")
+                                Label("delete".localized, systemImage: "trash")
                             }
 
                             Button {
                                 editingPrompt = prompt
                                 showEditPrompt = true
                             } label: {
-                                Label("編集", systemImage: "pencil")
+                                Label("edit".localized, systemImage: "pencil")
                             }
                             .tint(.blue)
                         }
@@ -224,7 +224,7 @@ struct MemoArrangeView: View {
                                     .foregroundColor(.blue)
                                     .frame(width: 30)
 
-                                Text("カスタムプロンプトを追加")
+                                Text("ai_add_custom_prompt".localized)
                                     .font(.subheadline)
                                     .foregroundColor(.blue)
 
@@ -246,7 +246,7 @@ struct MemoArrangeView: View {
                                 .foregroundColor(.yellow)
                                 .frame(width: 30)
 
-                            Text("プロンプト作成のヒント")
+                            Text("ai_prompt_hints".localized)
                                 .font(.subheadline)
                                 .foregroundColor(.secondary)
 
@@ -258,9 +258,9 @@ struct MemoArrangeView: View {
                         }
                     }
                 } header: {
-                    Text("カスタムプロンプト")
+                    Text("ai_custom_prompts".localized)
                 } footer: {
-                    Text("最大3つまで保存可能。左スワイプで編集・削除")
+                    Text("ai_custom_prompts_footer".localized)
                         .font(.caption)
                 }
 
@@ -275,9 +275,9 @@ struct MemoArrangeView: View {
                             }
                         }
                 } header: {
-                    Text("一時的な指示（保存されません）")
+                    Text("ai_temporary_instruction".localized)
                 } footer: {
-                    Text("今回だけ使う指示を入力。よく使う場合は上のカスタムプロンプトに保存してください")
+                    Text("ai_temporary_instruction_footer".localized)
                         .font(.caption)
                 }
 
@@ -289,10 +289,10 @@ struct MemoArrangeView: View {
                             if isProcessing {
                                 ProgressView()
                                     .padding(.trailing, 8)
-                                Text("処理中...")
+                                Text("ai_processing".localized)
                             } else {
                                 Image(systemName: "wand.and.stars")
-                                Text("メモをアレンジ")
+                                Text("ai_arrange_memo_button".localized)
                             }
                             Spacer()
                         }
@@ -309,33 +309,33 @@ struct MemoArrangeView: View {
                 // 使用統計
                 Section {
                     HStack {
-                        Text("今月の使用")
+                        Text("ai_monthly_usage_simple".localized)
                         Spacer()
                         Text("\(aiManager.usageStats.totalRequests)/\(aiManager.usageStats.monthlyLimit)")
                             .foregroundColor(.secondary)
                     }
 
                     HStack {
-                        Text("残り回数")
+                        Text("ai_remaining_count".localized)
                         Spacer()
                         Text("\(aiManager.usageStats.remainingRequests)")
                             .foregroundColor(aiManager.usageStats.isQuotaExceeded ? .red : .green)
                     }
                 } header: {
-                    Text("使用統計")
+                    Text("ai_usage_stats".localized)
                 }
             }
-            .navigationTitle("メモアレンジ")
+            .navigationTitle("ai_memo_arrange".localized)
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {
                 ToolbarItem(placement: .cancellationAction) {
-                    Button("キャンセル") {
+                    Button("cancel".localized) {
                         dismiss()
                     }
                 }
             }
-            .alert("エラー", isPresented: $showError) {
-                Button("OK", role: .cancel) {}
+            .alert("ai_error".localized, isPresented: $showError) {
+                Button("ok".localized, role: .cancel) {}
             } message: {
                 Text(errorMessage)
             }
@@ -385,13 +385,13 @@ struct MemoArrangeView: View {
 
     private var presets: [(key: String, title: String, description: String, icon: String, color: Color)] {
         [
-            ("summarize", "要約", "3行以内で簡潔にまとめます", "text.alignleft", .blue),
-            ("business", "ビジネス文書化", "フォーマルな文章に変換します", "briefcase.fill", .orange),
-            ("casual", "カジュアル化", "親しみやすい文章にします", "message.fill", .green),
-            ("expand", "詳細化", "より具体的に展開します", "arrow.up.left.and.arrow.down.right", .purple),
-            ("bullets", "箇条書き化", "見やすく整理します", "list.bullet", .indigo),
-            ("translate_en", "英語に翻訳", "英語に翻訳します", "globe", .cyan),
-            ("translate_ja", "日本語に翻訳", "日本語に翻訳します", "globe", .pink)
+            ("summarize", "ai_preset_summarize".localized, "ai_preset_summarize_desc".localized, "text.alignleft", .blue),
+            ("business", "ai_preset_business".localized, "ai_preset_business_desc".localized, "briefcase.fill", .orange),
+            ("casual", "ai_preset_casual".localized, "ai_preset_casual_desc".localized, "message.fill", .green),
+            ("expand", "ai_preset_expand".localized, "ai_preset_expand_desc".localized, "arrow.up.left.and.arrow.down.right", .purple),
+            ("bullets", "ai_preset_bullets".localized, "ai_preset_bullets_desc".localized, "list.bullet", .indigo),
+            ("translate_en", "ai_preset_translate_en".localized, "ai_preset_translate_en_desc".localized, "globe", .cyan),
+            ("translate_ja", "ai_preset_translate_ja".localized, "ai_preset_translate_ja_desc".localized, "globe", .pink)
         ]
     }
 
@@ -461,11 +461,11 @@ struct CustomPromptEditorView: View {
         NavigationView {
             Form {
                 Section {
-                    TextField("プロンプト名（例：議事録形式）", text: $name)
+                    TextField("ai_prompt_name_placeholder".localized, text: $name)
                 } header: {
-                    Text("名前")
+                    Text("ai_name".localized)
                 } footer: {
-                    Text("わかりやすい短い名前をつけてください")
+                    Text("ai_prompt_name_footer".localized)
                 }
 
                 Section {
@@ -489,38 +489,38 @@ struct CustomPromptEditorView: View {
                         .padding(.vertical, 8)
                     }
                 } header: {
-                    Text("アイコン")
+                    Text("ai_icon".localized)
                 }
 
                 Section {
                     TextEditor(text: $prompt)
                         .frame(minHeight: 150)
                 } header: {
-                    Text("プロンプト内容")
+                    Text("ai_prompt_content".localized)
                 } footer: {
                     VStack(alignment: .leading, spacing: 8) {
-                        Text("💡 ヒント:")
+                        Text("ai_hint_label".localized)
                             .font(.caption)
                             .fontWeight(.semibold)
-                        Text("• 「〜してください」のように明確な指示を書く")
-                        Text("• 出力形式を指定すると安定した結果に")
-                        Text("• 例: 「以下を議事録形式にまとめてください。日時、参加者、議題、決定事項、次回アクションの項目で整理してください。」")
+                        Text("ai_hint_1".localized)
+                        Text("ai_hint_2".localized)
+                        Text("ai_hint_3".localized)
                     }
                     .font(.caption)
                     .foregroundColor(.secondary)
                 }
             }
-            .navigationTitle(mode.isAdd ? "プロンプトを追加" : "プロンプトを編集")
+            .navigationTitle(mode.isAdd ? "ai_add_prompt".localized : "ai_edit_prompt".localized)
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {
                 ToolbarItem(placement: .cancellationAction) {
-                    Button("キャンセル") {
+                    Button("cancel".localized) {
                         dismiss()
                     }
                 }
 
                 ToolbarItem(placement: .confirmationAction) {
-                    Button("保存") {
+                    Button("save".localized) {
                         savePrompt()
                     }
                     .disabled(name.isEmpty || prompt.isEmpty)
@@ -561,18 +561,18 @@ struct PromptHintsView: View {
                 VStack(alignment: .leading, spacing: 24) {
                     // 基本原則
                     VStack(alignment: .leading, spacing: 12) {
-                        Label("基本原則", systemImage: "1.circle.fill")
+                        Label("ai_basic_principles".localized, systemImage: "1.circle.fill")
                             .font(.headline)
                             .foregroundColor(.blue)
 
-                        Text("プロンプトには以下の要素を含めると効果的です：")
+                        Text("ai_prompt_elements".localized)
                             .font(.subheadline)
 
                         VStack(alignment: .leading, spacing: 8) {
-                            HintItem(icon: "target", text: "目的: 何をしたいか明確に")
-                            HintItem(icon: "doc.text", text: "形式: 出力の形式を指定")
-                            HintItem(icon: "ruler", text: "制約: 文字数や条件を指定")
-                            HintItem(icon: "person.fill", text: "トーン: 文体やニュアンス")
+                            HintItem(icon: "target", text: "ai_element_purpose".localized)
+                            HintItem(icon: "doc.text", text: "ai_element_format".localized)
+                            HintItem(icon: "ruler", text: "ai_element_constraints".localized)
+                            HintItem(icon: "person.fill", text: "ai_element_tone".localized)
                         }
                     }
                     .padding()
@@ -581,11 +581,11 @@ struct PromptHintsView: View {
 
                     // 例1
                     VStack(alignment: .leading, spacing: 12) {
-                        Label("例1: 議事録形式", systemImage: "doc.richtext")
+                        Label("ai_example_1_title".localized, systemImage: "doc.richtext")
                             .font(.headline)
                             .foregroundColor(.orange)
 
-                        Text("以下の内容を議事録形式で整理してください。\n\n【形式】\n• 日時\n• 参加者（推測可能なら）\n• 議題\n• 決定事項\n• 次回アクション\n\n簡潔に箇条書きでまとめてください。")
+                        Text("ai_example_1_content".localized)
                             .font(.caption)
                             .padding()
                             .background(Color(.systemBackground))
@@ -601,11 +601,11 @@ struct PromptHintsView: View {
 
                     // 例2
                     VStack(alignment: .leading, spacing: 12) {
-                        Label("例2: SNS投稿用", systemImage: "bubble.left.and.bubble.right")
+                        Label("ai_example_2_title".localized, systemImage: "bubble.left.and.bubble.right")
                             .font(.headline)
                             .foregroundColor(.pink)
 
-                        Text("以下の内容をTwitter投稿用に変換してください。\n\n【条件】\n• 140文字以内\n• 絵文字を2-3個使用\n• ハッシュタグを1-2個提案\n• 興味を引く書き出しに")
+                        Text("ai_example_2_content".localized)
                             .font(.caption)
                             .padding()
                             .background(Color(.systemBackground))
@@ -621,11 +621,11 @@ struct PromptHintsView: View {
 
                     // 例3
                     VStack(alignment: .leading, spacing: 12) {
-                        Label("例3: コードレビュー依頼", systemImage: "chevron.left.forwardslash.chevron.right")
+                        Label("ai_example_3_title".localized, systemImage: "chevron.left.forwardslash.chevron.right")
                             .font(.headline)
                             .foregroundColor(.green)
 
-                        Text("以下のメモをコードレビュー依頼文に変換してください。\n\n【含める項目】\n• 変更の背景・目的\n• 主な変更点（箇条書き）\n• 特に見てほしいポイント\n• 影響範囲\n\n丁寧かつ簡潔な文体で。")
+                        Text("ai_example_3_content".localized)
                             .font(.caption)
                             .padding()
                             .background(Color(.systemBackground))
@@ -641,14 +641,14 @@ struct PromptHintsView: View {
 
                     // 注意点
                     VStack(alignment: .leading, spacing: 12) {
-                        Label("注意点", systemImage: "exclamationmark.triangle.fill")
+                        Label("ai_caution".localized, systemImage: "exclamationmark.triangle.fill")
                             .font(.headline)
                             .foregroundColor(.yellow)
 
                         VStack(alignment: .leading, spacing: 8) {
-                            Text("• 曖昧な指示は避ける（「いい感じに」→NG）")
-                            Text("• 具体的な条件を明示する")
-                            Text("• 出力例を示すとより正確に")
+                            Text("ai_caution_1".localized)
+                            Text("ai_caution_2".localized)
+                            Text("ai_caution_3".localized)
                         }
                         .font(.caption)
                     }
@@ -658,11 +658,11 @@ struct PromptHintsView: View {
                 }
                 .padding()
             }
-            .navigationTitle("プロンプト作成のヒント")
+            .navigationTitle("ai_prompt_hints".localized)
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {
                 ToolbarItem(placement: .confirmationAction) {
-                    Button("閉じる") {
+                    Button("close".localized) {
                         dismiss()
                     }
                 }
@@ -696,11 +696,21 @@ struct ClaudeCodeExportView: View {
     @State private var showCopied = false
 
     enum ExportTemplate: String, CaseIterable {
-        case general = "汎用"
-        case codeReview = "コードレビュー"
-        case bugFix = "バグ修正"
-        case feature = "機能実装"
-        case refactor = "リファクタリング"
+        case general = "general"
+        case codeReview = "codeReview"
+        case bugFix = "bugFix"
+        case feature = "feature"
+        case refactor = "refactor"
+
+        var localizedName: String {
+            switch self {
+            case .general: return "ai_template_general".localized
+            case .codeReview: return "ai_template_code_review".localized
+            case .bugFix: return "ai_template_bug_fix".localized
+            case .feature: return "ai_template_feature".localized
+            case .refactor: return "ai_template_refactor".localized
+            }
+        }
 
         var icon: String {
             switch self {
@@ -714,11 +724,11 @@ struct ClaudeCodeExportView: View {
 
         var description: String {
             switch self {
-            case .general: return "汎用的なタスク依頼"
-            case .codeReview: return "コードのレビュー依頼"
-            case .bugFix: return "バグの調査・修正依頼"
-            case .feature: return "新機能の実装依頼"
-            case .refactor: return "コードの改善依頼"
+            case .general: return "ai_template_general_desc".localized
+            case .codeReview: return "ai_template_code_review_desc".localized
+            case .bugFix: return "ai_template_bug_fix_desc".localized
+            case .feature: return "ai_template_feature_desc".localized
+            case .refactor: return "ai_template_refactor_desc".localized
             }
         }
 
@@ -828,7 +838,7 @@ struct ClaudeCodeExportView: View {
                                     .frame(width: 30)
 
                                 VStack(alignment: .leading, spacing: 4) {
-                                    Text(template.rawValue)
+                                    Text(template.localizedName)
                                         .font(.subheadline)
                                         .fontWeight(.medium)
                                         .foregroundColor(.primary)
@@ -848,9 +858,9 @@ struct ClaudeCodeExportView: View {
                         }
                     }
                 } header: {
-                    Text("テンプレート")
+                    Text("ai_template".localized)
                 } footer: {
-                    Text("用途に合わせたテンプレートを選択してください")
+                    Text("ai_template_footer".localized)
                 }
 
                 // 追加コンテキスト
@@ -858,9 +868,9 @@ struct ClaudeCodeExportView: View {
                     TextEditor(text: $additionalContext)
                         .frame(minHeight: 80)
                 } header: {
-                    Text("追加コンテキスト（任意）")
+                    Text("ai_additional_context".localized)
                 } footer: {
-                    Text("ファイルパス、関連する情報など補足事項があれば入力")
+                    Text("ai_additional_context_footer".localized)
                 }
 
                 // プレビュー
@@ -870,7 +880,7 @@ struct ClaudeCodeExportView: View {
                         .foregroundColor(.secondary)
                         .padding(.vertical, 8)
                 } header: {
-                    Text("生成されるプロンプト")
+                    Text("ai_generated_prompt".localized)
                 }
 
                 // コピーボタン
@@ -881,11 +891,11 @@ struct ClaudeCodeExportView: View {
                             if showCopied {
                                 Image(systemName: "checkmark.circle.fill")
                                     .foregroundColor(.green)
-                                Text("コピーしました！")
+                                Text("ai_copied".localized)
                                     .foregroundColor(.green)
                             } else {
                                 Image(systemName: "doc.on.clipboard")
-                                Text("クリップボードにコピー")
+                                Text("ai_copy_to_clipboard".localized)
                             }
                             Spacer()
                         }
@@ -898,11 +908,11 @@ struct ClaudeCodeExportView: View {
                     .listRowBackground(Color.clear)
                 }
             }
-            .navigationTitle("Claude Code出力")
+            .navigationTitle("ai_claude_code_output".localized)
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {
                 ToolbarItem(placement: .cancellationAction) {
-                    Button("閉じる") {
+                    Button("close".localized) {
                         dismiss()
                     }
                 }
@@ -938,7 +948,7 @@ struct ArrangedResultView: View {
                         HStack {
                             Image(systemName: "sparkles")
                                 .foregroundColor(.purple)
-                            Text("アレンジ後")
+                            Text("ai_after_arrange".localized)
                                 .font(.headline)
                         }
 
@@ -955,7 +965,7 @@ struct ArrangedResultView: View {
                             HStack {
                                 Image(systemName: "doc.text")
                                     .foregroundColor(.blue)
-                                Text("元のメモ")
+                                Text("ai_original_memo".localized)
                                     .font(.headline)
                             }
 
@@ -972,7 +982,7 @@ struct ArrangedResultView: View {
                     }) {
                         HStack {
                             Image(systemName: showComparison ? "chevron.up" : "chevron.down")
-                            Text(showComparison ? "元のメモを隠す" : "元のメモと比較")
+                            Text(showComparison ? "ai_hide_original".localized : "ai_compare_original".localized)
                         }
                         .font(.subheadline)
                         .foregroundColor(.blue)
@@ -985,7 +995,7 @@ struct ArrangedResultView: View {
                         Button(action: onApply) {
                             HStack {
                                 Image(systemName: "checkmark.circle.fill")
-                                Text("このメモを適用")
+                                Text("ai_apply_memo".localized)
                             }
                             .font(.headline)
                             .foregroundColor(.white)
@@ -996,7 +1006,7 @@ struct ArrangedResultView: View {
                         }
 
                         Button(action: onDismiss) {
-                            Text("破棄")
+                            Text("ai_discard".localized)
                                 .font(.headline)
                                 .foregroundColor(.red)
                                 .frame(maxWidth: .infinity)
@@ -1008,11 +1018,11 @@ struct ArrangedResultView: View {
                 }
                 .padding()
             }
-            .navigationTitle("アレンジ結果")
+            .navigationTitle("ai_arrange_result".localized)
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {
                 ToolbarItem(placement: .cancellationAction) {
-                    Button("閉じる") {
+                    Button("close".localized) {
                         onDismiss()
                     }
                 }

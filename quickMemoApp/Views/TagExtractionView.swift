@@ -22,7 +22,7 @@ struct TagExtractionView: View {
                     VStack(spacing: 20) {
                         ProgressView()
                             .scaleEffect(1.5)
-                        Text("AIがタグを抽出しています...")
+                        Text("ai_extracting_tags".localized)
                             .font(.subheadline)
                             .foregroundColor(.secondary)
                     }
@@ -34,10 +34,10 @@ struct TagExtractionView: View {
                             .font(.system(size: 60))
                             .foregroundColor(.purple)
 
-                        Text("メモ内容からタグを自動抽出")
+                        Text("ai_extract_tags_from_memo".localized)
                             .font(.headline)
 
-                        Text("Gemini AIがメモを分析し、関連するタグを提案します")
+                        Text("ai_extract_tags_description".localized)
                             .font(.subheadline)
                             .foregroundColor(.secondary)
                             .multilineTextAlignment(.center)
@@ -46,7 +46,7 @@ struct TagExtractionView: View {
                         Button(action: extractTags) {
                             HStack {
                                 Image(systemName: "wand.and.stars")
-                                Text("タグを抽出する")
+                                Text("ai_extract_tags_button".localized)
                             }
                             .font(.headline)
                             .foregroundColor(.white)
@@ -63,12 +63,12 @@ struct TagExtractionView: View {
                     // 抽出結果表示
                     List {
                         Section {
-                            Text("メモ内容から以下のタグを抽出しました。追加したいタグをタップしてください。")
+                            Text("ai_extracted_tags_instruction".localized)
                                 .font(.subheadline)
                                 .foregroundColor(.secondary)
                         }
 
-                        Section("提案されたタグ") {
+                        Section("ai_suggested_tags".localized) {
                             ForEach(extractedTags, id: \.self) { tag in
                                 Button(action: {
                                     toggleTag(tag)
@@ -92,7 +92,7 @@ struct TagExtractionView: View {
                             }) {
                                 HStack {
                                     Spacer()
-                                    Text("選択したタグを追加 (\(localSelectedTags.count))")
+                                    Text(String(format: "ai_add_selected_tags".localized, localSelectedTags.count))
                                         .fontWeight(.medium)
                                     Spacer()
                                 }
@@ -107,18 +107,18 @@ struct TagExtractionView: View {
                     usageStatsFooter
                 }
             }
-            .navigationTitle("タグ抽出")
+            .navigationTitle("ai_tag_extraction".localized)
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {
                 ToolbarItem(placement: .cancellationAction) {
-                    Button("キャンセル") {
+                    Button("cancel".localized) {
                         dismiss()
                     }
                 }
 
                 if !extractedTags.isEmpty {
                     ToolbarItem(placement: .primaryAction) {
-                        Button("追加") {
+                        Button("add".localized) {
                             applySelectedTags()
                         }
                         .fontWeight(.semibold)
@@ -126,8 +126,8 @@ struct TagExtractionView: View {
                     }
                 }
             }
-            .alert("エラー", isPresented: $showError) {
-                Button("OK", role: .cancel) {}
+            .alert("ai_error".localized, isPresented: $showError) {
+                Button("ok".localized, role: .cancel) {}
             } message: {
                 Text(errorMessage)
             }
@@ -135,7 +135,7 @@ struct TagExtractionView: View {
         .onAppear {
             // メモ内容が短い場合は警告
             if memoContent.count < 20 {
-                errorMessage = "メモの内容が短すぎます。より詳しい内容を書くと、より適切なタグが抽出できます。"
+                errorMessage = "ai_memo_too_short".localized
                 showError = true
             }
         }
@@ -150,13 +150,13 @@ struct TagExtractionView: View {
                     .font(.caption)
                     .foregroundColor(.secondary)
 
-                Text("今月の使用: \(aiManager.usageStats.totalRequests)/\(aiManager.usageStats.monthlyLimit)")
+                Text(String(format: "ai_monthly_usage".localized, aiManager.usageStats.totalRequests, aiManager.usageStats.monthlyLimit))
                     .font(.caption)
                     .foregroundColor(.secondary)
 
                 Spacer()
 
-                Text("残り: \(aiManager.usageStats.remainingRequests)")
+                Text(String(format: "ai_remaining".localized, aiManager.usageStats.remainingRequests))
                     .font(.caption)
                     .foregroundColor(aiManager.usageStats.isQuotaExceeded ? .red : .green)
             }

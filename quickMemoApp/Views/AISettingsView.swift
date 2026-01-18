@@ -21,7 +21,7 @@ struct AISettingsView: View {
                     VStack(alignment: .leading, spacing: 4) {
                         Text("Gemini API")
                             .font(.headline)
-                        Text("タグ抽出に使用")
+                        Text("ai_used_for_tag_extraction".localized)
                             .font(.caption)
                             .foregroundColor(.secondary)
                     }
@@ -29,12 +29,12 @@ struct AISettingsView: View {
                     Spacer()
 
                     if aiManager.hasAPIKey(for: .gemini) {
-                        Button("削除") {
+                        Button("delete".localized) {
                             deleteGeminiKey()
                         }
                         .foregroundColor(.red)
                     } else {
-                        Button("設定") {
+                        Button("ai_api_key_input".localized) {
                             showingGeminiInput = true
                         }
                     }
@@ -45,7 +45,7 @@ struct AISettingsView: View {
                     VStack(alignment: .leading, spacing: 4) {
                         Text("Claude API")
                             .font(.headline)
-                        Text("メモアレンジ・要約に使用")
+                        Text("ai_used_for_arrange_summary".localized)
                             .font(.caption)
                             .foregroundColor(.secondary)
                     }
@@ -53,12 +53,12 @@ struct AISettingsView: View {
                     Spacer()
 
                     if aiManager.hasAPIKey(for: .claude) {
-                        Button("削除") {
+                        Button("delete".localized) {
                             deleteClaudeKey()
                         }
                         .foregroundColor(.red)
                     } else {
-                        Button("設定") {
+                        Button("ai_api_key_input".localized) {
                             showingClaudeInput = true
                         }
                     }
@@ -69,7 +69,7 @@ struct AISettingsView: View {
                     VStack(alignment: .leading, spacing: 4) {
                         Text("ChatGPT API")
                             .font(.headline)
-                        Text("全機能に使用可能")
+                        Text("ai_used_for_all_features".localized)
                             .font(.caption)
                             .foregroundColor(.secondary)
                     }
@@ -77,32 +77,32 @@ struct AISettingsView: View {
                     Spacer()
 
                     if aiManager.hasAPIKey(for: .openai) {
-                        Button("削除") {
+                        Button("delete".localized) {
                             deleteChatGPTKey()
                         }
                         .foregroundColor(.red)
                     } else {
-                        Button("設定") {
+                        Button("ai_api_key_input".localized) {
                             showingChatGPTInput = true
                         }
                     }
                 }
             } header: {
-                Text("APIキー管理")
+                Text("ai_api_key_management".localized)
             } footer: {
-                Text("APIキーはお客様のデバイスに安全に保存されます。料金は各APIプロバイダーに直接お支払いください。")
+                Text("ai_api_key_footer".localized)
                     .font(.caption)
             }
 
             // Model Selection Section
-            Section("機能別モデル設定") {
+            Section("ai_model_by_feature".localized) {
                 // タグ抽出
                 Button(action: {
                     showingModelSelection = .tagExtraction
                 }) {
                     HStack {
                         VStack(alignment: .leading, spacing: 4) {
-                            Text("タグ抽出")
+                            Text("ai_tag_extraction".localized)
                                 .font(.subheadline)
                                 .foregroundColor(.primary)
 
@@ -128,7 +128,7 @@ struct AISettingsView: View {
                 }) {
                     HStack {
                         VStack(alignment: .leading, spacing: 4) {
-                            Text("メモアレンジ")
+                            Text("ai_memo_arrange".localized)
                                 .font(.subheadline)
                                 .foregroundColor(.primary)
 
@@ -154,7 +154,7 @@ struct AISettingsView: View {
                 }) {
                     HStack {
                         VStack(alignment: .leading, spacing: 4) {
-                            Text("カテゴリー要約")
+                            Text("ai_category_summary".localized)
                                 .font(.subheadline)
                                 .foregroundColor(.primary)
 
@@ -176,44 +176,44 @@ struct AISettingsView: View {
             }
 
             // Usage Statistics Section
-            Section("使用統計") {
+            Section("ai_usage_stats".localized) {
                 HStack {
-                    Text("今月のリクエスト数")
+                    Text("ai_monthly_requests".localized)
                     Spacer()
                     Text("\(aiManager.usageStats.totalRequests)")
                         .foregroundColor(.secondary)
                 }
 
                 HStack {
-                    Text("残りリクエスト数")
+                    Text("ai_remaining_requests".localized)
                     Spacer()
                     Text("\(aiManager.usageStats.remainingRequests)")
                         .foregroundColor(aiManager.usageStats.isQuotaExceeded ? .red : .green)
                 }
 
                 HStack {
-                    Text("月間制限")
+                    Text("ai_monthly_limit".localized)
                     Spacer()
                     Text("\(aiManager.usageStats.monthlyLimit)")
                         .foregroundColor(.secondary)
                 }
 
                 HStack {
-                    Text("累計トークン数")
+                    Text("ai_total_tokens".localized)
                     Spacer()
                     Text("\(aiManager.usageStats.totalTokens)")
                         .foregroundColor(.secondary)
                 }
 
                 HStack {
-                    Text("推定コスト")
+                    Text("ai_estimated_cost".localized)
                     Spacer()
                     Text(String(format: "$%.4f", aiManager.usageStats.totalCost))
                         .foregroundColor(.secondary)
                 }
 
                 HStack {
-                    Text("最終リセット日")
+                    Text("ai_last_reset_date".localized)
                     Spacer()
                     Text(formatDate(aiManager.usageStats.lastResetDate))
                         .foregroundColor(.secondary)
@@ -223,12 +223,12 @@ struct AISettingsView: View {
 
             // Usage Breakdown Section
             if !aiManager.usageStats.requestsByType.isEmpty {
-                Section("機能別使用状況") {
+                Section("ai_usage_by_type".localized) {
                     ForEach(Array(aiManager.usageStats.requestsByType.keys.sorted()), id: \.self) { type in
                         HStack {
                             Text(localizedTypeName(type))
                             Spacer()
-                            Text("\(aiManager.usageStats.requestsByType[type] ?? 0)回")
+                            Text(String(format: "ai_times_count".localized, aiManager.usageStats.requestsByType[type] ?? 0))
                                 .foregroundColor(.secondary)
                         }
                     }
@@ -242,9 +242,9 @@ struct AISettingsView: View {
                         Image(systemName: "clock.arrow.circlepath")
                             .foregroundColor(.purple)
                         VStack(alignment: .leading, spacing: 4) {
-                            Text("詳細な使用履歴")
+                            Text("ai_usage_history_detail".localized)
                                 .font(.subheadline)
-                            Text("すべてのリクエストログを確認・エクスポート")
+                            Text("ai_usage_history_footer".localized)
                                 .font(.caption)
                                 .foregroundColor(.secondary)
                         }
@@ -257,15 +257,15 @@ struct AISettingsView: View {
                 Button(role: .destructive) {
                     resetStats()
                 } label: {
-                    Label("使用統計をリセット", systemImage: "trash")
+                    Label("ai_reset_usage_stats".localized, systemImage: "trash")
                 }
             }
 
             // Help Section
-            Section("ヘルプ") {
+            Section("ai_help".localized) {
                 Link(destination: URL(string: "https://ai.google.dev/")!) {
                     HStack {
-                        Text("Gemini APIキーを取得")
+                        Text("ai_get_gemini_key".localized)
                         Spacer()
                         Image(systemName: "arrow.up.right.square")
                             .foregroundColor(.blue)
@@ -274,7 +274,7 @@ struct AISettingsView: View {
 
                 Link(destination: URL(string: "https://console.anthropic.com/")!) {
                     HStack {
-                        Text("Claude APIキーを取得")
+                        Text("ai_get_claude_key".localized)
                         Spacer()
                         Image(systemName: "arrow.up.right.square")
                             .foregroundColor(.blue)
@@ -282,11 +282,11 @@ struct AISettingsView: View {
                 }
             }
         }
-        .navigationTitle("AI機能設定")
+        .navigationTitle("ai_settings".localized)
         .navigationBarTitleDisplayMode(.inline)
         .sheet(isPresented: $showingGeminiInput) {
             APIKeyInputView(
-                title: "Gemini APIキー",
+                title: "ai_gemini_api_key".localized,
                 placeholder: "AIza...",
                 apiKey: $geminiKey,
                 onSave: {
@@ -296,7 +296,7 @@ struct AISettingsView: View {
         }
         .sheet(isPresented: $showingClaudeInput) {
             APIKeyInputView(
-                title: "Claude APIキー",
+                title: "ai_claude_api_key".localized,
                 placeholder: "sk-ant-...",
                 apiKey: $claudeKey,
                 onSave: {
@@ -306,7 +306,7 @@ struct AISettingsView: View {
         }
         .sheet(isPresented: $showingChatGPTInput) {
             APIKeyInputView(
-                title: "ChatGPT APIキー",
+                title: "ai_chatgpt_api_key".localized,
                 placeholder: "sk-...",
                 apiKey: $chatGPTKey,
                 onSave: {
@@ -317,7 +317,7 @@ struct AISettingsView: View {
         .sheet(item: $showingModelSelection) { feature in
             AIModelSelectionView(feature: feature)
         }
-        .alert("AI設定", isPresented: $showAlert) {
+        .alert("ai_settings".localized, isPresented: $showAlert) {
             Button("OK", role: .cancel) {}
         } message: {
             Text(alertMessage)
@@ -329,12 +329,12 @@ struct AISettingsView: View {
     private func saveGeminiKey() {
         do {
             try aiManager.setAPIKey(geminiKey, for: .gemini)
-            alertMessage = "Gemini APIキーを保存しました"
+            alertMessage = String(format: "ai_api_key_saved".localized, "Gemini")
             showAlert = true
             geminiKey = ""
             showingGeminiInput = false
         } catch {
-            alertMessage = "エラー: \(error.localizedDescription)"
+            alertMessage = String(format: "ai_error_message".localized, error.localizedDescription)
             showAlert = true
         }
     }
@@ -342,10 +342,10 @@ struct AISettingsView: View {
     private func deleteGeminiKey() {
         do {
             try aiManager.deleteAPIKey(for: .gemini)
-            alertMessage = "Gemini APIキーを削除しました"
+            alertMessage = String(format: "ai_api_key_deleted".localized, "Gemini")
             showAlert = true
         } catch {
-            alertMessage = "エラー: \(error.localizedDescription)"
+            alertMessage = String(format: "ai_error_message".localized, error.localizedDescription)
             showAlert = true
         }
     }
@@ -353,12 +353,12 @@ struct AISettingsView: View {
     private func saveClaudeKey() {
         do {
             try aiManager.setAPIKey(claudeKey, for: .claude)
-            alertMessage = "Claude APIキーを保存しました"
+            alertMessage = String(format: "ai_api_key_saved".localized, "Claude")
             showAlert = true
             claudeKey = ""
             showingClaudeInput = false
         } catch {
-            alertMessage = "エラー: \(error.localizedDescription)"
+            alertMessage = String(format: "ai_error_message".localized, error.localizedDescription)
             showAlert = true
         }
     }
@@ -366,10 +366,10 @@ struct AISettingsView: View {
     private func deleteClaudeKey() {
         do {
             try aiManager.deleteAPIKey(for: .claude)
-            alertMessage = "Claude APIキーを削除しました"
+            alertMessage = String(format: "ai_api_key_deleted".localized, "Claude")
             showAlert = true
         } catch {
-            alertMessage = "エラー: \(error.localizedDescription)"
+            alertMessage = String(format: "ai_error_message".localized, error.localizedDescription)
             showAlert = true
         }
     }
@@ -377,12 +377,12 @@ struct AISettingsView: View {
     private func saveChatGPTKey() {
         do {
             try aiManager.setAPIKey(chatGPTKey, for: .openai)
-            alertMessage = "ChatGPT APIキーを保存しました"
+            alertMessage = String(format: "ai_api_key_saved".localized, "ChatGPT")
             showAlert = true
             chatGPTKey = ""
             showingChatGPTInput = false
         } catch {
-            alertMessage = "エラー: \(error.localizedDescription)"
+            alertMessage = String(format: "ai_error_message".localized, error.localizedDescription)
             showAlert = true
         }
     }
@@ -390,17 +390,17 @@ struct AISettingsView: View {
     private func deleteChatGPTKey() {
         do {
             try aiManager.deleteAPIKey(for: .openai)
-            alertMessage = "ChatGPT APIキーを削除しました"
+            alertMessage = String(format: "ai_api_key_deleted".localized, "ChatGPT")
             showAlert = true
         } catch {
-            alertMessage = "エラー: \(error.localizedDescription)"
+            alertMessage = String(format: "ai_error_message".localized, error.localizedDescription)
             showAlert = true
         }
     }
 
     private func resetStats() {
         aiManager.resetUsageStats()
-        alertMessage = "使用統計をリセットしました"
+        alertMessage = "ai_stats_reset".localized
         showAlert = true
     }
 
@@ -415,11 +415,11 @@ struct AISettingsView: View {
     private func localizedTypeName(_ type: String) -> String {
         switch type {
         case "tag_extraction":
-            return "タグ抽出"
+            return "ai_tag_extraction".localized
         case "memo_arrange":
-            return "メモアレンジ"
+            return "ai_memo_arrange".localized
         case "category_summary":
-            return "カテゴリー要約"
+            return "ai_category_summary".localized
         default:
             return type
         }
@@ -444,13 +444,13 @@ struct APIKeyInputView: View {
                         .textInputAutocapitalization(.never)
                         .autocorrectionDisabled()
                 } header: {
-                    Text("APIキーを入力")
+                    Text("ai_api_key_input".localized)
                 } footer: {
-                    Text("APIキーは安全にKeychainに保存されます。第三者に共有しないでください。")
+                    Text("ai_api_key_save_secure".localized)
                 }
 
                 Section {
-                    Button("保存") {
+                    Button("save".localized) {
                         onSave()
                     }
                     .disabled(apiKey.isEmpty)
@@ -460,7 +460,7 @@ struct APIKeyInputView: View {
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {
                 ToolbarItem(placement: .cancellationAction) {
-                    Button("キャンセル") {
+                    Button("cancel".localized) {
                         dismiss()
                     }
                 }
