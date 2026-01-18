@@ -75,13 +75,13 @@ struct EditMemoView: View {
                 deleteButton
             }
             .toolbar(.hidden, for: .navigationBar)
-            .alert("メモを削除", isPresented: $showingDeleteAlert) {
-                Button("削除", role: .destructive) {
+            .alert("delete_memo_confirm_title".localized, isPresented: $showingDeleteAlert) {
+                Button("delete".localized, role: .destructive) {
                     deleteMemo()
                 }
-                Button("キャンセル", role: .cancel) {}
+                Button("cancel".localized, role: .cancel) {}
             } message: {
-                Text("このメモを削除してもよろしいですか？")
+                Text("delete_memo_confirm_message".localized)
             }
             .confirmationDialog("export_format".localized, isPresented: $showingExportOptions) {
                 Button("settings_markdown_format".localized) {
@@ -221,7 +221,7 @@ struct EditMemoView: View {
                     HStack(spacing: 6) {
                         Image(systemName: isExpanded ? "chevron.up" : "chevron.down")
                             .font(.system(size: 12))
-                        Text(isExpanded ? "オプションを隠す" : "オプションを表示")
+                        Text(isExpanded ? "hide_options".localized : "show_options".localized)
                             .font(.system(size: 14))
                     }
                     .foregroundColor(.secondary)
@@ -236,7 +236,7 @@ struct EditMemoView: View {
                         HStack(spacing: 4) {
                             Image(systemName: "arrow.uturn.backward")
                                 .font(.system(size: 11))
-                            Text("元に戻す")
+                            Text("undo_changes".localized)
                                 .font(.system(size: 12))
                         }
                         .foregroundColor(.orange)
@@ -244,7 +244,7 @@ struct EditMemoView: View {
                 }
 
                 if !selectedTags.isEmpty {
-                    Text("\(selectedTags.count)個のタグ")
+                    Text(String(format: "memo_tags_count".localized, selectedTags.count))
                         .font(.system(size: 12))
                         .foregroundColor(.secondary)
                 }
@@ -289,7 +289,7 @@ struct EditMemoView: View {
                             HStack(spacing: 4) {
                                 Image(systemName: "sparkles")
                                     .font(.system(size: 11, weight: .medium))
-                                Text("AI抽出")
+                                Text("ai_extract".localized)
                                     .font(.system(size: 13, weight: .medium))
                             }
                             .foregroundColor(.purple)
@@ -337,13 +337,13 @@ struct EditMemoView: View {
         }
         .padding(.bottom, 12)
         .transition(.move(edge: .top).combined(with: .opacity))
-        .alert("タグ数の制限", isPresented: $showingTagLimitAlert) {
-            Button("Pro版を見る") {
+        .alert("memo_tag_limit".localized, isPresented: $showingTagLimitAlert) {
+            Button("pro_view".localized) {
                 showingPurchase = true
             }
             Button("OK", role: .cancel) {}
         } message: {
-            Text("無料版では1つのメモに15個までのタグを設定できます。Pro版では無制限にタグを追加できます。")
+            Text("tag_limit_message".localized)
         }
         .sheet(isPresented: $showingPurchase) {
             PurchaseView()
@@ -354,16 +354,16 @@ struct EditMemoView: View {
         .sheet(isPresented: $showingMemoArrange) {
             MemoArrangeView(memoContent: $memoText)
         }
-        .alert("新しいタグを追加", isPresented: $showingAddTag) {
-            TextField("タグ名", text: $newTagText)
-            Button("追加") {
+        .alert("memo_new_tag".localized, isPresented: $showingAddTag) {
+            TextField("memo_tag_name".localized, text: $newTagText)
+            Button("add".localized) {
                 addNewTag()
             }
-            Button("キャンセル", role: .cancel) {
+            Button("cancel".localized, role: .cancel) {
                 newTagText = ""
             }
         } message: {
-            Text("\(selectedCategory)カテゴリーに新しいタグを追加します")
+            Text(String(format: "add_tag_to_category".localized, selectedCategory))
         }
     }
     

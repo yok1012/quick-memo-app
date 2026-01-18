@@ -78,6 +78,15 @@
 "memo_hours" = "小时";
 "memo_tags_count" = "%d个标签";
 
+// FastInputView & EditMemoView Specific
+"discard_draft" = "删除草稿";
+"ai_extract" = "AI提取";
+"show_options" = "显示选项";
+"hide_options" = "隐藏选项";
+"undo_changes" = "撤销";
+"delete_memo_confirm_title" = "删除备忘录";
+"delete_memo_confirm_message" = "确定要删除此备忘录吗？";
+
 // MARK: - Settings
 "settings_title" = "设置";
 "upgrade" = "升级";
@@ -762,4 +771,33 @@
 "ai_api_key_deleted" = "%@ API密钥已删除";
 "ai_stats_reset" = "使用统计已重置";
 "ai_help" = "帮助";
+
+// MARK: - Import View
+"import_error" = "导入错误";
+"import_success" = "导入完成";
+"import_success_message" = "已导入%d条备忘录";
+"import_supported_formats" = "支持的格式";
+"import_format_text_desc" = "纯文本文件";
+"import_format_markdown_desc" = "Markdown格式文件";
+"import_format_csv_desc" = "QuickMemo导出格式";
+"import_format_json_desc" = "QuickMemo导出格式";
+"import_encoding_detection" = "自动检测编码：UTF-8、Shift-JIS、EUC-JP等";
+"import_select_file" = "选择文件";
+"import_preview_count" = "预览（%d项）";
+"import_more_items" = "还有%d项...";
+"import_destination_category" = "目标分类";
+"import_category_note" = "※ 适用于没有分类信息的备忘录";
+"import_importing" = "导入中...";
+"import_count" = "导入%d项";
+"import_limit_exceeded" = "备忘录数量已达上限（%d项）。请升级到Pro版本。";
+"format_text" = "文本";
+"format_markdown" = "Markdown";
+"format_csv" = "CSV";
+"format_json" = "JSON";
+
+// MARK: - Widget Settings View
+"widget_max_selection" = "最多可选择8个（支持大尺寸小组件）";
+"widget_pro_required_message" = "需要升级到Pro版本才能自定义小组件分类";
+"settings_saved" = "设置已保存";
+"pro_exclusive_feature" = "Pro专属功能";
 

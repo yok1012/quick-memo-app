@@ -101,6 +101,15 @@
 "memo_hours" = "時間";
 "memo_tags_count" = "%d個のタグ";
 
+// FastInputView & EditMemoView Specific
+"discard_draft" = "下書きを削除";
+"ai_extract" = "AI抽出";
+"show_options" = "オプションを表示";
+"hide_options" = "オプションを隠す";
+"undo_changes" = "元に戻す";
+"delete_memo_confirm_title" = "メモを削除";
+"delete_memo_confirm_message" = "このメモを削除してもよろしいですか？";
+
 // MARK: - Settings
 "settings_title" = "設定";
 "upgrade" = "アップグレード";
@@ -638,6 +647,35 @@
 "ai_remaining_requests" = "残りリクエスト数";
 "ai_monthly_limit" = "月間制限";
 "ai_total_tokens" = "累計トークン数";
+
+// MARK: - Import View
+"import_error" = "インポートエラー";
+"import_success" = "インポート完了";
+"import_success_message" = "%d件のメモをインポートしました";
+"import_supported_formats" = "対応フォーマット";
+"import_format_text_desc" = "プレーンテキストファイル";
+"import_format_markdown_desc" = "Markdown形式のファイル";
+"import_format_csv_desc" = "QuickMemoエクスポート形式";
+"import_format_json_desc" = "QuickMemoエクスポート形式";
+"import_encoding_detection" = "文字コード自動検出: UTF-8, Shift-JIS, EUC-JP等に対応";
+"import_select_file" = "ファイルを選択";
+"import_preview_count" = "プレビュー (%d件)";
+"import_more_items" = "他 %d件...";
+"import_destination_category" = "インポート先カテゴリー";
+"import_category_note" = "※ 元のカテゴリー情報がないメモに適用されます";
+"import_importing" = "インポート中...";
+"import_count" = "%d件をインポート";
+"import_limit_exceeded" = "メモ数が上限(%d件)に達しています。Pro版にアップグレードしてください。";
+"format_text" = "テキスト";
+"format_markdown" = "Markdown";
+"format_csv" = "CSV";
+"format_json" = "JSON";
+
+// MARK: - Widget Settings View
+"widget_max_selection" = "最大8つまで選択できます（大サイズウィジェット対応）";
+"widget_pro_required_message" = "ウィジェットのカテゴリーをカスタマイズするにはPro版へのアップグレードが必要です";
+"settings_saved" = "設定を保存しました";
+"pro_exclusive_feature" = "Pro版限定機能";
 "ai_estimated_cost" = "推定コスト";
 "ai_last_reset_date" = "最終リセット日";
 "ai_usage_by_type" = "機能別使用状況";

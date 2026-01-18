@@ -207,7 +207,7 @@ struct FastInputView: View {
                         HStack(spacing: 4) {
                             Image(systemName: "trash")
                                 .font(.system(size: 11))
-                            Text("下書きを削除")
+                            Text("discard_draft".localized)
                                 .font(.system(size: 12))
                         }
                         .foregroundColor(.orange)
@@ -260,7 +260,7 @@ struct FastInputView: View {
                             HStack(spacing: 4) {
                                 Image(systemName: "sparkles")
                                     .font(.system(size: 11, weight: .medium))
-                                Text("AI抽出")
+                                Text("ai_extract".localized)
                                     .font(.system(size: 13, weight: .medium))
                             }
                             .foregroundColor(.purple)

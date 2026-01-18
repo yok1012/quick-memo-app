@@ -78,6 +78,15 @@
 "memo_hours" = "hours";
 "memo_tags_count" = "%d tags";
 
+// FastInputView & EditMemoView Specific
+"discard_draft" = "Discard Draft";
+"ai_extract" = "AI Extract";
+"show_options" = "Show Options";
+"hide_options" = "Hide Options";
+"undo_changes" = "Undo";
+"delete_memo_confirm_title" = "Delete Memo";
+"delete_memo_confirm_message" = "Are you sure you want to delete this memo?";
+
 // MARK: - Settings
 "settings_title" = "Settings";
 "upgrade" = "Upgrade";
@@ -762,4 +771,33 @@
 "ai_api_key_deleted" = "%@ API key deleted";
 "ai_stats_reset" = "Usage statistics reset";
 "ai_help" = "Help";
+
+// MARK: - Import View
+"import_error" = "Import Error";
+"import_success" = "Import Complete";
+"import_success_message" = "Imported %d memos";
+"import_supported_formats" = "Supported Formats";
+"import_format_text_desc" = "Plain text files";
+"import_format_markdown_desc" = "Markdown format files";
+"import_format_csv_desc" = "QuickMemo export format";
+"import_format_json_desc" = "QuickMemo export format";
+"import_encoding_detection" = "Auto-detect encoding: UTF-8, Shift-JIS, EUC-JP, etc.";
+"import_select_file" = "Select File";
+"import_preview_count" = "Preview (%d items)";
+"import_more_items" = "And %d more...";
+"import_destination_category" = "Destination Category";
+"import_category_note" = "※ Applied to memos without category information";
+"import_importing" = "Importing...";
+"import_count" = "Import %d items";
+"import_limit_exceeded" = "Memo limit (%d items) reached. Please upgrade to Pro version.";
+"format_text" = "Text";
+"format_markdown" = "Markdown";
+"format_csv" = "CSV";
+"format_json" = "JSON";
+
+// MARK: - Widget Settings View
+"widget_max_selection" = "Up to 8 categories (supports large widgets)";
+"widget_pro_required_message" = "Upgrade to Pro version to customize widget categories";
+"settings_saved" = "Settings Saved";
+"pro_exclusive_feature" = "Pro Exclusive Feature";
 

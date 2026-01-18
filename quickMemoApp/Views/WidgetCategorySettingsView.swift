@@ -42,37 +42,37 @@ struct WidgetCategorySettingsView: View {
                             Text("widget_free_version_notice".localized)
                                 .foregroundColor(.secondary)
                         } else {
-                            Text("最大8つまで選択できます（大サイズウィジェット対応）")
+                            Text("widget_max_selection".localized)
                                 .foregroundColor(.secondary)
                         }
                     }
                 }
                 .listStyle(InsetGroupedListStyle())
             }
-            .navigationTitle("ウィジェット設定")
+            .navigationTitle("widget_settings".localized)
             .toolbar {
                 ToolbarItem(placement: .navigationBarLeading) {
-                    Button("キャンセル") {
+                    Button("cancel".localized) {
                         dismiss()
                     }
                 }
 
                 ToolbarItem(placement: .navigationBarTrailing) {
-                    Button("保存") {
+                    Button("save".localized) {
                         saveSettings()
                     }
                     .disabled(!hasChanges())
                 }
             }
-            .alert("Pro版が必要です", isPresented: $showingPurchaseAlert) {
-                Button("Pro版を見る") {
+            .alert("pro_required".localized, isPresented: $showingPurchaseAlert) {
+                Button("pro_view".localized) {
                     showingPurchase = true
                 }
-                Button("キャンセル", role: .cancel) { }
+                Button("cancel".localized, role: .cancel) { }
             } message: {
-                Text("ウィジェットのカテゴリーをカスタマイズするにはPro版へのアップグレードが必要です")
+                Text("widget_pro_required_message".localized)
             }
-            .alert("設定を保存しました", isPresented: $showingSaveConfirmation) {
+            .alert("settings_saved".localized, isPresented: $showingSaveConfirmation) {
                 Button("OK") {
                     dismiss()
                 }
@@ -177,7 +177,7 @@ struct ProUpgradeCard: View {
                 HStack {
                     Image(systemName: "star.fill")
                         .foregroundColor(.yellow)
-                    Text("Pro版限定機能")
+                    Text("pro_exclusive_feature".localized)
                         .font(.headline)
                 }
                 Text("widget_can_select_freely".localized)

@@ -51,17 +51,17 @@ struct ImportView: View {
             .sheet(isPresented: $showingDocumentPicker) {
                 DocumentPickerView(completion: handleDocumentPicked)
             }
-            .alert("インポートエラー", isPresented: $showingError) {
+            .alert("import_error".localized, isPresented: $showingError) {
                 Button("OK", role: .cancel) {}
             } message: {
                 Text(errorMessage)
             }
-            .alert("インポート完了", isPresented: $showingSuccess) {
+            .alert("import_success".localized, isPresented: $showingSuccess) {
                 Button("OK") {
                     dismiss()
                 }
             } message: {
-                Text("\(importedCount)件のメモをインポートしました")
+                Text(String(format: "import_success_message".localized, importedCount))
             }
         }
     }
@@ -78,7 +78,7 @@ struct ImportView: View {
 
             Spacer()
 
-            Text("メモをインポート")
+            Text("import_memos".localized)
                 .font(.system(size: 18, weight: .semibold))
 
             Spacer()
@@ -98,20 +98,20 @@ struct ImportView: View {
                 Image(systemName: "doc.text")
                     .font(.system(size: 20))
                     .foregroundColor(.blue)
-                Text("対応フォーマット")
+                Text("import_supported_formats".localized)
                     .font(.system(size: 16, weight: .semibold))
             }
 
             VStack(alignment: .leading, spacing: 8) {
-                FormatRow(icon: "doc.text", format: "テキスト", extensions: ".txt", description: "プレーンテキストファイル")
-                FormatRow(icon: "text.badge.checkmark", format: "Markdown", extensions: ".md", description: "Markdown形式のファイル")
-                FormatRow(icon: "doc.badge.gearshape", format: "CSV", extensions: ".csv", description: "QuickMemoエクスポート形式")
-                FormatRow(icon: "curlybraces", format: "JSON", extensions: ".json", description: "QuickMemoエクスポート形式")
+                FormatRow(icon: "doc.text", format: "format_text".localized, extensions: ".txt", description: "import_format_text_desc".localized)
+                FormatRow(icon: "text.badge.checkmark", format: "format_markdown".localized, extensions: ".md", description: "import_format_markdown_desc".localized)
+                FormatRow(icon: "doc.badge.gearshape", format: "format_csv".localized, extensions: ".csv", description: "import_format_csv_desc".localized)
+                FormatRow(icon: "curlybraces", format: "format_json".localized, extensions: ".json", description: "import_format_json_desc".localized)
             }
 
             Divider()
 
-            Text("文字コード自動検出: UTF-8, Shift-JIS, EUC-JP等に対応")
+            Text("import_encoding_detection".localized)
                 .font(.system(size: 12))
                 .foregroundColor(.secondary)
         }
@@ -127,7 +127,7 @@ struct ImportView: View {
             HStack {
                 Image(systemName: "folder.badge.plus")
                     .font(.system(size: 20))
-                Text("ファイルを選択")
+                Text("import_select_file".localized)
                     .font(.system(size: 16, weight: .medium))
             }
             .frame(maxWidth: .infinity)
@@ -144,10 +144,10 @@ struct ImportView: View {
             HStack {
                 Image(systemName: "eye")
                     .foregroundColor(.green)
-                Text("プレビュー (\(importedMemos.count)件)")
+                Text(String(format: "import_preview_count".localized, importedMemos.count))
                     .font(.system(size: 16, weight: .semibold))
                 Spacer()
-                Button("クリア") {
+                Button("clear".localized) {
                     importedMemos = []
                 }
                 .font(.system(size: 14))
@@ -159,7 +159,7 @@ struct ImportView: View {
             }
 
             if importedMemos.count > 5 {
-                Text("他 \(importedMemos.count - 5)件...")
+                Text(String(format: "import_more_items".localized, importedMemos.count - 5))
                     .font(.system(size: 14))
                     .foregroundColor(.secondary)
                     .padding(.leading, 8)
@@ -172,7 +172,7 @@ struct ImportView: View {
 
     private var categorySelectorSection: some View {
         VStack(alignment: .leading, spacing: 12) {
-            Text("インポート先カテゴリー")
+            Text("import_destination_category".localized)
                 .font(.system(size: 14, weight: .medium))
                 .foregroundColor(.secondary)
 
@@ -189,7 +189,7 @@ struct ImportView: View {
                 }
             }
 
-            Text("※ 元のカテゴリー情報がないメモに適用されます")
+            Text("import_category_note".localized)
                 .font(.system(size: 12))
                 .foregroundColor(.secondary)
         }
@@ -206,7 +206,7 @@ struct ImportView: View {
                 } else {
                     Image(systemName: "square.and.arrow.down")
                 }
-                Text(isImporting ? "インポート中..." : "\(importedMemos.count)件をインポート")
+                Text(isImporting ? "import_importing".localized : String(format: "import_count".localized, importedMemos.count))
                     .font(.system(size: 16, weight: .bold))
             }
             .frame(maxWidth: .infinity)
@@ -276,7 +276,7 @@ struct ImportView: View {
             if allowedCount > 0 {
                 memosToImport = Array(memosToImport.prefix(allowedCount))
             } else {
-                errorMessage = "メモ数が上限(\(maxMemos)件)に達しています。Pro版にアップグレードしてください。"
+                errorMessage = String(format: "import_limit_exceeded".localized, maxMemos)
                 showingError = true
                 isImporting = false
                 return
