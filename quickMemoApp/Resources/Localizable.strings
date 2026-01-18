@@ -595,6 +595,19 @@
 "ai_features" = "AI機能";
 "ai_feature_settings" = "AI機能設定";
 
+// Settings View Specific
+"settings_icloud_account" = "iCloudアカウント";
+"settings_ai_features" = "AI機能";
+"settings_ai_features_settings" = "AI機能設定";
+"settings_ai_features_desc" = "タグ抽出・メモアレンジ・要約";
+"settings_ai_features_footer" = "APIキーを設定してAI機能を利用できます。料金は各APIプロバイダーに直接お支払いください。";
+"settings_icloud_backup" = "iCloudバックアップ";
+"settings_last_backup" = "最終バックアップ: %@";
+"settings_restore_from_icloud" = "iCloudから復元";
+"settings_icloud_sync" = "iCloud同期";
+"settings_icloud_sync_footer" = "Pro版ではデータが自動的にiCloudにバックアップされます。アプリを閉じる時に自動保存されます。";
+"settings_backup_failed" = "バックアップに失敗しました。\n\n設定アプリでiCloudにサインインしていることを確認してください。";
+
 // MARK: - AI Settings
 "ai_api_key_management" = "APIキー管理";
 "ai_api_key_footer" = "APIキーはお客様のデバイスに安全に保存されます。料金は各APIプロバイダーに直接お支払いください。";

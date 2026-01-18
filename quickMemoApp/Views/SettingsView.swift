@@ -49,7 +49,7 @@ struct SettingsView: View {
                             .font(.title2)
                             .foregroundColor(.blue)
                         VStack(alignment: .leading, spacing: 4) {
-                            Text("iCloudアカウント")
+                            Text("settings_icloud_account".localized)
                                 .font(.subheadline)
                                 .fontWeight(.medium)
                             Text("data_sync_usage".localized)
@@ -426,9 +426,9 @@ struct SettingsView: View {
                             Image(systemName: "sparkles")
                                 .foregroundColor(.purple)
                             VStack(alignment: .leading, spacing: 4) {
-                                Text("AI機能設定")
+                                Text("settings_ai_features_settings".localized)
                                     .font(.subheadline)
-                                Text("タグ抽出・メモアレンジ・要約")
+                                Text("settings_ai_features_desc".localized)
                                     .font(.caption)
                                     .foregroundColor(.secondary)
                             }
@@ -436,9 +436,9 @@ struct SettingsView: View {
                         }
                     }
                 } header: {
-                    Label("AI機能", systemImage: "brain")
+                    Label("settings_ai_features".localized, systemImage: "brain")
                 } footer: {
-                    Text("APIキーを設定してAI機能を利用できます。料金は各APIプロバイダーに直接お支払いください。")
+                    Text("settings_ai_features_footer".localized)
                         .font(.system(size: 12))
                 }
 
@@ -562,10 +562,10 @@ struct SettingsView: View {
                             Image(systemName: "icloud.fill")
                                 .foregroundColor(.blue)
                             VStack(alignment: .leading, spacing: 2) {
-                                Text("iCloudバックアップ")
+                                Text("settings_icloud_backup".localized)
                                     .font(.subheadline)
                                 if let date = cloudKitManager.lastBackupDate ?? UserDefaults.standard.object(forKey: "lastCloudBackupDate") as? Date {
-                                    Text("最終バックアップ: \(date.formatted(date: .abbreviated, time: .shortened))")
+                                    Text(String(format: "settings_last_backup".localized, date.formatted(date: .abbreviated, time: .shortened)))
                                         .font(.caption)
                                         .foregroundColor(.secondary)
                                 } else {
@@ -619,7 +619,7 @@ struct SettingsView: View {
                             HStack {
                                 Image(systemName: "icloud.and.arrow.down")
                                     .foregroundColor(.blue)
-                                Text("iCloudから復元")
+                                Text("settings_restore_from_icloud".localized)
                                 Spacer()
                                 if isRestoring {
                                     ProgressView()
@@ -629,9 +629,9 @@ struct SettingsView: View {
                         }
                         .disabled(isBackingUp || isRestoring)
                     } header: {
-                        Label("iCloud同期", systemImage: "icloud")
+                        Label("settings_icloud_sync".localized, systemImage: "icloud")
                     } footer: {
-                        Text("Pro版ではデータが自動的にiCloudにバックアップされます。アプリを閉じる時に自動保存されます。")
+                        Text("settings_icloud_sync_footer".localized)
                             .font(.system(size: 12))
                     }
                 }
@@ -1381,7 +1381,7 @@ struct SettingsView: View {
                     if let error = cloudKitManager.syncError {
                         backupResultMessage = error
                     } else {
-                        backupResultMessage = "バックアップに失敗しました。\n\n設定アプリでiCloudにサインインしていることを確認してください。"
+                        backupResultMessage = "settings_backup_failed".localized
                     }
                 }
                 showingBackupResult = true

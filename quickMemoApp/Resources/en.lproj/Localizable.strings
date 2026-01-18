@@ -565,6 +565,19 @@
 "ai_features" = "AI Features";
 "ai_feature_settings" = "AI Feature Settings";
 
+// Settings View Specific
+"settings_icloud_account" = "iCloud Account";
+"settings_ai_features" = "AI Features";
+"settings_ai_features_settings" = "AI Feature Settings";
+"settings_ai_features_desc" = "Tag extraction, memo arrange, summary";
+"settings_ai_features_footer" = "Set up API keys to use AI features. You pay providers directly.";
+"settings_icloud_backup" = "iCloud Backup";
+"settings_last_backup" = "Last backup: %@";
+"settings_restore_from_icloud" = "Restore from iCloud";
+"settings_icloud_sync" = "iCloud Sync";
+"settings_icloud_sync_footer" = "Pro version automatically backs up data to iCloud. Auto-saves when closing the app.";
+"settings_backup_failed" = "Backup failed.\n\nPlease verify you're signed in to iCloud in the Settings app.";
+
 // MARK: - AI Settings
 "ai_api_key_management" = "API Key Management";
 "ai_api_key_footer" = "API keys are securely stored on your device. You pay providers directly.";

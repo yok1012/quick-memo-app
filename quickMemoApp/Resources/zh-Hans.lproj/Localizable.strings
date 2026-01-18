@@ -565,6 +565,19 @@
 "ai_features" = "AI功能";
 "ai_feature_settings" = "AI功能设置";
 
+// Settings View Specific
+"settings_icloud_account" = "iCloud账户";
+"settings_ai_features" = "AI功能";
+"settings_ai_features_settings" = "AI功能设置";
+"settings_ai_features_desc" = "标签提取、备忘整理、摘要";
+"settings_ai_features_footer" = "设置API密钥以使用AI功能。费用直接支付给各API提供商。";
+"settings_icloud_backup" = "iCloud备份";
+"settings_last_backup" = "上次备份: %@";
+"settings_restore_from_icloud" = "从iCloud恢复";
+"settings_icloud_sync" = "iCloud同步";
+"settings_icloud_sync_footer" = "专业版会自动将数据备份到iCloud。关闭应用时自动保存。";
+"settings_backup_failed" = "备份失败。\n\n请确认在设置应用中已登录iCloud。";
+
 // MARK: - AI Settings
 "ai_api_key_management" = "API密钥管理";
 "ai_api_key_footer" = "API密钥安全存储在您的设备上。费用直接支付给各API提供商。";
