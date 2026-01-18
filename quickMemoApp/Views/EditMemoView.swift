@@ -28,6 +28,11 @@ struct EditMemoView: View {
     // ドラフト保存用
     @State private var hasDraft = false
 
+    // エクスポート用
+    @State private var showingExportOptions = false
+    @State private var showingShareSheet = false
+    @State private var exportedFileURL: URL?
+
     let memo: QuickMemo
     private let draftKey: String
 
@@ -78,6 +83,25 @@ struct EditMemoView: View {
             } message: {
                 Text("このメモを削除してもよろしいですか？")
             }
+            .confirmationDialog("export_format".localized, isPresented: $showingExportOptions) {
+                Button("settings_markdown_format".localized) {
+                    exportMemo(format: ExportManager.ExportFormat.markdown)
+                }
+                Button("settings_text_format".localized) {
+                    exportMemo(format: ExportManager.ExportFormat.plainText)
+                }
+                Button("settings_json_format".localized) {
+                    exportMemo(format: ExportManager.ExportFormat.json)
+                }
+                Button("cancel".localized, role: .cancel) {}
+            } message: {
+                Text("export_select_format".localized)
+            }
+            .sheet(isPresented: $showingShareSheet) {
+                if let url = exportedFileURL {
+                    ShareSheet(activityItems: [url])
+                }
+            }
         }
     }
     
@@ -97,6 +121,17 @@ struct EditMemoView: View {
                 .font(.system(size: 18, weight: .semibold))
 
             Spacer()
+
+            // エクスポートボタン
+            Button(action: {
+                showingExportOptions = true
+            }) {
+                Image(systemName: "square.and.arrow.up")
+                    .font(.system(size: 18))
+                    .foregroundColor(.green)
+            }
+            .disabled(memoText.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty)
+            .opacity(memoText.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty ? 0.5 : 1.0)
 
             // AI アレンジボタン
             Button(action: {
@@ -444,7 +479,47 @@ struct EditMemoView: View {
 
         dismiss()
     }
-    
+
+    private func exportMemo(format: ExportManager.ExportFormat) {
+        // 現在の入力内容から一時メモを作成
+        let tempMemo = QuickMemo(
+            id: memo.id,
+            title: memo.title,
+            content: memoText,
+            primaryCategory: selectedCategory,
+            tags: Array(selectedTags),
+            createdAt: memo.createdAt,
+            updatedAt: Date(),
+            calendarEventId: nil,
+            durationMinutes: selectedDuration
+        )
+
+        do {
+            let data = try ExportManager.shared.exportSingleMemo(tempMemo, format: format)
+
+            let fileExtension: String
+            switch format {
+            case .markdown:
+                fileExtension = "md"
+            case .plainText:
+                fileExtension = "txt"
+            case .json:
+                fileExtension = "json"
+            case .csv:
+                fileExtension = "csv"
+            }
+
+            let fileName = "memo_\(Date().timeIntervalSince1970).\(fileExtension)"
+            let tempURL = FileManager.default.temporaryDirectory.appendingPathComponent(fileName)
+            try data.write(to: tempURL)
+
+            exportedFileURL = tempURL
+            showingShareSheet = true
+        } catch {
+            print("Export error: \(error)")
+        }
+    }
+
     private func addNewTag() {
         let trimmed = newTagText.trimmingCharacters(in: .whitespacesAndNewlines)
         guard !trimmed.isEmpty else { return }

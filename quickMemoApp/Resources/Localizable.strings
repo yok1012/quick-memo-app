@@ -211,10 +211,24 @@
 "settings_diagnostics" = "診断情報";
 "settings_data_management" = "データ管理";
 "settings_export_memos" = "メモをエクスポート";
+"import_memos" = "メモをインポート";
+
+// MARK: - Clipboard Copy
+"copy_text" = "テキストをコピー";
+"copy_markdown" = "Markdown形式でコピー";
+"copy_with_metadata" = "詳細情報付きでコピー";
+"share" = "共有";
+"copied" = "コピーしました";
+"category" = "カテゴリー";
+"duration" = "所要時間";
+"created_at" = "作成日時";
+
 "settings_export_format" = "エクスポート形式";
 "settings_export_select_format" = "ファイル形式を選択してください";
 "settings_json_format" = "JSON形式";
 "settings_csv_format" = "CSV形式";
+"settings_markdown_format" = "Markdown形式";
+"settings_text_format" = "テキスト形式";
 "settings_export_footer" = "エクスポートしたファイルは共有やバックアップに利用できます。";
 "settings_export_error" = "エクスポートエラー";
 "settings_app_info" = "アプリ情報";
@@ -364,6 +378,7 @@
 
 // MARK: - Export
 "export_format" = "エクスポート形式";
+"export_select_format" = "ファイル形式を選択してください";
 "export_json" = "JSON形式";
 "export_csv" = "CSV形式";
 "export_data" = "データをエクスポート";
@@ -495,6 +510,22 @@
 "tag_filter" = "タグ";
 "date_filter" = "日付";
 "clear_filters" = "フィルターをクリア";
+
+// MARK: - Smart Filter
+"filter_all" = "すべて";
+"filter_today" = "今日";
+"filter_this_week" = "今週";
+"filter_this_month" = "今月";
+"filter_last_7_days" = "直近7日";
+"filter_last_30_days" = "直近30日";
+"filter_custom" = "カスタム";
+"sort_by" = "並び替え:";
+"sort_newest" = "新しい順";
+"sort_oldest" = "古い順";
+"sort_alphabetical" = "名前順";
+"search" = "検索";
+"clear" = "クリア";
+
 "no_search_results" = "検索結果が見つかりません";
 "change_search_conditions" = "検索条件を変更してお試しください";
 "data_sync_usage" = "データ同期に使用されます";

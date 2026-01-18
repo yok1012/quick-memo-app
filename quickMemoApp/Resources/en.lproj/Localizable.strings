@@ -185,10 +185,24 @@
 "settings_diagnostics" = "Diagnostic Information";
 "settings_data_management" = "Data Management";
 "settings_export_memos" = "Export Memos";
+"import_memos" = "Import Memos";
+
+// MARK: - Clipboard Copy
+"copy_text" = "Copy Text";
+"copy_markdown" = "Copy as Markdown";
+"copy_with_metadata" = "Copy with Details";
+"share" = "Share";
+"copied" = "Copied";
+"category" = "Category";
+"duration" = "Duration";
+"created_at" = "Created";
+
 "settings_export_format" = "Export Format";
 "settings_export_select_format" = "Choose a file format";
 "settings_json_format" = "JSON Format";
 "settings_csv_format" = "CSV Format";
+"settings_markdown_format" = "Markdown Format";
+"settings_text_format" = "Text Format";
 "settings_export_footer" = "Exported files can be shared or backed up.";
 "settings_export_error" = "Export Error";
 "settings_app_info" = "App Information";
@@ -338,6 +352,7 @@
 
 // MARK: - Export
 "export_format" = "Export Format";
+"export_select_format" = "Choose a file format";
 "export_json" = "JSON Format";
 "export_csv" = "CSV Format";
 "export_data" = "Export Data";
@@ -465,6 +480,22 @@
 "tag_filter" = "Tags";
 "date_filter" = "Date";
 "clear_filters" = "Clear Filters";
+
+// MARK: - Smart Filter
+"filter_all" = "All";
+"filter_today" = "Today";
+"filter_this_week" = "This Week";
+"filter_this_month" = "This Month";
+"filter_last_7_days" = "Last 7 Days";
+"filter_last_30_days" = "Last 30 Days";
+"filter_custom" = "Custom";
+"sort_by" = "Sort by:";
+"sort_newest" = "Newest";
+"sort_oldest" = "Oldest";
+"sort_alphabetical" = "A-Z";
+"search" = "Search";
+"clear" = "Clear";
+
 "no_search_results" = "No search results found";
 "change_search_conditions" = "Try changing your search criteria";
 "data_sync_usage" = "Used for data synchronization";

@@ -47,6 +47,7 @@ struct MemoListView: View {
 struct MemoRow: View {
     let memo: QuickMemo
     @ObservedObject private var localizationManager = LocalizationManager.shared
+    @State private var showCopiedFeedback = false
 
     private var categoryColor: Color {
         // DataManagerからカテゴリーを検索して色を取得
@@ -94,13 +95,13 @@ struct MemoRow: View {
                     Text(memo.content)
                         .font(.system(size: 14))
                         .foregroundColor(.secondary)
-                        .lineLimit(3)  // 1行から3行に増やす
+                        .lineLimit(3)
                         .multilineTextAlignment(.leading)
                 } else {
                     Text(memo.content)
                         .font(.system(size: 16, weight: .medium))
                         .foregroundColor(.primary)
-                        .lineLimit(4)  // 2行から4行に増やす
+                        .lineLimit(4)
                         .multilineTextAlignment(.leading)
                 }
                 
@@ -153,11 +154,129 @@ struct MemoRow: View {
                 .fill(Color(.systemBackground))
                 .shadow(color: .gray.opacity(0.1), radius: 2, x: 0, y: 1)
         )
+        .overlay(
+            Group {
+                if showCopiedFeedback {
+                    Text(localizationManager.localizedString(for: "copied"))
+                        .font(.system(size: 12, weight: .medium))
+                        .foregroundColor(.white)
+                        .padding(.horizontal, 12)
+                        .padding(.vertical, 6)
+                        .background(Color.green.cornerRadius(8))
+                        .transition(.opacity.combined(with: .scale))
+                }
+            }
+        )
+        .contextMenu {
+            // プレーンテキストでコピー
+            Button(action: { copyAsPlainText() }) {
+                Label(localizationManager.localizedString(for: "copy_text"), systemImage: "doc.on.doc")
+            }
+            
+            // Markdown形式でコピー
+            Button(action: { copyAsMarkdown() }) {
+                Label(localizationManager.localizedString(for: "copy_markdown"), systemImage: "text.badge.checkmark")
+            }
+            
+            // メタデータ付きでコピー
+            Button(action: { copyWithMetadata() }) {
+                Label(localizationManager.localizedString(for: "copy_with_metadata"), systemImage: "info.circle")
+            }
+            
+            Divider()
+            
+            // 共有
+            ShareLink(item: memo.content) {
+                Label(localizationManager.localizedString(for: "share"), systemImage: "square.and.arrow.up")
+            }
+        }
     }
     
     private func relativeTimeString(from date: Date) -> String {
         let formatter = RelativeDateTimeFormatter()
         formatter.unitsStyle = .abbreviated
         return formatter.localizedString(for: date, relativeTo: Date())
+    }
+    
+    // MARK: - Copy Functions
+    
+    private func copyAsPlainText() {
+        let text: String
+        if !memo.title.isEmpty {
+            text = "\(memo.title)\n\n\(memo.content)"
+        } else {
+            text = memo.content
+        }
+        UIPasteboard.general.string = text
+        showCopiedAnimation()
+    }
+    
+    private func copyAsMarkdown() {
+        var markdown = ""
+        
+        // タイトルがあれば見出しとして
+        if !memo.title.isEmpty {
+            markdown += "# \(memo.title)\n\n"
+        }
+        
+        // コンテンツ
+        markdown += memo.content
+        
+        // タグがあればリンク形式で
+        if !memo.tags.isEmpty {
+            markdown += "\n\n---\n\n"
+            markdown += memo.tags.map { "#\($0)" }.joined(separator: " ")
+        }
+        
+        UIPasteboard.general.string = markdown
+        showCopiedAnimation()
+    }
+    
+    private func copyWithMetadata() {
+        var text = ""
+        
+        // タイトル
+        if !memo.title.isEmpty {
+            text += "【\(memo.title)】\n\n"
+        }
+        
+        // コンテンツ
+        text += memo.content
+        
+        text += "\n\n---"
+        
+        // カテゴリー
+        text += "\n\(localizationManager.localizedString(for: "category")): \(localizedCategoryName)"
+        
+        // タグ
+        if !memo.tags.isEmpty {
+            text += "\n\(localizationManager.localizedString(for: "tags")): \(memo.tags.joined(separator: ", "))"
+        }
+        
+        // 所要時間
+        if memo.durationMinutes != 30 {
+            text += "\n\(localizationManager.localizedString(for: "duration")): \(memo.durationMinutes)\(localizationManager.localizedString(for: "memo_minutes"))"
+        }
+        
+        // 作成日時
+        let dateFormatter = DateFormatter()
+        dateFormatter.dateStyle = .medium
+        dateFormatter.timeStyle = .short
+        dateFormatter.locale = Locale.current
+        text += "\n\(localizationManager.localizedString(for: "created_at")): \(dateFormatter.string(from: memo.createdAt))"
+        
+        UIPasteboard.general.string = text
+        showCopiedAnimation()
+    }
+    
+    private func showCopiedAnimation() {
+        withAnimation(.easeInOut(duration: 0.2)) {
+            showCopiedFeedback = true
+        }
+        DispatchQueue.main.asyncAfter(deadline: .now() + 1.5) {
+            withAnimation(.easeInOut(duration: 0.2)) {
+                showCopiedFeedback = false
+            }
+        }
     }
 }

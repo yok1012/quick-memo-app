@@ -2,6 +2,7 @@ import SwiftUI
 
 struct SearchView: View {
     @ObservedObject private var dataManager = DataManager.shared
+    @ObservedObject private var localizationManager = LocalizationManager.shared
     
     @State private var searchText = ""
     @State private var selectedCategories: Set<String> = []
@@ -10,19 +11,104 @@ struct SearchView: View {
     @State private var endDate: Date?
     @State private var showingDatePicker = false
     @State private var showingTagPicker = false
+    @State private var selectedDatePreset: DatePreset = .all
+    @State private var selectedSortOption: SortOption = .newest
+    
+    // 日付プリセット
+    enum DatePreset: String, CaseIterable {
+        case all = "all"
+        case today = "today"
+        case thisWeek = "this_week"
+        case thisMonth = "this_month"
+        case last7Days = "last_7_days"
+        case last30Days = "last_30_days"
+        case custom = "custom"
+        
+        var localizedName: String {
+            switch self {
+            case .all: return LocalizationManager.shared.localizedString(for: "filter_all")
+            case .today: return LocalizationManager.shared.localizedString(for: "filter_today")
+            case .thisWeek: return LocalizationManager.shared.localizedString(for: "filter_this_week")
+            case .thisMonth: return LocalizationManager.shared.localizedString(for: "filter_this_month")
+            case .last7Days: return LocalizationManager.shared.localizedString(for: "filter_last_7_days")
+            case .last30Days: return LocalizationManager.shared.localizedString(for: "filter_last_30_days")
+            case .custom: return LocalizationManager.shared.localizedString(for: "filter_custom")
+            }
+        }
+        
+        func dateRange() -> (start: Date?, end: Date?) {
+            let calendar = Calendar.current
+            let now = Date()
+            
+            switch self {
+            case .all:
+                return (nil, nil)
+            case .today:
+                let start = calendar.startOfDay(for: now)
+                let end = calendar.date(byAdding: .day, value: 1, to: start)
+                return (start, end)
+            case .thisWeek:
+                let start = calendar.date(from: calendar.dateComponents([.yearForWeekOfYear, .weekOfYear], from: now))
+                let end = calendar.date(byAdding: .weekOfYear, value: 1, to: start ?? now)
+                return (start, end)
+            case .thisMonth:
+                let start = calendar.date(from: calendar.dateComponents([.year, .month], from: now))
+                let end = calendar.date(byAdding: .month, value: 1, to: start ?? now)
+                return (start, end)
+            case .last7Days:
+                let start = calendar.date(byAdding: .day, value: -7, to: now)
+                return (start, now)
+            case .last30Days:
+                let start = calendar.date(byAdding: .day, value: -30, to: now)
+                return (start, now)
+            case .custom:
+                return (nil, nil)
+            }
+        }
+    }
+    
+    // ソートオプション
+    enum SortOption: String, CaseIterable {
+        case newest = "newest"
+        case oldest = "oldest"
+        case alphabetical = "alphabetical"
+        
+        var localizedName: String {
+            switch self {
+            case .newest: return LocalizationManager.shared.localizedString(for: "sort_newest")
+            case .oldest: return LocalizationManager.shared.localizedString(for: "sort_oldest")
+            case .alphabetical: return LocalizationManager.shared.localizedString(for: "sort_alphabetical")
+            }
+        }
+        
+        var icon: String {
+            switch self {
+            case .newest: return "arrow.down.circle"
+            case .oldest: return "arrow.up.circle"
+            case .alphabetical: return "textformat.abc"
+            }
+        }
+    }
     
     var body: some View {
         NavigationStack {
             VStack(spacing: 0) {
                 searchHeader
                 
+                smartFilterSection
+                
                 filterSection
                 
                 searchResults
             }
-            .navigationTitle("検索")
+            .navigationTitle(localizationManager.localizedString(for: "search"))
             .sheet(isPresented: $showingDatePicker) {
                 DateRangePickerView(startDate: $startDate, endDate: $endDate)
+                    .onDisappear {
+                        if startDate != nil || endDate != nil {
+                            selectedDatePreset = .custom
+                        }
+                    }
             }
             .sheet(isPresented: $showingTagPicker) {
                 TagPickerView(selectedTags: $selectedTags)
@@ -36,11 +122,11 @@ struct SearchView: View {
                 Image(systemName: "magnifyingglass")
                     .foregroundColor(.secondary)
                 
-                TextField("メモを検索...", text: $searchText)
+                TextField(localizationManager.localizedString(for: "search_placeholder"), text: $searchText)
                     .textFieldStyle(RoundedBorderTextFieldStyle())
                 
                 if !searchText.isEmpty {
-                    Button("クリア") {
+                    Button(localizationManager.localizedString(for: "clear")) {
                         searchText = ""
                     }
                     .font(.caption)
@@ -56,6 +142,75 @@ struct SearchView: View {
         }
         .background(Color(.systemBackground))
         .shadow(color: .gray.opacity(0.1), radius: 1, x: 0, y: 1)
+    }
+    
+    // MARK: - Smart Filter Section
+    
+    private var smartFilterSection: some View {
+        VStack(spacing: 8) {
+            // 日付プリセット
+            ScrollView(.horizontal, showsIndicators: false) {
+                HStack(spacing: 8) {
+                    ForEach([DatePreset.all, .today, .thisWeek, .thisMonth, .last7Days, .last30Days], id: \.self) { preset in
+                        Button(action: {
+                            selectDatePreset(preset)
+                        }) {
+                            Text(preset.localizedName)
+                                .font(.system(size: 12, weight: .medium))
+                                .padding(.horizontal, 12)
+                                .padding(.vertical, 6)
+                                .background(
+                                    RoundedRectangle(cornerRadius: 14)
+                                        .fill(selectedDatePreset == preset ? Color.blue : Color(.systemGray5))
+                                )
+                                .foregroundColor(selectedDatePreset == preset ? .white : .primary)
+                        }
+                    }
+                }
+                .padding(.horizontal, 16)
+            }
+            
+            // ソートオプション
+            HStack {
+                Text(localizationManager.localizedString(for: "sort_by"))
+                    .font(.system(size: 12))
+                    .foregroundColor(.secondary)
+                
+                Menu {
+                    ForEach(SortOption.allCases, id: \.self) { option in
+                        Button(action: {
+                            selectedSortOption = option
+                        }) {
+                            HStack {
+                                Image(systemName: option.icon)
+                                Text(option.localizedName)
+                                if selectedSortOption == option {
+                                    Image(systemName: "checkmark")
+                                }
+                            }
+                        }
+                    }
+                } label: {
+                    HStack(spacing: 4) {
+                        Image(systemName: selectedSortOption.icon)
+                        Text(selectedSortOption.localizedName)
+                        Image(systemName: "chevron.down")
+                            .font(.system(size: 10))
+                    }
+                    .font(.system(size: 12, weight: .medium))
+                    .padding(.horizontal, 10)
+                    .padding(.vertical, 5)
+                    .background(Color(.systemGray5))
+                    .cornerRadius(12)
+                }
+                
+                Spacer()
+            }
+            .padding(.horizontal, 16)
+            .padding(.bottom, 4)
+        }
+        .padding(.vertical, 8)
+        .background(Color(.systemGray6).opacity(0.3))
     }
     
     private var filterSection: some View {
@@ -77,7 +232,7 @@ struct SearchView: View {
         }) {
             HStack(spacing: 6) {
                 Image(systemName: "folder")
-                Text("category_filter".localized)
+                Text(localizationManager.localizedString(for: "category_filter"))
                 if !selectedCategories.isEmpty {
                     Text("(\(selectedCategories.count))")
                         .fontWeight(.semibold)
@@ -114,7 +269,7 @@ struct SearchView: View {
         }) {
             HStack(spacing: 6) {
                 Image(systemName: "tag")
-                Text("tag_filter".localized)
+                Text(localizationManager.localizedString(for: "tag_filter"))
                 if !selectedTags.isEmpty {
                     Text("(\(selectedTags.count))")
                         .fontWeight(.semibold)
@@ -137,7 +292,7 @@ struct SearchView: View {
         }) {
             HStack(spacing: 6) {
                 Image(systemName: "calendar")
-                Text("date_filter".localized)
+                Text(localizationManager.localizedString(for: "date_filter"))
                 if startDate != nil || endDate != nil {
                     Image(systemName: "checkmark.circle.fill")
                         .font(.caption2)
@@ -160,7 +315,7 @@ struct SearchView: View {
         }) {
             HStack(spacing: 6) {
                 Image(systemName: "xmark.circle.fill")
-                Text("clear_filters".localized)
+                Text(localizationManager.localizedString(for: "clear_filters"))
             }
             .font(.caption)
             .foregroundColor(.red)
@@ -172,13 +327,7 @@ struct SearchView: View {
     }
     
     private var searchResults: some View {
-        let filteredMemos = dataManager.searchMemos(
-            searchText: searchText,
-            categories: selectedCategories,
-            tags: selectedTags,
-            startDate: startDate,
-            endDate: endDate
-        )
+        let filteredMemos = getFilteredAndSortedMemos()
         
         return List {
             ForEach(filteredMemos, id: \.id) { memo in
@@ -195,11 +344,11 @@ struct SearchView: View {
                         .font(.system(size: 48))
                         .foregroundColor(.secondary)
                     
-                    Text("no_search_results".localized)
+                    Text(localizationManager.localizedString(for: "no_search_results"))
                         .font(.headline)
                         .foregroundColor(.secondary)
 
-                    Text("change_search_conditions".localized)
+                    Text(localizationManager.localizedString(for: "change_search_conditions"))
                         .font(.subheadline)
                         .foregroundColor(.secondary)
                         .multilineTextAlignment(.center)
@@ -210,7 +359,16 @@ struct SearchView: View {
     }
     
     private var hasActiveFilters: Bool {
-        !selectedCategories.isEmpty || !selectedTags.isEmpty || startDate != nil || endDate != nil
+        !selectedCategories.isEmpty || !selectedTags.isEmpty || startDate != nil || endDate != nil || selectedDatePreset != .all
+    }
+    
+    // MARK: - Actions
+    
+    private func selectDatePreset(_ preset: DatePreset) {
+        selectedDatePreset = preset
+        let range = preset.dateRange()
+        startDate = range.start
+        endDate = range.end
     }
     
     private func toggleCategory(_ categoryName: String) {
@@ -226,8 +384,34 @@ struct SearchView: View {
         selectedTags.removeAll()
         startDate = nil
         endDate = nil
+        selectedDatePreset = .all
     }
     
+    private func getFilteredAndSortedMemos() -> [QuickMemo] {
+        var memos = dataManager.searchMemos(
+            searchText: searchText,
+            categories: selectedCategories,
+            tags: selectedTags,
+            startDate: startDate,
+            endDate: endDate
+        )
+        
+        // ソート適用
+        switch selectedSortOption {
+        case .newest:
+            memos.sort { $0.createdAt > $1.createdAt }
+        case .oldest:
+            memos.sort { $0.createdAt < $1.createdAt }
+        case .alphabetical:
+            memos.sort {
+                let text0 = $0.title.isEmpty ? $0.content : $0.title
+                let text1 = $1.title.isEmpty ? $1.content : $1.title
+                return text0.localizedCompare(text1) == .orderedAscending
+            }
+        }
+        
+        return memos
+    }
 }
 
 struct DateRangePickerView: View {

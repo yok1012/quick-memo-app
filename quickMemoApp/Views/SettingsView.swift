@@ -28,6 +28,7 @@ struct SettingsView: View {
     @State private var showingShareSheet = false
     @State private var showingExportError = false
     @State private var exportErrorMessage = ""
+    @State private var showingImportView = false
     @State private var showingDataDiagnostic = false
     @State private var isBackingUp = false
     @State private var isRestoring = false
@@ -533,6 +534,19 @@ struct SettingsView: View {
                     .disabled(dataManager.memos.isEmpty && dataManager.archivedMemos.isEmpty)
 
                     // インポートボタン
+                    Button(action: {
+                        showingImportView = true
+                    }) {
+                        HStack {
+                            Image(systemName: "square.and.arrow.down")
+                                .foregroundColor(.green)
+                            Text("import_memos".localized)
+                            Spacer()
+                            Image(systemName: "chevron.right")
+                                .font(.caption)
+                                .foregroundColor(.secondary)
+                        }
+                    }
                 } header: {
                     Label("settings_data_management".localized, systemImage: "externaldrive")
                 } footer: {
@@ -842,6 +856,14 @@ struct SettingsView: View {
                     exportFormat = .csv
                     exportMemos()
                 }
+                Button("settings_markdown_format".localized) {
+                    exportFormat = .markdown
+                    exportMemos()
+                }
+                Button("settings_text_format".localized) {
+                    exportFormat = .plainText
+                    exportMemos()
+                }
                 Button("cancel".localized, role: .cancel) {}
             } message: {
                 Text("settings_export_select_format".localized)
@@ -850,6 +872,9 @@ struct SettingsView: View {
                 if let url = exportedFileURL {
                     ShareSheet(activityItems: [url])
                 }
+            }
+            .sheet(isPresented: $showingImportView) {
+                ImportView()
             }
             .alert("settings_export_error".localized, isPresented: $showingExportError) {
                 Button(localizationManager.localizedString(for: "ok")) {}
