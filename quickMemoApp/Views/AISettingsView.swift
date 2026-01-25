@@ -12,8 +12,112 @@ struct AISettingsView: View {
     @State private var alertMessage = ""
     @State private var showingModelSelection: AIModelSelectionView.AIFeature? = nil
 
+    // Pro版AI機能の使用量
+    @State private var proAIUsage: ProAIUsageResponse?
+    @State private var isLoadingUsage = false
+
     var body: some View {
         List {
+            // Pro Version AI Features Section
+            Section {
+                if PurchaseManager.shared.isProVersion {
+                    // Pro版ユーザー向け表示
+                    VStack(alignment: .leading, spacing: 12) {
+                        HStack {
+                            Image(systemName: "checkmark.seal.fill")
+                                .foregroundColor(.green)
+                            Text("APIキー不要でAI機能を利用できます")
+                                .font(.subheadline)
+                                .fontWeight(.medium)
+                        }
+
+                        if isLoadingUsage {
+                            ProgressView()
+                                .frame(maxWidth: .infinity)
+                        } else if let usage = proAIUsage {
+                            VStack(alignment: .leading, spacing: 8) {
+                                // 使用量プログレスバー
+                                VStack(alignment: .leading, spacing: 4) {
+                                    HStack {
+                                        Text("今月の使用回数")
+                                            .font(.caption)
+                                            .foregroundColor(.secondary)
+                                        Spacer()
+                                        Text("\(usage.count) / \(usage.limit)")
+                                            .font(.caption)
+                                            .fontWeight(.medium)
+                                    }
+
+                                    ProgressView(value: Double(usage.count), total: Double(usage.limit))
+                                        .tint(usage.remaining < 10 ? .red : .blue)
+                                }
+
+                                // 残り使用回数
+                                HStack {
+                                    Text("残り")
+                                        .font(.caption)
+                                        .foregroundColor(.secondary)
+                                    Text("\(usage.remaining) 回")
+                                        .font(.caption)
+                                        .fontWeight(.medium)
+                                        .foregroundColor(usage.remaining < 10 ? .red : .primary)
+                                }
+
+                                // リセット日
+                                Text("リセット日: \(usage.resetDate)")
+                                    .font(.caption2)
+                                    .foregroundColor(.secondary)
+                            }
+                            .padding(.top, 4)
+                        } else {
+                            Button(action: {
+                                loadProAIUsage()
+                            }) {
+                                HStack {
+                                    Image(systemName: "arrow.clockwise")
+                                    Text("使用量を読み込む")
+                                }
+                                .font(.caption)
+                            }
+                        }
+                    }
+                    .padding(.vertical, 4)
+                } else {
+                    // 無料版ユーザー向け表示
+                    VStack(alignment: .leading, spacing: 8) {
+                        Text("Pro版にアップグレードすると、APIキー不要でAI機能を利用できます")
+                            .font(.subheadline)
+                            .foregroundColor(.secondary)
+
+                        NavigationLink(destination: PurchaseView()) {
+                            HStack {
+                                Image(systemName: "crown.fill")
+                                    .foregroundColor(.yellow)
+                                Text("Pro版にアップグレード")
+                                    .fontWeight(.medium)
+                            }
+                            .frame(maxWidth: .infinity)
+                            .padding()
+                            .background(Color.blue)
+                            .foregroundColor(.white)
+                            .cornerRadius(10)
+                        }
+                        .buttonStyle(PlainButtonStyle())
+                    }
+                    .padding(.vertical, 4)
+                }
+            } header: {
+                Text("Pro版 AI機能")
+            } footer: {
+                if PurchaseManager.shared.isProVersion {
+                    Text("Pro版ユーザーは月間100回まで、開発者提供のAI機能を無料で利用できます。超過後は個人のAPIキーが必要になります。")
+                        .font(.caption)
+                } else {
+                    Text("Pro版にアップグレードすると、自分のAPIキーを登録せずにAI機能を利用できます（月間100回まで）。")
+                        .font(.caption)
+                }
+            }
+
             // API Key Management Section
             Section {
                 // Gemini API
@@ -284,6 +388,12 @@ struct AISettingsView: View {
         }
         .navigationTitle("ai_settings".localized)
         .navigationBarTitleDisplayMode(.inline)
+        .onAppear {
+            // Pro版ユーザーの場合、使用量を自動読み込み
+            if PurchaseManager.shared.isProVersion {
+                loadProAIUsage()
+            }
+        }
         .sheet(isPresented: $showingGeminiInput) {
             APIKeyInputView(
                 title: "ai_gemini_api_key".localized,
@@ -422,6 +532,31 @@ struct AISettingsView: View {
             return "ai_category_summary".localized
         default:
             return type
+        }
+    }
+
+    // MARK: - Pro AI Usage
+
+    /// Pro版AI使用量を読み込む
+    private func loadProAIUsage() {
+        guard PurchaseManager.shared.isProVersion else { return }
+
+        isLoadingUsage = true
+
+        Task {
+            do {
+                let usage = try await aiManager.getProAIUsage()
+                await MainActor.run {
+                    self.proAIUsage = usage
+                    self.isLoadingUsage = false
+                }
+            } catch {
+                await MainActor.run {
+                    self.isLoadingUsage = false
+                    self.alertMessage = "使用量の取得に失敗しました: \(error.localizedDescription)"
+                    self.showAlert = true
+                }
+            }
         }
     }
 }
