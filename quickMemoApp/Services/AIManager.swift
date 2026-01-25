@@ -426,4 +426,105 @@ class AIManager: ObservableObject {
         "expand": "このメモをより詳しく、具体的に展開してください。",
         "bullets": "このメモを箇条書き形式に整理してください。"
     ]
+
+    // MARK: - Pro Version AI Features (API Key Free)
+
+    /// Pro版AI機能: タグ抽出（APIキー不要）
+    /// - Parameter content: メモ本文
+    /// - Returns: 抽出されたタグの配列
+    /// - Note: Pro版ユーザーは開発者提供のAIを使用、無料版またはエラー時は従来のAPIキー方式にフォールバック
+    func extractTagsWithProService(from content: String) async throws -> [String] {
+        // Pro版ならProAIServiceを使用
+        if PurchaseManager.shared.isProVersion {
+            do {
+                // ProAIServiceでタグ抽出
+                let result = try await ProAIService.shared.extractTags(from: content)
+                return result.tags
+            } catch ProAIError.usageLimitExceeded(let message) {
+                // 使用量超過時は明示的にエラーを投げる
+                throw AIServiceError.quotaExceeded
+            } catch ProAIError.proVersionRequired {
+                // Pro版チェック失敗時はフォールバック
+                return try await extractTags(from: content)
+            } catch {
+                // その他のエラー時はフォールバック
+                print("ProAIService error, falling back to user API key: \(error)")
+                return try await extractTags(from: content)
+            }
+        } else {
+            // 無料版は従来通りユーザーのAPIキー必要
+            return try await extractTags(from: content)
+        }
+    }
+
+    /// Pro版AI機能: メモアレンジ（APIキー不要）
+    /// - Parameters:
+    ///   - content: 元のメモ本文
+    ///   - instruction: アレンジ指示
+    /// - Returns: アレンジされたメモ本文
+    /// - Note: Pro版ユーザーは開発者提供のAIを使用、無料版またはエラー時は従来のAPIキー方式にフォールバック
+    func arrangeMemoWithProService(content: String, instruction: String) async throws -> String {
+        // Pro版ならProAIServiceを使用
+        if PurchaseManager.shared.isProVersion {
+            do {
+                // ProAIServiceでメモアレンジ
+                return try await ProAIService.shared.arrangeMemo(content: content, instruction: instruction)
+            } catch ProAIError.usageLimitExceeded(let message) {
+                // 使用量超過時は明示的にエラーを投げる
+                throw AIServiceError.quotaExceeded
+            } catch ProAIError.proVersionRequired {
+                // Pro版チェック失敗時はフォールバック
+                return try await arrangeMemo(content: content, instruction: instruction)
+            } catch {
+                // その他のエラー時はフォールバック
+                print("ProAIService error, falling back to user API key: \(error)")
+                return try await arrangeMemo(content: content, instruction: instruction)
+            }
+        } else {
+            // 無料版は従来通りユーザーのAPIキー必要
+            return try await arrangeMemo(content: content, instruction: instruction)
+        }
+    }
+
+    /// Pro版AI機能: カテゴリー要約（APIキー不要）
+    /// - Parameters:
+    ///   - memos: メモの配列
+    ///   - categoryName: カテゴリー名
+    /// - Returns: カテゴリー要約結果
+    /// - Note: Pro版ユーザーは開発者提供のAIを使用、無料版またはエラー時は従来のAPIキー方式にフォールバック
+    func summarizeCategoryWithProService(memos: [QuickMemo], categoryName: String) async throws -> CategorySummaryResult {
+        // Pro版ならProAIServiceを使用
+        if PurchaseManager.shared.isProVersion {
+            do {
+                // メモ本文を配列に変換
+                let memoContents = memos.map { $0.content }
+
+                // ProAIServiceでカテゴリー要約
+                return try await ProAIService.shared.summarizeCategory(memos: memoContents)
+            } catch ProAIError.usageLimitExceeded(let message) {
+                // 使用量超過時は明示的にエラーを投げる
+                throw AIServiceError.quotaExceeded
+            } catch ProAIError.proVersionRequired {
+                // Pro版チェック失敗時はフォールバック
+                return try await summarizeCategory(memos: memos, categoryName: categoryName)
+            } catch {
+                // その他のエラー時はフォールバック
+                print("ProAIService error, falling back to user API key: \(error)")
+                return try await summarizeCategory(memos: memos, categoryName: categoryName)
+            }
+        } else {
+            // 無料版は従来通りユーザーのAPIキー必要
+            return try await summarizeCategory(memos: memos, categoryName: categoryName)
+        }
+    }
+
+    /// Pro版AI使用量を取得
+    /// - Returns: 使用量情報
+    func getProAIUsage() async throws -> ProAIUsageResponse {
+        guard PurchaseManager.shared.isProVersion else {
+            throw AIServiceError.invalidRequest("Pro版のみ利用可能です")
+        }
+
+        return try await ProAIService.shared.getUsage()
+    }
 }
