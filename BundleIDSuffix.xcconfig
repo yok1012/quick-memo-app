@@ -1,0 +1,2 @@
+// Claude実装用のBundle ID設定
+PRODUCT_BUNDLE_IDENTIFIER = yokAppDev.quickMemoApp.claude
