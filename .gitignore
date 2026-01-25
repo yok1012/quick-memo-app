@@ -1,0 +1,48 @@
+# Worktrees
+worktrees/
+
+# Xcode
+*.xcodeproj/*
+!*.xcodeproj/project.pbxproj
+!*.xcodeproj/xcshareddata/
+!*.xcodeproj/project.xcworkspace/
+*.xcworkspace/*
+!*.xcworkspace/contents.xcworkspacedata
+!*.xcworkspace/xcshareddata/
+
+# User-specific
+*.xcuserstate
+*.xcuserdatad/
+xcuserdata/
+
+# DerivedData
+DerivedData/
+*.hmap
+
+# Build
+build/
+*.app.dSYM.zip
+*.dSYM
+
+# Swift Package Manager
+.swiftpm/
+.build/
+
+# CocoaPods
+Pods/
+*.podspec
+
+# Carthage
+Carthage/Build/
+
+# fastlane
+fastlane/report.xml
+fastlane/Preview.html
+fastlane/screenshots/**/*.png
+fastlane/test_output
+
+# macOS
+.DS_Store
+
+# Firebase (optional - APIキーを含む設定ファイルは除外)
+# GoogleService-Info.plist
