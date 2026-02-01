@@ -5,28 +5,37 @@ import Combine
 class QuickInputManager: ObservableObject {
     static let shared = QuickInputManager()
     
-    @Published var lastUsedCategory: String = "仕事"
+    @Published var lastUsedCategory: String = LocalizedCategories.localizedName(for: "work")
     @Published var quickInputEnabled: Bool = true
     @Published var recentCategories: [String] = []
+
+    private var lastUsedCategoryIdentifier: String = "work"
+    private var recentCategoryIdentifiers: [String] = []
+    private var languageObserver: NSObjectProtocol?
     
     private let userDefaults = UserDefaults.standard
     private let maxRecentCategories = 3
     
     private init() {
         loadSettings()
+        setupLanguageObserver()
     }
     
     func recordCategoryUsage(_ categoryName: String) {
-        lastUsedCategory = categoryName
-        
-        if let index = recentCategories.firstIndex(of: categoryName) {
-            recentCategories.remove(at: index)
+        let identifier = normalizeIdentifier(for: categoryName)
+        lastUsedCategoryIdentifier = identifier
+        lastUsedCategory = localizedName(for: identifier)
+
+        if let index = recentCategoryIdentifiers.firstIndex(of: identifier) {
+            recentCategoryIdentifiers.remove(at: index)
         }
-        recentCategories.insert(categoryName, at: 0)
+        recentCategoryIdentifiers.insert(identifier, at: 0)
         
-        if recentCategories.count > maxRecentCategories {
-            recentCategories = Array(recentCategories.prefix(maxRecentCategories))
+        if recentCategoryIdentifiers.count > maxRecentCategories {
+            recentCategoryIdentifiers = Array(recentCategoryIdentifiers.prefix(maxRecentCategories))
         }
+
+        recentCategories = recentCategoryIdentifiers.map(localizedName(for:))
         
         saveSettings()
     }
@@ -36,19 +45,68 @@ class QuickInputManager: ObservableObject {
     }
     
     func preloadCategories() -> [String] {
-        return recentCategories.isEmpty ? ["仕事", "プライベート", "アイデア"] : recentCategories
+        if recentCategories.isEmpty {
+            return LocalizedCategories.defaultQuickCategoryKeys().map { LocalizedCategories.localizedName(for: $0) }
+        }
+        return recentCategories
     }
     
     private func loadSettings() {
-        lastUsedCategory = userDefaults.string(forKey: "lastUsedCategory") ?? "仕事"
-        recentCategories = userDefaults.array(forKey: "recentCategories") as? [String] ?? []
+        if let storedIdentifier = userDefaults.string(forKey: "lastUsedCategoryKey") {
+            lastUsedCategoryIdentifier = storedIdentifier
+        } else {
+            // Legacy support: fallback to localized string
+            let legacyName = userDefaults.string(forKey: "lastUsedCategory") ?? LocalizedCategories.localizedName(for: "work")
+            lastUsedCategoryIdentifier = normalizeIdentifier(for: legacyName)
+        }
+
+        if let storedIdentifiers = userDefaults.array(forKey: "recentCategoryKeys") as? [String] {
+            recentCategoryIdentifiers = storedIdentifiers
+        } else {
+            let legacyNames = userDefaults.array(forKey: "recentCategories") as? [String] ?? []
+            recentCategoryIdentifiers = legacyNames.map(normalizeIdentifier(for:))
+        }
+
+        lastUsedCategory = localizedName(for: lastUsedCategoryIdentifier)
+        recentCategories = recentCategoryIdentifiers.map(localizedName(for:))
         quickInputEnabled = userDefaults.bool(forKey: "quickInputEnabled")
     }
     
     private func saveSettings() {
+        userDefaults.set(lastUsedCategoryIdentifier, forKey: "lastUsedCategoryKey")
+        userDefaults.set(recentCategoryIdentifiers, forKey: "recentCategoryKeys")
         userDefaults.set(lastUsedCategory, forKey: "lastUsedCategory")
         userDefaults.set(recentCategories, forKey: "recentCategories")
         userDefaults.set(quickInputEnabled, forKey: "quickInputEnabled")
+    }
+
+    private func normalizeIdentifier(for name: String) -> String {
+        LocalizedCategories.baseKey(forLocalizedName: name) ?? name
+    }
+
+    private func localizedName(for identifier: String) -> String {
+        if let baseKey = LocalizedCategories.baseKey(forLocalizedName: identifier) {
+            return LocalizedCategories.localizedName(for: baseKey)
+        }
+        return identifier
+    }
+
+    private func setupLanguageObserver() {
+        languageObserver = NotificationCenter.default.addObserver(
+            forName: LocalizationManager.languageDidChangeNotification,
+            object: nil,
+            queue: .main
+        ) { [weak self] _ in
+            guard let self else { return }
+            self.lastUsedCategory = self.localizedName(for: self.lastUsedCategoryIdentifier)
+            self.recentCategories = self.recentCategoryIdentifiers.map(self.localizedName(for:))
+        }
+    }
+
+    deinit {
+        if let languageObserver {
+            NotificationCenter.default.removeObserver(languageObserver)
+        }
     }
 }
 

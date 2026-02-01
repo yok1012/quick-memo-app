@@ -2,8 +2,9 @@ import SwiftUI
 
 struct QuickMemoInputView: View {
     @Environment(\.dismiss) private var dismiss
-    @StateObject private var dataManager = DataManager.shared
+    @ObservedObject private var dataManager = DataManager.shared
     @StateObject private var quickInputManager = QuickInputManager.shared
+    @ObservedObject private var localizationManager = LocalizationManager.shared
     @State private var memoText = ""
     @State private var selectedCategory: String = ""
     @FocusState private var isTextFieldFocused: Bool
@@ -28,24 +29,27 @@ struct QuickMemoInputView: View {
                     isTextFieldFocused = true
                 }
             }
+            .onReceive(quickInputManager.$lastUsedCategory) { newValue in
+                selectedCategory = newValue
+            }
         }
     }
     
     private var headerView: some View {
         HStack {
-            Button("閉じる") {
+            Button(localizationManager.localizedString(for: "close")) {
                 dismiss()
             }
             .foregroundColor(.secondary)
             
             Spacer()
             
-            Text("クイックメモ")
+            Text(localizationManager.localizedString(for: "quick_memo"))
                 .font(.system(size: 20, weight: .bold))
             
             Spacer()
             
-            Button("保存") {
+            Button(localizationManager.localizedString(for: "save")) {
                 saveMemo()
             }
             .font(.system(size: 16, weight: .semibold))
@@ -90,7 +94,7 @@ struct QuickMemoInputView: View {
     
     private var textInputArea: some View {
         VStack(alignment: .leading, spacing: 0) {
-            TextField("メモを入力してください...", text: $memoText, axis: .vertical)
+            TextField(localizationManager.localizedString(for: "input_placeholder"), text: $memoText, axis: .vertical)
                 .focused($isTextFieldFocused)
                 .font(.system(size: 18))
                 .lineLimit(8, reservesSpace: true)
@@ -110,7 +114,7 @@ struct QuickMemoInputView: View {
                 Image(systemName: "checkmark.circle.fill")
                     .font(.system(size: 20))
                 
-                Text("保存")
+                Text(localizationManager.localizedString(for: "save"))
                     .font(.system(size: 18, weight: .semibold))
             }
             .foregroundColor(.white)
@@ -131,13 +135,8 @@ struct QuickMemoInputView: View {
     }
     
     private func iconForCategory(_ category: String) -> String {
-        switch category {
-        case "仕事": return "briefcase"
-        case "プライベート": return "house"
-        case "アイデア": return "lightbulb"
-        case "人物": return "person"
-        default: return "folder"
-        }
+        let identifier = LocalizedCategories.baseKey(forLocalizedName: category) ?? category
+        return LocalizedCategories.iconName(for: identifier)
     }
     
     private func saveMemo() {

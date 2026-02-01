@@ -1,0 +1,833 @@
+/*
+  Localizable.strings (Base - Japanese)
+  quickMemoApp
+*/
+
+// MARK: - App General
+"app_name" = "Quick Memo";
+"quick_memo" = "Quick Memo";
+
+// MARK: - Tab & Navigation
+"all_memos" = "すべて";
+"settings" = "設定";
+"close" = "閉じる";
+"cancel" = "キャンセル";
+"save" = "保存";
+"delete" = "削除";
+"edit" = "編集";
+"done" = "完了";
+"ok" = "OK";
+
+// MARK: - Common Buttons
+"add" = "追加";
+"retry" = "再試行";
+
+// MARK: - Main View
+"add_memo" = "メモを追加";
+"no_memos" = "メモがありません";
+"memos_count" = "%d個のメモ";
+"category_all" = "すべて";
+"search_placeholder" = "メモを検索";
+
+// MARK: - Categories
+"work" = "仕事";
+"personal" = "プライベート";
+"idea" = "アイデア";
+"people" = "人物";
+"other" = "その他";
+"category_management" = "カテゴリー管理";
+"add_category" = "カテゴリーを追加";
+"category_name" = "カテゴリー名";
+"select_color" = "色を選択";
+"cannot_delete_category" = "このカテゴリーは削除できません";
+"category_has_memos" = "このカテゴリーにはメモがあります";
+"delete_category_confirm" = "カテゴリーを削除しますか？";
+
+// MARK: - Category Management
+"category_new" = "新規カテゴリー";
+"category_edit" = "カテゴリー編集";
+"category_delete_confirm" = "カテゴリーを削除";
+"category_basic_info" = "基本情報";
+"category_icon" = "アイコン";
+"category_color" = "カラー";
+"category_default_tags" = "デフォルトタグ";
+"category_name_placeholder" = "カテゴリー名";
+"category_exists_error" = "同じ名前のカテゴリーが既に存在します";
+"category_limit_error" = "カテゴリー数の上限に達しました。リワード広告を視聴してカテゴリー枠を獲得するか、Pro版にアップグレードしてください。";
+"category_pro_required" = "Pro版が必要です";
+"category_free_limit_message" = "無料版ではデフォルトの5つのカテゴリーのみ使用できます。Pro版にアップグレードすると、カテゴリーを自由に追加・削除・並び替えできます。";
+"delete_category_with_memos" = "「%@」カテゴリーを削除しますか？\n\n%d件のメモが「その他」カテゴリーに移動されます。";
+"delete_category_confirm_message" = "「%@」カテゴリーを削除しますか？";
+"comma_separated_tags" = "カンマ区切りで入力 (例: 会議, タスク, 締切)";
+
+// MARK: - Tags
+"meeting" = "会議";
+"task" = "タスク";
+"deadline" = "締切";
+"idea_tag" = "アイデア";
+"shopping" = "買い物";
+"schedule" = "予定";
+"memory" = "思い出";
+"health" = "健康";
+"business" = "ビジネス";
+"creation" = "創作";
+"improvement" = "改善";
+"memo_tag" = "メモ";
+"misc" = "雑記";
+"temp" = "一時";
+"pending" = "分類待ち";
+"hold" = "保留";
+"contacts" = "連絡先";
+"conversation" = "会話";
+"appointment" = "約束";
+"relationship" = "関係";
+
+// MARK: - Memo Input
+"input_placeholder" = "メモを入力...";
+"save_memo" = "メモを保存";
+"select_category" = "カテゴリーを選択";
+"add_tags" = "タグを追加";
+"duration_minutes" = "所要時間（分）";
+"shake_to_open" = "シェイクで開く";
+"memo_title_optional" = "タイトル（オプション）";
+"memo_placeholder" = "メモを入力...";
+"memo_tags_hide" = "タグを隠す";
+"memo_tags_add" = "タグを追加";
+"memo_new_tag" = "新しいタグを追加";
+"memo_tag_name" = "タグ名";
+"memo_tag_limit" = "タグ数の制限";
+"memo_calendar_duration" = "カレンダーの期間";
+"memo_minutes" = "分";
+"memo_hours" = "時間";
+"memo_tags_count" = "%d個のタグ";
+
+// FastInputView & EditMemoView Specific
+"discard_draft" = "下書きを削除";
+"ai_extract" = "AI抽出";
+"show_options" = "オプションを表示";
+"hide_options" = "オプションを隠す";
+"undo_changes" = "元に戻す";
+"delete_memo_confirm_title" = "メモを削除";
+"delete_memo_confirm_message" = "このメモを削除してもよろしいですか？";
+
+// MARK: - Settings
+"settings_title" = "設定";
+"upgrade" = "アップグレード";
+"pro_version" = "Pro版";
+"pro_version_active" = "Pro版をご利用中";
+"unlock_all_features" = "すべての機能をアンロック";
+"usage_stats" = "使用状況";
+"apple_watch" = "Apple Watch";
+"notifications" = "メモ通知";
+"calendar_sync" = "カレンダー連携";
+"data_export" = "データエクスポート";
+"widget_settings" = "ウィジェット設定";
+"watch_settings" = "Watch設定";
+"language_settings" = "言語設定";
+
+// MARK: - Settings
+"settings_title" = "設定";
+"settings_upgrade" = "アップグレード";
+"settings_pro_using" = "Pro版をご利用中";
+"settings_unlock_all" = "すべての機能をアンロック";
+"settings_unlock_all_features" = "すべての機能を解放";
+"settings_pro_version" = "Pro版";
+"settings_pro_active" = "Pro版をご利用中";
+"settings_quickmemo_pro" = "QuickMemo Pro";
+"settings_usage_stats" = "使用状況";
+"settings_widget" = "ウィジェット設定";
+"settings_widget_category" = "ウィジェットカテゴリー設定";
+"settings_widget_categories" = "ウィジェットカテゴリー";
+"settings_widget_footer_pro" = "ウィジェットに任意のカテゴリーを表示できます。";
+"settings_widget_footer_free" = "無料版では現在のカテゴリーのみウィジェットに表示されます。";
+"settings_watch" = "Apple Watch設定";
+"settings_watch_footer_pro" = "Pro版では最大4つのカテゴリーを選択して同期できます。";
+"settings_watch_footer_free" = "無料版ではデフォルトのカテゴリーのみ同期されます。";
+"settings_apple_watch" = "Apple Watch設定";
+"settings_memo_notifications" = "メモ通知";
+"settings_enable_notifications" = "通知を有効にする";
+"settings_notification_interval" = "通知間隔";
+"settings_1_minute" = "1分";
+"settings_3_minutes" = "3分";
+"settings_15_minutes" = "15分";
+"settings_30_minutes" = "30分";
+"settings_1_hour" = "1時間";
+"settings_1_5_hours" = "1.5時間";
+"settings_2_hours" = "2時間";
+"settings_3_hours" = "3時間";
+"settings_4_hours" = "4時間";
+"settings_quiet_mode" = "おやすみモード";
+"settings_start_time" = "開始時間";
+"settings_end_time" = "終了時間";
+"settings_send_test_notification" = "テスト通知を送信";
+"settings_notifications_footer" = "静かな時間帯を設定すると通知を抑制できます。";
+"settings_calendar_integration" = "カレンダー連携";
+"settings_last_error" = "直近のエラー";
+"settings_calendar_footer" = "カレンダー連携を有効にするとメモを自動的にイベントとして保存します。";
+"settings_connection_test" = "接続テスト";
+"settings_connection_test_result" = "接続テスト結果";
+"settings_connection_test_success" = "カレンダーへの接続に成功しました。";
+"settings_connection_problem" = "接続に問題があります";
+"settings_connection_test_failed" = "接続テストに失敗しました。";
+"settings_reconnect" = "再接続";
+"settings_reconnect_success" = "再接続に成功しました。";
+"settings_reconnect_failed" = "再接続に失敗しました。";
+"settings_allow_calendar_access" = "カレンダーアクセスを許可";
+"settings_open_system_settings" = "システム設定を開く";
+"settings_calendar_access" = "カレンダーアクセス";
+"settings_permitted" = "許可済み";
+"settings_not_permitted" = "未許可";
+"settings_permission_level" = "アクセスの種類";
+"settings_authorized" = "許可済み";
+"settings_full_access" = "フルアクセス";
+"settings_write_only" = "書き込みのみ";
+"settings_not_determined" = "未確認";
+"settings_restricted" = "制限あり";
+"settings_denied" = "拒否";
+"settings_unknown" = "不明";
+"settings_quick_memo_calendar" = "Quick Memoカレンダー";
+"settings_configured" = "設定済み";
+"settings_not_configured" = "未設定";
+"settings_ios_version" = "iOSバージョン";
+"settings_memo_count" = "メモ数";
+"settings_category_count" = "カテゴリー数";
+"settings_remaining" = "残り";
+"settings_items" = "件";
+"settings_unlimited" = "無制限";
+"reward_slots" = "リワード枠";
+"settings_pro_features" = "Proで解放される機能";
+"settings_pro_features_list" = "無制限のメモ・カテゴリー、カスタムタグ、iCloud同期などが利用できます。";
+"settings_pro_only" = "Pro限定";
+"settings_account" = "アカウント";
+"settings_sign_in_apple" = "Sign in with Appleでサインイン";
+"settings_sign_in_apple_desc" = "他デバイスでサブスク特典を利用できます（任意）";
+"settings_signed_in" = "サインイン済み";
+"settings_account_sync_enabled" = "アカウント同期が有効";
+"settings_sign_out" = "サインアウト";
+"settings_account_footer" = "サインインは任意です。他デバイスでの購入状態の同期に利用できます。";
+"settings_restore_footer" = "同じApple IDで以前購入した場合は復元できます。";
+"settings_restore_purchases" = "購入を復元";
+"settings_force_sync" = "強制同期";
+"settings_sync_mode" = "同期モード";
+"settings_sync_settings" = "同期設定";
+"settings_normal" = "通常";
+"settings_force_sync_now" = "今すぐ強制同期";
+"settings_force_sync_message" = "同期に問題がある場合は強制同期を実行できます。続行しますか？";
+"settings_force_sync_warning" = "強制同期はiCloudとの再同期を実行します。頻繁な使用は推奨されません。";
+"settings_normal_sync_info" = "通常同期はバックグラウンドで自動的に実行されます。";
+"settings_start_sync" = "同期を開始";
+"settings_diagnostic" = "診断情報";
+"settings_diagnostics" = "診断情報";
+"settings_data_management" = "データ管理";
+"settings_export_memos" = "メモをエクスポート";
+"import_memos" = "メモをインポート";
+
+// MARK: - Clipboard Copy
+"copy_text" = "テキストをコピー";
+"copy_markdown" = "Markdown形式でコピー";
+"copy_with_metadata" = "詳細情報付きでコピー";
+"share" = "共有";
+"copied" = "コピーしました";
+"category" = "カテゴリー";
+"duration" = "所要時間";
+"created_at" = "作成日時";
+
+"settings_export_format" = "エクスポート形式";
+"settings_export_select_format" = "ファイル形式を選択してください";
+"settings_json_format" = "JSON形式";
+"settings_csv_format" = "CSV形式";
+"settings_markdown_format" = "Markdown形式";
+"settings_text_format" = "テキスト形式";
+"settings_export_footer" = "エクスポートしたファイルは共有やバックアップに利用できます。";
+"settings_export_error" = "エクスポートエラー";
+"settings_app_info" = "アプリ情報";
+"settings_version" = "バージョン";
+"settings_build" = "ビルド";
+"settings_connected" = "接続済み";
+"settings_disconnected" = "未接続";
+"settings_checking" = "確認中...";
+"settings_error" = "エラー";
+"settings_status_unknown" = "状態不明";
+
+"calendar_event_title_format" = "[%@] %@";
+"calendar_event_default_title" = "メモ";
+"calendar_note_content" = "メモ内容";
+"calendar_note_category" = "カテゴリ";
+"calendar_note_tags" = "タグ";
+"calendar_note_tags_none" = "なし";
+"calendar_note_created" = "作成日時";
+"calendar_note_updated" = "更新日時";
+
+// MARK: - Notifications
+"enable_notifications" = "メモ通知を有効にする";
+"notification_interval" = "通知間隔";
+"interval_1min" = "1分";
+"interval_3min" = "3分";
+"interval_15min" = "15分";
+"interval_30min" = "30分";
+"interval_1hour" = "1時間";
+"interval_90min" = "1.5時間";
+"interval_2hours" = "2時間";
+"interval_3hours" = "3時間";
+"interval_4hours" = "4時間";
+"quiet_mode" = "おやすみモード";
+"quiet_mode_start" = "開始時刻";
+"quiet_mode_end" = "終了時刻";
+"send_test_notification" = "テスト通知を送信";
+"notification_title" = "メモを記録しましょう";
+"notification_body" = "今の気持ちや思いついたことを記録してみませんか？";
+"notification_permission_desc" = "定期的にメモを書くことを促す通知を送信します。おやすみモードでは指定時間内の通知を停止します。";
+"notification_enable" = "メモ通知を有効にする";
+"notification_test" = "テスト通知を送信";
+"notification_quiet_mode" = "おやすみモード";
+"notification_start_time" = "開始時刻";
+"notification_end_time" = "終了時刻";
+
+// MARK: - Calendar
+"calendar_permission_title" = "カレンダーアクセス";
+"calendar_permission_message" = "メモをカレンダーに保存するためにアクセスが必要です";
+"grant_permission" = "権限を許可";
+"calendar_sync_enabled" = "カレンダー連携有効";
+"calendar_sync_disabled" = "カレンダー連携無効";
+"test_connection" = "接続テスト";
+"calendar_integration" = "カレンダー連携";
+"calendar_auto_record" = "メモを自動でカレンダーに記録";
+"calendar_timeline" = "タイムライン表示";
+"calendar_dedicated" = "専用カレンダー";
+"calendar_allow_access" = "カレンダーアクセスを許可";
+"calendar_connected" = "接続済み";
+"calendar_disconnected" = "未接続";
+"calendar_test_connection" = "接続テスト";
+
+// MARK: - Pro Features
+"pro_features" = "Pro機能";
+"unlimited_memos" = "無制限のメモ";
+"unlimited_memos_desc" = "100個以上のメモを作成可能";
+"unlimited_categories" = "無制限のカテゴリ";
+"unlimited_categories_desc" = "カテゴリを自由に作成";
+"unlimited_tags" = "無制限のタグ";
+"unlimited_tags_desc" = "メモあたり15個以上のタグ";
+"icloud_sync" = "iCloud同期";
+"icloud_sync_desc" = "すべてのデバイスで自動同期";
+"widget_customize" = "Widget カスタマイズ";
+"widget_customize_desc" = "ウィジェットの表示をカスタマイズ";
+"watch_pro" = "Apple Watch Pro";
+"watch_pro_desc" = "カテゴリーカスタマイズ";
+"data_export_desc" = "CSV/JSON形式でバックアップ";
+
+// MARK: - Purchase
+"purchase" = "購入する";
+"purchase_unlock_description" = "すべての機能を解放してQuickMemoを最大限に活用しましょう";
+"purchase_pro_features" = "Pro版の機能";
+"purchase_unlimited_memos" = "無制限のメモ";
+"purchase_unlimited_memos_desc" = "100個以上のメモを作成可能";
+"purchase_unlimited_categories" = "無制限のカテゴリー";
+"purchase_unlimited_categories_desc" = "カテゴリーを自由に追加・編集";
+"purchase_unlimited_tags" = "無制限のタグ";
+"purchase_unlimited_tags_desc" = "メモあたり15個以上のタグを追加可能";
+"purchase_icloud_sync" = "iCloud同期";
+"purchase_icloud_sync_desc" = "すべてのデバイスで自動同期";
+"purchase_widget_customize" = "ウィジェットカスタマイズ";
+"purchase_widget_customize_desc" = "ウィジェット表示をカスタマイズ";
+"purchase_watch_pro" = "Apple Watch Pro";
+"purchase_watch_pro_desc" = "カテゴリーをカスタマイズ可能";
+"purchase_data_export" = "データエクスポート";
+"purchase_data_export_desc" = "CSV/JSON形式でバックアップ";
+"purchase_buy" = "購入";
+"purchase_one_time" = "一度の購入ですべての機能が永続的に利用可能";
+"purchase_no_products" = "商品情報を取得できません";
+"purchase_network_error" = "ネットワーク接続を確認してください";
+"purchase_retry" = "再試行";
+"purchase_restore" = "購入を復元";
+"purchase_restore_description" = "以前購入した場合はここから復元";
+"purchase_completed" = "購入済み";
+"purchase_status" = "購入状況";
+"purchase_success_message" = "購入が完了しました！すべての機能が利用可能になりました。";
+"purchase_cancelled" = "購入がキャンセルされました";
+"restore_purchases" = "購入を復元";
+"purchased" = "購入済み";
+"purchase_failed" = "購入に失敗しました";
+"restore_failed" = "復元に失敗しました";
+"one_time_purchase" = "一度の購入ですべての機能が永続的に利用可能";
+"purchase_other_devices_title" = "他のデバイスでの利用方法";
+"purchase_same_apple_id_title" = "同じApple IDで復元";
+"purchase_same_apple_id_desc" = "他のデバイスでは、同じApple IDで『購入を復元』を実行してください";
+"purchase_sign_in_apple_title" = "Sign in with Apple（任意）";
+"purchase_sign_in_apple_desc" = "Apple IDが異なる場合でも、アカウント登録で利用可能（今後実装予定）";
+"purchase_coming_soon" = "近日公開";
+"purchase_restore_subtitle" = "以前の購入を復元";
+"purchase_restore_notice" = "復元には同じApple IDでのサインインが必要です";
+"purchase_monthly_subscription" = "月額サブスクリプション";
+"purchase_onetime" = "買い切りライセンス";
+"purchase_period_day" = "日";
+"purchase_period_week" = "週";
+"purchase_period_month" = "月";
+"purchase_period_year" = "年";
+
+// MARK: - Limits
+"memo_limit_reached" = "メモの上限に達しました";
+"category_limit_reached" = "カテゴリの上限に達しました";
+"upgrade_to_pro" = "Pro版にアップグレード";
+"remaining_memos" = "残り%d個";
+"remaining_categories" = "残り%d個";
+"limit_reached" = "制限に達しました";
+"memo_limit_message" = "無料版では100個までのメモを作成できます。Pro版にアップグレードすると無制限に作成できます。";
+"tag_limit_message" = "無料版では1つのメモに15個までのタグを設定できます。Pro版では無制限にタグを追加できます。";
+
+// MARK: - Usage Stats
+"usage_memo_count" = "メモ数";
+"usage_category_count" = "カテゴリ数";
+"usage_remaining" = "残り %d 個";
+"usage_unlimited" = "無制限";
+
+// MARK: - Pro Features
+"pro_required" = "Pro限定";
+"pro_purchase" = "Pro版を購入";
+"pro_view" = "Pro版を見る";
+
+// MARK: - Export
+"export_format" = "エクスポート形式";
+"export_select_format" = "ファイル形式を選択してください";
+"export_json" = "JSON形式";
+"export_csv" = "CSV形式";
+"export_data" = "データをエクスポート";
+"import_data" = "データをインポート";
+"export_memos" = "メモをエクスポート";
+"export_error" = "エクスポートエラー";
+
+// MARK: - Languages
+"language_japanese" = "日本語";
+"language_english" = "English";
+"language_chinese" = "中文";
+"select_language" = "言語を選択";
+"language_change_restart" = "言語変更は次回起動時に反映されます";
+"follow_device" = "デバイス設定に従う";
+
+// MARK: - Time Intervals
+"time_1min" = "1分";
+"time_3min" = "3分";
+"time_15min" = "15分";
+"time_30min" = "30分";
+"time_1hour" = "1時間";
+"time_90min" = "1.5時間";
+"time_2hours" = "2時間";
+"time_3hours" = "3時間";
+"time_4hours" = "4時間";
+
+// MARK: - Misc
+"items_count" = "件";
+"version" = "バージョン";
+"build" = "ビルド";
+"checking" = "確認中...";
+"error_prefix" = "エラー:";
+"status_unknown" = "状態不明";
+"authorized" = "許可済み";
+"not_authorized" = "未許可";
+"setup_later" = "後で設定";
+"setting_up" = "設定中...";
+"system_settings" = "システム設定を開く";
+
+// MARK: - Additional Keys
+"add_tag_to_category" = "%@カテゴリーに新しいタグを追加します";
+"tag_management" = "タグ管理";
+"tag_delete" = "タグを削除";
+"tag_delete_confirm" = "「%@」を削除してもよろしいですか？";
+"no_tags" = "タグがありません";
+"add_tag" = "タグを追加";
+"tags" = "タグ";
+"search_tags" = "タグを検索";
+"no_tags_yet" = "まだタグがありません";
+"tags_will_appear_here" = "メモに#タグを追加すると、ここに表示されます";
+"delete_tag_title" = "タグを削除";
+"delete_tag_message" = "タグ「%@」を削除しますか？";
+"add_tag_to_category" = "このカテゴリーにタグを追加";
+"tag_name" = "タグ名";
+"tag_add_hint" = "メモに#を付けて入力すると自動的にタグとして認識されます";
+"shopping" = "買い物";
+"other" = "その他";
+"voice_input" = "音声入力";
+"recording" = "録音中...";
+"scribble_input" = "手書き入力";
+"scribble_placeholder" = "ここに書いてください";
+"preview" = "プレビュー";
+
+// MARK: - Account Management
+"account_delete" = "アカウントを削除";
+"account_delete_confirm_title" = "本当にアカウントを削除しますか？";
+"account_delete_confirm_message" = "アカウントと関連データは削除され、復元できません。";
+"account_delete_confirm_button" = "削除を確定";
+
+// MARK: - Subscription Management
+"subscription_manage" = "サブスクリプションを管理";
+
+// MARK: - Legal
+"legal_info" = "法的情報";
+"privacy_policy" = "プライバシーポリシー";
+"terms_of_use" = "利用規約 (EULA)";
+
+// MARK: - Subscription Details
+"subscription_info_title" = "サブスクリプションについて";
+"subscription_info_auto_renew" = "• 現在の期間の終了24時間前までにキャンセルしない限り、自動的に更新されます。";
+"subscription_info_cancel" = "• 設定 > Apple ID > サブスクリプション からいつでもキャンセルできます。";
+"subscription_info_manage" = "• 購入確認時にApple IDアカウントに請求されます。";
+"subscription_monthly_details" = "QuickMemo Pro 月額サブスクリプション";
+"subscription_price_format" = "料金：%@/月";
+"subscription_auto_renew_monthly" = "毎月自動更新";
+"subscription_notice_detailed" = "現在の期間終了の24時間前以内に更新料金が請求されます。アカウント設定でサブスクリプションと自動更新の設定を管理できます。";
+
+// MARK: - Data Diagnostic
+"data_diagnostic" = "データ診断";
+"current_data_status" = "現在のデータ状態";
+"categories" = "カテゴリー";
+"memos" = "メモ";
+"scanning_storage" = "保存場所をスキャン中...";
+"scan_all_locations" = "保存場所をスキャン";
+"storage_locations" = "保存場所";
+"storage_scan_description" = "アプリ内の複数の保存場所をスキャンしてデータを検索します。";
+"data_recovery" = "データ復旧";
+"no_recoverable_data" = "復旧可能なデータが見つかりません";
+"debug_info" = "デバッグ情報";
+"reset_migration_flag" = "マイグレーションフラグをリセット";
+"recovery_result" = "復旧結果";
+"recovered_items" = "%d件のデータを復旧しました";
+"no_data_recovered" = "復旧可能なデータがありませんでした";
+"location_info" = "場所情報";
+"categories_found" = "カテゴリー";
+"memos_found" = "メモ";
+"raw_data_categories" = "生データ（カテゴリー）";
+"raw_data_memos" = "生データ（メモ）";
+"data_detail" = "データ詳細";
+
+// MARK: - Additional UI Strings
+"edit_memo" = "メモを編集";
+"update" = "更新";
+"new_category" = "新規";
+"select_category_title" = "カテゴリを選択";
+"select_category_subtitle" = "メモの種類を選んでください";
+"category_not_found" = "カテゴリーが見つかりません";
+"new_memo" = "新しいメモ";
+"category_settings" = "カテゴリー設定";
+"debug_settings" = "デバッグ設定";
+"max_categories_reached" = "最大数に達しました";
+"widget_display_categories" = "ウィジェットに表示するカテゴリー";
+"widget_free_version_notice" = "無料版では現在選択されているカテゴリーのみ表示されます";
+"widget_updated" = "ウィジェットに表示されるカテゴリーが更新されました";
+"widget_can_select_freely" = "カテゴリーを自由に選択できます";
+"calendar_permission_description" = "設定アプリからアクセスを許可すると、予定の自動作成が利用できます。";
+"calendar_auto_save_description" = "作成したメモが自動的にカレンダーイベントとして保存され、時系列で確認できます";
+"category_filter" = "カテゴリ";
+"tag_filter" = "タグ";
+"date_filter" = "日付";
+"clear_filters" = "フィルターをクリア";
+
+// MARK: - Smart Filter
+"filter_all" = "すべて";
+"filter_today" = "今日";
+"filter_this_week" = "今週";
+"filter_this_month" = "今月";
+"filter_last_7_days" = "直近7日";
+"filter_last_30_days" = "直近30日";
+"filter_custom" = "カスタム";
+"sort_by" = "並び替え:";
+"sort_newest" = "新しい順";
+"sort_oldest" = "古い順";
+"sort_alphabetical" = "名前順";
+"search" = "検索";
+"clear" = "クリア";
+
+"no_search_results" = "検索結果が見つかりません";
+"change_search_conditions" = "検索条件を変更してお試しください";
+"data_sync_usage" = "データ同期に使用されます";
+"export_archive_history" = "削除履歴をエクスポート";
+"export_all_data" = "すべてのデータをエクスポート";
+"delete_memo_title" = "メモを削除";
+"memo_duration" = "カレンダーの期間";
+"no_backup" = "バックアップなし";
+"backup_now" = "今すぐバックアップ";
+"data_diagnostic_restore" = "データ診断・復元";
+"check_storage_restore" = "保存場所を確認して復元を試みる";
+"restore_old_version_data" = "旧バージョンのデータを復元";
+"if_data_lost_after_update" = "アップデート後にデータが消えた場合";
+"restore_after_update_description" = "アップデート後にデータが消えた場合、ここから復元を試みることができます。";
+"reset_purchase_status" = "購入状態をリセット";
+"output_debug_info" = "デバッグ情報を出力";
+"debug_features_description" = "開発用のデバッグ機能です。本番環境では表示されません。";
+
+// MARK: - Widget
+"widget_open_app" = "アプリを開く";
+"widget_tap_to_add_memo" = "タップしてメモを追加";
+"widget_description" = "素早くメモを追加できます";
+
+// MARK: - Reward Ads
+"reward_ad_title" = "メモ枠を獲得";
+"reward_ad_headline" = "動画を視聴してメモ枠を獲得しよう！";
+"reward_ad_description" = "短い動画を視聴すると、追加でメモを作成できる枠が獲得できます。無料版の100個制限を超えてメモを作成できます。";
+"reward_feature_watch" = "動画を視聴";
+"reward_feature_watch_desc" = "1回の視聴で%d個のメモ枠を獲得";
+"reward_feature_duration" = "有効期間";
+"reward_feature_duration_desc" = "獲得したメモ枠は%d日間有効";
+"reward_feature_max" = "最大枠数";
+"reward_feature_max_desc" = "最大%d個のメモ枠を蓄積可能";
+"reward_current_status" = "現在の状態";
+"reward_remaining_memos" = "残りメモ枠";
+"reward_daily_remaining" = "今日の残り回数";
+"reward_expires_on" = "有効期限: %@";
+"reward_watch_ad_button" = "動画を視聴して%d枠獲得";
+"reward_loading_ad" = "読み込み中...";
+"reward_ad_not_ready" = "準備中...";
+"reward_success_title" = "獲得完了！";
+"reward_success_message" = "%d個のメモ枠を獲得しました！";
+"reward_error_title" = "エラー";
+"reward_error_unknown" = "不明なエラーが発生しました";
+"reward_max_reached" = "最大枠数に達しています";
+"reward_daily_limit_reached" = "本日の視聴上限に達しました";
+"reward_ad_loading" = "広告を読み込み中...";
+"reward_pro_suggestion" = "Pro版なら広告なしで無制限にメモを作成できます";
+"reward_upgrade_to_pro" = "Pro版にアップグレード";
+"reward_compact_title" = "メモ枠を獲得";
+"reward_compact_subtitle" = "動画を視聴して%d枠を獲得";
+"reward_ad_section" = "リワード広告";
+"reward_ad_footer" = "動画広告を視聴すると、無料版の上限を超えてメモを作成できます。";
+"reward_select_type" = "獲得する報酬を選択";
+"reward_type" = "報酬タイプ";
+"reward_type_memo" = "メモ枠";
+"reward_type_category" = "カテゴリー枠";
+"reward_remaining_categories" = "残りカテゴリー枠";
+"reward_category_ad_description" = "短い動画を視聴すると、追加でカテゴリーを作成できる枠が獲得できます。無料版の5個制限を超えてカテゴリーを作成できます。";
+"reward_category_feature_watch" = "動画を視聴";
+"reward_category_feature_watch_desc" = "1回の視聴で%d個のカテゴリー枠を獲得";
+"reward_watch_ad_button_category" = "動画を視聴して%d枠獲得";
+"reward_category_success_title" = "獲得完了！";
+"reward_category_success_message" = "%d個のカテゴリー枠を獲得しました！";
+// MARK: - AI Features
+"ai_settings" = "AI機能設定";
+"ai_features" = "AI機能";
+"ai_feature_settings" = "AI機能設定";
+
+// Settings View Specific
+"settings_icloud_account" = "iCloudアカウント";
+"settings_ai_features" = "AI機能";
+"settings_ai_features_settings" = "AI機能設定";
+"settings_ai_features_desc" = "タグ抽出・メモアレンジ・要約";
+"settings_ai_features_footer" = "APIキーを設定してAI機能を利用できます。料金は各APIプロバイダーに直接お支払いください。";
+"settings_icloud_backup" = "iCloudバックアップ";
+"settings_last_backup" = "最終バックアップ: %@";
+"settings_restore_from_icloud" = "iCloudから復元";
+"settings_icloud_sync" = "iCloud同期";
+"settings_icloud_sync_footer" = "Pro版ではデータが自動的にiCloudにバックアップされます。アプリを閉じる時に自動保存されます。";
+"settings_backup_failed" = "バックアップに失敗しました。\n\n設定アプリでiCloudにサインインしていることを確認してください。";
+
+// MARK: - AI Settings
+"ai_api_key_management" = "APIキー管理";
+"ai_api_key_footer" = "APIキーはお客様のデバイスに安全に保存されます。料金は各APIプロバイダーに直接お支払いください。";
+"ai_gemini_api_key" = "Gemini APIキー";
+"ai_claude_api_key" = "Claude APIキー";
+"ai_chatgpt_api_key" = "ChatGPT APIキー";
+"ai_api_key_input" = "APIキーを入力";
+"ai_api_key_save_secure" = "APIキーは安全にKeychainに保存されます。第三者に共有しないでください。";
+"ai_get_gemini_key" = "Gemini APIキーを取得";
+"ai_get_claude_key" = "Claude APIキーを取得";
+"ai_used_for_tag_extraction" = "タグ抽出に使用";
+"ai_used_for_arrange_summary" = "メモアレンジ・要約に使用";
+"ai_used_for_all_features" = "全機能に使用可能";
+
+// MARK: - AI Model Selection
+"ai_model_by_feature" = "機能別モデル設定";
+"ai_provider" = "AIプロバイダー";
+"ai_model_selection" = "モデル選択";
+"ai_model_count" = "モデル数: %d";
+"ai_api_key_not_set" = "%sのAPIキーが未設定です";
+"ai_input_cost" = "入力: ";
+"ai_output_cost" = " / 出力: ";
+"ai_per_1m_tokens" = " (per 1M tokens)";
+
+// MARK: - AI Usage Stats
+"ai_usage_stats" = "使用統計";
+"ai_monthly_requests" = "今月のリクエスト数";
+"ai_remaining_requests" = "残りリクエスト数";
+"ai_monthly_limit" = "月間制限";
+"ai_total_tokens" = "累計トークン数";
+
+// MARK: - Import View
+"import_error" = "インポートエラー";
+"import_success" = "インポート完了";
+"import_success_message" = "%d件のメモをインポートしました";
+"import_supported_formats" = "対応フォーマット";
+"import_format_text_desc" = "プレーンテキストファイル";
+"import_format_markdown_desc" = "Markdown形式のファイル";
+"import_format_csv_desc" = "QuickMemoエクスポート形式";
+"import_format_json_desc" = "QuickMemoエクスポート形式";
+"import_encoding_detection" = "文字コード自動検出: UTF-8, Shift-JIS, EUC-JP等に対応";
+"import_select_file" = "ファイルを選択";
+"import_preview_count" = "プレビュー (%d件)";
+"import_more_items" = "他 %d件...";
+"import_destination_category" = "インポート先カテゴリー";
+"import_category_note" = "※ 元のカテゴリー情報がないメモに適用されます";
+"import_importing" = "インポート中...";
+"import_count" = "%d件をインポート";
+"import_limit_exceeded" = "メモ数が上限(%d件)に達しています。Pro版にアップグレードしてください。";
+"format_text" = "テキスト";
+"format_markdown" = "Markdown";
+"format_csv" = "CSV";
+"format_json" = "JSON";
+
+// MARK: - Widget Settings View
+"widget_max_selection" = "最大8つまで選択できます（大サイズウィジェット対応）";
+"widget_pro_required_message" = "ウィジェットのカテゴリーをカスタマイズするにはPro版へのアップグレードが必要です";
+"settings_saved" = "設定を保存しました";
+"pro_exclusive_feature" = "Pro版限定機能";
+"ai_estimated_cost" = "推定コスト";
+"ai_last_reset_date" = "最終リセット日";
+"ai_usage_by_type" = "機能別使用状況";
+"ai_times_count" = "%d回";
+"ai_usage_history_detail" = "詳細な使用履歴";
+"ai_usage_history_footer" = "すべてのリクエストログを確認・エクスポート";
+"ai_reset_usage_stats" = "使用統計をリセット";
+"ai_monthly_usage" = "今月の使用: %d/%d";
+"ai_remaining" = "残り: %d";
+
+// MARK: - Tag Extraction
+"ai_tag_extraction" = "タグ抽出";
+"ai_extracting_tags" = "AIがタグを抽出しています...";
+"ai_extract_tags_from_memo" = "メモ内容からタグを自動抽出";
+"ai_extract_tags_description" = "Gemini AIがメモを分析し、関連するタグを提案します";
+"ai_extract_tags_button" = "タグを抽出する";
+"ai_extracted_tags_instruction" = "メモ内容から以下のタグを抽出しました。追加したいタグをタップしてください。";
+"ai_suggested_tags" = "提案されたタグ";
+"ai_add_selected_tags" = "選択したタグを追加 (%d)";
+"ai_memo_too_short" = "メモの内容が短すぎます。より詳しい内容を書くと、より適切なタグが抽出できます。";
+
+// MARK: - Memo Arrange
+"ai_memo_arrange" = "メモアレンジ";
+"ai_arranging_memo" = "処理中...";
+"ai_original_memo" = "元のメモ";
+"ai_select_preset" = "プリセット";
+"ai_preset_footer" = "よく使われる編集パターンから選択できます";
+"ai_arrange_memo" = "メモをアレンジ";
+"ai_arrange_result" = "アレンジ結果";
+"ai_arranged_memo" = "アレンジ後";
+"ai_compare_original" = "元のメモと比較";
+"ai_hide_original" = "元のメモを隠す";
+"ai_apply_memo" = "このメモを適用";
+"ai_discard" = "破棄";
+
+// Arrange Presets
+"ai_preset_summarize" = "要約";
+"ai_preset_summarize_desc" = "3行以内で簡潔にまとめます";
+"ai_preset_business" = "ビジネス文書化";
+"ai_preset_business_desc" = "フォーマルな文章に変換します";
+"ai_preset_casual" = "カジュアル化";
+"ai_preset_casual_desc" = "親しみやすい文章にします";
+"ai_preset_expand" = "詳細化";
+"ai_preset_expand_desc" = "より具体的に展開します";
+"ai_preset_bullets" = "箇条書き化";
+"ai_preset_bullets_desc" = "見やすく整理します";
+"ai_preset_translate_en" = "英語に翻訳";
+"ai_preset_translate_en_desc" = "英語に翻訳します";
+"ai_preset_translate_ja" = "日本語に翻訳";
+"ai_preset_translate_ja_desc" = "日本語に翻訳します";
+
+// Custom Prompts
+"ai_custom_prompts" = "カスタムプロンプト";
+"ai_custom_prompt_footer" = "最大3つまで保存可能。左スワイプで編集・削除";
+"ai_add_custom_prompt" = "カスタムプロンプトを追加";
+"ai_custom_prompt_count" = "%d/3";
+"ai_prompt_hints" = "プロンプト作成のヒント";
+"ai_temporary_instruction" = "一時的な指示（保存されません）";
+"ai_temporary_instruction_footer" = "今回だけ使う指示を入力。よく使う場合は上のカスタムプロンプトに保存してください";
+
+// Custom Prompt Editor
+"ai_prompt_name" = "名前";
+"ai_prompt_name_placeholder" = "プロンプト名（例：議事録形式）";
+"ai_prompt_name_footer" = "わかりやすい短い名前をつけてください";
+"ai_prompt_icon" = "アイコン";
+"ai_prompt_content" = "プロンプト内容";
+"ai_prompt_content_footer_hint" = "💡 ヒント:";
+"ai_prompt_content_footer_1" = "• 「〜してください」のように明確な指示を書く";
+"ai_prompt_content_footer_2" = "• 出力形式を指定すると安定した結果に";
+"ai_prompt_content_footer_3" = "• 例: 「以下を議事録形式にまとめてください。日時、参加者、議題、決定事項、次回アクションの項目で整理してください。」";
+"ai_add_prompt" = "プロンプトを追加";
+"ai_edit_prompt" = "プロンプトを編集";
+
+// Prompt Hints
+"ai_hint_basic_principle" = "基本原則";
+"ai_hint_basic_desc" = "プロンプトには以下の要素を含めると効果的です：";
+"ai_hint_purpose" = "目的: 何をしたいか明確に";
+"ai_hint_format" = "形式: 出力の形式を指定";
+"ai_hint_constraints" = "制約: 文字数や条件を指定";
+"ai_hint_tone" = "トーン: 文体やニュアンス";
+"ai_hint_example1" = "例1: 議事録形式";
+"ai_hint_example2" = "例2: SNS投稿用";
+"ai_hint_example3" = "例3: コードレビュー依頼";
+"ai_hint_notes" = "注意点";
+"ai_hint_note1" = "• 曖昧な指示は避ける（「いい感じに」→NG）";
+"ai_hint_note2" = "• 具体的な条件を明示する";
+"ai_hint_note3" = "• 出力例を示すとより正確に";
+
+// Claude Code Export
+"ai_claude_code_export" = "Claude Code用プロンプト出力";
+"ai_claude_code_export_desc" = "AIアシスタント向けのプロンプトとしてコピー";
+"ai_external_ai_integration" = "外部AI連携";
+"ai_claude_code_export_title" = "Claude Code出力";
+"ai_export_template" = "テンプレート";
+"ai_export_template_footer" = "用途に合わせたテンプレートを選択してください";
+"ai_additional_context" = "追加コンテキスト（任意）";
+"ai_additional_context_footer" = "ファイルパス、関連する情報など補足事項があれば入力";
+"ai_generated_prompt" = "生成されるプロンプト";
+"ai_copy_to_clipboard" = "クリップボードにコピー";
+"ai_copied" = "コピーしました！";
+
+// Export Templates
+"ai_template_general" = "汎用";
+"ai_template_general_desc" = "汎用的なタスク依頼";
+"ai_template_code_review" = "コードレビュー";
+"ai_template_code_review_desc" = "コードのレビュー依頼";
+"ai_template_bug_fix" = "バグ修正";
+"ai_template_bug_fix_desc" = "バグの調査・修正依頼";
+"ai_template_feature" = "機能実装";
+"ai_template_feature_desc" = "新機能の実装依頼";
+"ai_template_refactor" = "リファクタリング";
+"ai_template_refactor_desc" = "コードの改善依頼";
+
+// MARK: - Category Summary
+"ai_category_summary" = "カテゴリー要約";
+"ai_analyzing_category" = "AIがカテゴリーを分析しています...";
+"ai_analyzing_memos_count" = "%d件のメモを解析中";
+"ai_generate_summary" = "要約を生成";
+"ai_category_analysis_desc" = "%d件のメモを分析して、要約と要点を抽出します";
+"ai_memo_count_warning" = "メモが3件未満です。より正確な分析には、もっとメモを追加してください。";
+"ai_overall_summary" = "全体の要約";
+"ai_key_points" = "主な要点";
+"ai_trends" = "トレンド";
+"ai_statistics" = "統計情報";
+"ai_analyzed_memos" = "分析メモ数";
+"ai_key_points_count" = "要点数";
+"ai_trends_count" = "トレンド数";
+"ai_memos_count_items" = "%d件のメモ";
+"ai_items_count" = "%d件";
+
+// MARK: - AI Usage History
+"ai_usage_history" = "AI使用履歴";
+"ai_all_period_stats" = "全期間の統計";
+"ai_total_requests" = "総リクエスト数";
+"ai_total_cost" = "総コスト";
+"ai_current_month_stats" = "今月の統計";
+"ai_request_count" = "リクエスト数";
+"ai_token_count" = "トークン数";
+"ai_cost" = "コスト";
+"ai_stats_by_feature" = "機能別統計";
+"ai_stats_by_provider" = "プロバイダー別統計";
+"ai_recent_history" = "直近の履歴 (最新50件)";
+"ai_export_csv" = "CSVでエクスポート";
+"ai_clear_history" = "履歴をクリア";
+"ai_error_message" = "エラー: %@";
+"ai_tokens_display" = "トークン: %@";
+"ai_in_out_tokens" = "in: %d / out: %d";
+
+// MARK: - AI Errors
+"ai_error" = "エラー";
+"ai_api_key_saved" = "%@ APIキーを保存しました";
+"ai_api_key_deleted" = "%@ APIキーを削除しました";
+"ai_stats_reset" = "使用統計をリセットしました";
+"ai_help" = "ヘルプ";
+

@@ -1,0 +1,44 @@
+{
+  "identifier" : "configuration",
+  "nonRenewingSubscriptions" : [
+
+  ],
+  "products" : [
+    {
+      "displayPrice" : "4.99",
+      "familyShareable" : false,
+      "internalID" : "6736263559",
+      "localizations" : [
+        {
+          "description" : "Unlock unlimited memos, categories, and advanced features",
+          "displayName" : "QuickMemo Pro",
+          "locale" : "en_US"
+        },
+        {
+          "description" : "無制限のメモ、カテゴリ、高度な機能をアンロック",
+          "displayName" : "QuickMemo Pro",
+          "locale" : "ja"
+        }
+      ],
+      "productID" : "yokAppDev.quickMemoApp.pro",
+      "referenceName" : "QuickMemo Pro",
+      "type" : "NonConsumable"
+    }
+  ],
+  "settings" : {
+    "_billingIssuesEnabled" : false,
+    "_failTransactionsEnabled" : false,
+    "_locale" : "en_US",
+    "_storefront" : "USA",
+    "_storeKitErrors" : [
+
+    ]
+  },
+  "subscriptions" : [
+
+  ],
+  "version" : {
+    "major" : 3,
+    "minor" : 0
+  }
+}

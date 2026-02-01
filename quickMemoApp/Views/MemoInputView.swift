@@ -2,7 +2,7 @@ import SwiftUI
 
 struct MemoInputView: View {
     @Environment(\.dismiss) private var dismiss
-    @StateObject private var dataManager = DataManager.shared
+    @ObservedObject private var dataManager = DataManager.shared
     
     private var category: Category? {
         dataManager.getCategory(named: categoryName)
@@ -58,7 +58,7 @@ struct MemoInputView: View {
                     HStack(spacing: 4) {
                         Image(systemName: cat.icon)
                             .foregroundColor(Color(hex: cat.color))
-                        Text("新しいメモ")
+                        Text("new_memo".localized)
                             .font(.system(size: 14))
                             .foregroundColor(.secondary)
                     }
@@ -102,7 +102,7 @@ struct MemoInputView: View {
     private var tagSection: some View {
         VStack(alignment: .leading, spacing: 16) {
             HStack {
-                Text("タグ")
+                Text("tags".localized)
                     .font(.system(size: 16, weight: .semibold))
                     .padding(.horizontal, 20)
                 

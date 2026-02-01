@@ -1,0 +1,17 @@
+/*
+  Localizable.strings (Japanese)
+  quickMemoWidget
+*/
+
+// Categories
+"work" = "仕事";
+"personal" = "プライベート";
+"idea" = "アイデア";
+"other" = "その他";
+
+// Widget UI
+"quick_memo" = "Quick Memo";
+"widget_open_app" = "アプリを開く";
+"widget_tap_to_add_memo" = "タップしてメモを追加";
+"widget_description" = "素早くメモを追加できます";
+"upgrade_to_pro" = "Pro版にアップグレード";

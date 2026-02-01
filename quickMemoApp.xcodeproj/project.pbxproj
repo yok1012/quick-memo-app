@@ -7,12 +7,40 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		BE026D8D2E7EAA3200ADB5D0 /* Configuration.storekit in Resources */ = {isa = PBXBuildFile; fileRef = BE026D8C2E7EAA3200ADB5D0 /* Configuration.storekit */; };
+		BE026D8F2E7EAA4900ADB5D0 /* PurchaseManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = BE026D8E2E7EAA4900ADB5D0 /* PurchaseManager.swift */; };
+		BE026D912E7EAA6200ADB5D0 /* PurchaseView.swift in Sources */ = {isa = PBXBuildFile; fileRef = BE026D902E7EAA6200ADB5D0 /* PurchaseView.swift */; };
+		BE026D932E7EAAEB00ADB5D0 /* ProFeatureViews.swift in Sources */ = {isa = PBXBuildFile; fileRef = BE026D922E7EAAEB00ADB5D0 /* ProFeatureViews.swift */; };
+		BE026FCC2E7F618500ADB5D0 /* quickMemoWatch Watch App.app in Embed Watch Content */ = {isa = PBXBuildFile; fileRef = BE026FAC2E7F618400ADB5D0 /* quickMemoWatch Watch App.app */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
+		BE2E19122EA6406F0037BE46 /* StoreKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = BE2E19112EA6406F0037BE46 /* StoreKit.framework */; };
 		BE37DED02E75A03000343AF8 /* WidgetKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = BE37DECF2E75A03000343AF8 /* WidgetKit.framework */; };
 		BE37DED22E75A03000343AF8 /* SwiftUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = BE37DED12E75A03000343AF8 /* SwiftUI.framework */; };
 		BE37DEE32E75A03100343AF8 /* quickMemoWidgetExtension.appex in Embed Foundation Extensions */ = {isa = PBXBuildFile; fileRef = BE37DECD2E75A03000343AF8 /* quickMemoWidgetExtension.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
+		BEE35F1D2F014E9D00A7AA69 /* GoogleMobileAds in Frameworks */ = {isa = PBXBuildFile; productRef = BEE35AA02F014AAE00A7AA69 /* GoogleMobileAds */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
+		BE026FB92E7F618500ADB5D0 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = BE2A96EE2E52958500736A63 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = BE026FAB2E7F618400ADB5D0;
+			remoteInfo = "quickMemoWatch Watch App";
+		};
+		BE026FC32E7F618500ADB5D0 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = BE2A96EE2E52958500736A63 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = BE026FAB2E7F618400ADB5D0;
+			remoteInfo = "quickMemoWatch Watch App";
+		};
+		BE026FCA2E7F618500ADB5D0 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = BE2A96EE2E52958500736A63 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = BE026FAB2E7F618400ADB5D0;
+			remoteInfo = "quickMemoWatch Watch App";
+		};
 		BE2A97042E52958600736A63 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = BE2A96EE2E52958500736A63 /* Project object */;
@@ -37,6 +65,17 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXCopyFilesBuildPhase section */
+		BE026FD02E7F618500ADB5D0 /* Embed Watch Content */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "$(CONTENTS_FOLDER_PATH)/Watch";
+			dstSubfolderSpec = 16;
+			files = (
+				BE026FCC2E7F618500ADB5D0 /* quickMemoWatch Watch App.app in Embed Watch Content */,
+			);
+			name = "Embed Watch Content";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		BE37DEE82E75A03100343AF8 /* Embed Foundation Extensions */ = {
 			isa = PBXCopyFilesBuildPhase;
 			buildActionMask = 2147483647;
@@ -51,10 +90,17 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		BE026D8C2E7EAA3200ADB5D0 /* Configuration.storekit */ = {isa = PBXFileReference; lastKnownFileType = text; path = Configuration.storekit; sourceTree = "<group>"; };
+		BE026D8E2E7EAA4900ADB5D0 /* PurchaseManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PurchaseManager.swift; sourceTree = "<group>"; };
+		BE026D902E7EAA6200ADB5D0 /* PurchaseView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PurchaseView.swift; sourceTree = "<group>"; };
+		BE026D922E7EAAEB00ADB5D0 /* ProFeatureViews.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProFeatureViews.swift; sourceTree = "<group>"; };
+		BE026FAC2E7F618400ADB5D0 /* quickMemoWatch Watch App.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "quickMemoWatch Watch App.app"; sourceTree = BUILT_PRODUCTS_DIR; };
+		BE026FB82E7F618500ADB5D0 /* quickMemoWatch Watch AppTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "quickMemoWatch Watch AppTests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
+		BE026FC22E7F618500ADB5D0 /* quickMemoWatch Watch AppUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "quickMemoWatch Watch AppUITests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
 		BE2A96F62E52958500736A63 /* quickMemoApp.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = quickMemoApp.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		BE2A97032E52958600736A63 /* quickMemoAppTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = quickMemoAppTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		BE2A970D2E52958600736A63 /* quickMemoAppUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = quickMemoAppUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
-		BE2A97802E5325FF00736A63 /* quickMemoWatchApp.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.extensionkit-extension"; includeInIndex = 0; path = quickMemoWatchApp.appex; sourceTree = BUILT_PRODUCTS_DIR; };
+		BE2E19112EA6406F0037BE46 /* StoreKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = StoreKit.framework; path = System/Library/Frameworks/StoreKit.framework; sourceTree = SDKROOT; };
 		BE37DECD2E75A03000343AF8 /* quickMemoWidgetExtension.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = quickMemoWidgetExtension.appex; sourceTree = BUILT_PRODUCTS_DIR; };
 		BE37DECF2E75A03000343AF8 /* WidgetKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = WidgetKit.framework; path = System/Library/Frameworks/WidgetKit.framework; sourceTree = SDKROOT; };
 		BE37DED12E75A03000343AF8 /* SwiftUI.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SwiftUI.framework; path = System/Library/Frameworks/SwiftUI.framework; sourceTree = SDKROOT; };
@@ -71,6 +117,21 @@
 /* End PBXFileSystemSynchronizedBuildFileExceptionSet section */
 
 /* Begin PBXFileSystemSynchronizedRootGroup section */
+		BE026FAD2E7F618400ADB5D0 /* quickMemoWatch Watch App */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			path = "quickMemoWatch Watch App";
+			sourceTree = "<group>";
+		};
+		BE026FBB2E7F618500ADB5D0 /* quickMemoWatch Watch AppTests */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			path = "quickMemoWatch Watch AppTests";
+			sourceTree = "<group>";
+		};
+		BE026FC52E7F618500ADB5D0 /* quickMemoWatch Watch AppUITests */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			path = "quickMemoWatch Watch AppUITests";
+			sourceTree = "<group>";
+		};
 		BE2A96F82E52958500736A63 /* quickMemoApp */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
 			path = quickMemoApp;
@@ -86,11 +147,6 @@
 			path = quickMemoAppUITests;
 			sourceTree = "<group>";
 		};
-		BE2A97812E5325FF00736A63 /* quickMemoWatchApp */ = {
-			isa = PBXFileSystemSynchronizedRootGroup;
-			path = quickMemoWatchApp;
-			sourceTree = "<group>";
-		};
 		BE37DED32E75A03000343AF8 /* quickMemoWidget */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
 			exceptions = (
@@ -102,10 +158,33 @@
 /* End PBXFileSystemSynchronizedRootGroup section */
 
 /* Begin PBXFrameworksBuildPhase section */
+		BE026FA92E7F618400ADB5D0 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		BE026FB52E7F618500ADB5D0 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		BE026FBF2E7F618500ADB5D0 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		BE2A96F32E52958500736A63 /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				BEE35F1D2F014E9D00A7AA69 /* GoogleMobileAds in Frameworks */,
+				BE2E19122EA6406F0037BE46 /* StoreKit.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -117,13 +196,6 @@
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 		BE2A970A2E52958600736A63 /* Frameworks */ = {
-			isa = PBXFrameworksBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		BE2A977D2E5325FF00736A63 /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -148,10 +220,16 @@
 				BE2A96F82E52958500736A63 /* quickMemoApp */,
 				BE2A97062E52958600736A63 /* quickMemoAppTests */,
 				BE2A97102E52958600736A63 /* quickMemoAppUITests */,
-				BE2A97812E5325FF00736A63 /* quickMemoWatchApp */,
 				BE37DED32E75A03000343AF8 /* quickMemoWidget */,
+				BE026FAD2E7F618400ADB5D0 /* quickMemoWatch Watch App */,
+				BE026FBB2E7F618500ADB5D0 /* quickMemoWatch Watch AppTests */,
+				BE026FC52E7F618500ADB5D0 /* quickMemoWatch Watch AppUITests */,
 				BE37DECE2E75A03000343AF8 /* Frameworks */,
 				BE2A96F72E52958500736A63 /* Products */,
+				BE026D8C2E7EAA3200ADB5D0 /* Configuration.storekit */,
+				BE026D8E2E7EAA4900ADB5D0 /* PurchaseManager.swift */,
+				BE026D902E7EAA6200ADB5D0 /* PurchaseView.swift */,
+				BE026D922E7EAAEB00ADB5D0 /* ProFeatureViews.swift */,
 			);
 			sourceTree = "<group>";
 		};
@@ -161,8 +239,10 @@
 				BE2A96F62E52958500736A63 /* quickMemoApp.app */,
 				BE2A97032E52958600736A63 /* quickMemoAppTests.xctest */,
 				BE2A970D2E52958600736A63 /* quickMemoAppUITests.xctest */,
-				BE2A97802E5325FF00736A63 /* quickMemoWatchApp.appex */,
 				BE37DECD2E75A03000343AF8 /* quickMemoWidgetExtension.appex */,
+				BE026FAC2E7F618400ADB5D0 /* quickMemoWatch Watch App.app */,
+				BE026FB82E7F618500ADB5D0 /* quickMemoWatch Watch AppTests.xctest */,
+				BE026FC22E7F618500ADB5D0 /* quickMemoWatch Watch AppUITests.xctest */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -170,6 +250,7 @@
 		BE37DECE2E75A03000343AF8 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				BE2E19112EA6406F0037BE46 /* StoreKit.framework */,
 				BE37DECF2E75A03000343AF8 /* WidgetKit.framework */,
 				BE37DED12E75A03000343AF8 /* SwiftUI.framework */,
 			);
@@ -179,6 +260,74 @@
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
+		BE026FAB2E7F618400ADB5D0 /* quickMemoWatch Watch App */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = BE026FCD2E7F618500ADB5D0 /* Build configuration list for PBXNativeTarget "quickMemoWatch Watch App" */;
+			buildPhases = (
+				BE026FA82E7F618400ADB5D0 /* Sources */,
+				BE026FA92E7F618400ADB5D0 /* Frameworks */,
+				BE026FAA2E7F618400ADB5D0 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			fileSystemSynchronizedGroups = (
+				BE026FAD2E7F618400ADB5D0 /* quickMemoWatch Watch App */,
+			);
+			name = "quickMemoWatch Watch App";
+			packageProductDependencies = (
+			);
+			productName = "quickMemoWatch Watch App";
+			productReference = BE026FAC2E7F618400ADB5D0 /* quickMemoWatch Watch App.app */;
+			productType = "com.apple.product-type.application";
+		};
+		BE026FB72E7F618500ADB5D0 /* quickMemoWatch Watch AppTests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = BE026FD12E7F618500ADB5D0 /* Build configuration list for PBXNativeTarget "quickMemoWatch Watch AppTests" */;
+			buildPhases = (
+				BE026FB42E7F618500ADB5D0 /* Sources */,
+				BE026FB52E7F618500ADB5D0 /* Frameworks */,
+				BE026FB62E7F618500ADB5D0 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				BE026FBA2E7F618500ADB5D0 /* PBXTargetDependency */,
+			);
+			fileSystemSynchronizedGroups = (
+				BE026FBB2E7F618500ADB5D0 /* quickMemoWatch Watch AppTests */,
+			);
+			name = "quickMemoWatch Watch AppTests";
+			packageProductDependencies = (
+			);
+			productName = "quickMemoWatch Watch AppTests";
+			productReference = BE026FB82E7F618500ADB5D0 /* quickMemoWatch Watch AppTests.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
+		};
+		BE026FC12E7F618500ADB5D0 /* quickMemoWatch Watch AppUITests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = BE026FD42E7F618500ADB5D0 /* Build configuration list for PBXNativeTarget "quickMemoWatch Watch AppUITests" */;
+			buildPhases = (
+				BE026FBE2E7F618500ADB5D0 /* Sources */,
+				BE026FBF2E7F618500ADB5D0 /* Frameworks */,
+				BE026FC02E7F618500ADB5D0 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				BE026FC42E7F618500ADB5D0 /* PBXTargetDependency */,
+			);
+			fileSystemSynchronizedGroups = (
+				BE026FC52E7F618500ADB5D0 /* quickMemoWatch Watch AppUITests */,
+			);
+			name = "quickMemoWatch Watch AppUITests";
+			packageProductDependencies = (
+			);
+			productName = "quickMemoWatch Watch AppUITests";
+			productReference = BE026FC22E7F618500ADB5D0 /* quickMemoWatch Watch AppUITests.xctest */;
+			productType = "com.apple.product-type.bundle.ui-testing";
+		};
 		BE2A96F52E52958500736A63 /* quickMemoApp */ = {
 			isa = PBXNativeTarget;
 			buildConfigurationList = BE2A97172E52958600736A63 /* Build configuration list for PBXNativeTarget "quickMemoApp" */;
@@ -187,17 +336,20 @@
 				BE2A96F32E52958500736A63 /* Frameworks */,
 				BE2A96F42E52958500736A63 /* Resources */,
 				BE37DEE82E75A03100343AF8 /* Embed Foundation Extensions */,
+				BE026FD02E7F618500ADB5D0 /* Embed Watch Content */,
 			);
 			buildRules = (
 			);
 			dependencies = (
 				BE37DEE22E75A03100343AF8 /* PBXTargetDependency */,
+				BE026FCB2E7F618500ADB5D0 /* PBXTargetDependency */,
 			);
 			fileSystemSynchronizedGroups = (
 				BE2A96F82E52958500736A63 /* quickMemoApp */,
 			);
 			name = quickMemoApp;
 			packageProductDependencies = (
+				BEE35AA02F014AAE00A7AA69 /* GoogleMobileAds */,
 			);
 			productName = quickMemoApp;
 			productReference = BE2A96F62E52958500736A63 /* quickMemoApp.app */;
@@ -249,28 +401,6 @@
 			productReference = BE2A970D2E52958600736A63 /* quickMemoAppUITests.xctest */;
 			productType = "com.apple.product-type.bundle.ui-testing";
 		};
-		BE2A977F2E5325FF00736A63 /* quickMemoWatchApp */ = {
-			isa = PBXNativeTarget;
-			buildConfigurationList = BE2A978A2E5325FF00736A63 /* Build configuration list for PBXNativeTarget "quickMemoWatchApp" */;
-			buildPhases = (
-				BE2A977C2E5325FF00736A63 /* Sources */,
-				BE2A977D2E5325FF00736A63 /* Frameworks */,
-				BE2A977E2E5325FF00736A63 /* Resources */,
-			);
-			buildRules = (
-			);
-			dependencies = (
-			);
-			fileSystemSynchronizedGroups = (
-				BE2A97812E5325FF00736A63 /* quickMemoWatchApp */,
-			);
-			name = quickMemoWatchApp;
-			packageProductDependencies = (
-			);
-			productName = quickMemoWatchApp;
-			productReference = BE2A97802E5325FF00736A63 /* quickMemoWatchApp.appex */;
-			productType = "com.apple.product-type.extensionkit-extension";
-		};
 		BE37DECC2E75A03000343AF8 /* quickMemoWidgetExtension */ = {
 			isa = PBXNativeTarget;
 			buildConfigurationList = BE37DEE52E75A03100343AF8 /* Build configuration list for PBXNativeTarget "quickMemoWidgetExtension" */;
@@ -300,9 +430,20 @@
 			isa = PBXProject;
 			attributes = {
 				BuildIndependentTargetsInParallel = 1;
-				LastSwiftUpdateCheck = 1640;
+				LastSwiftUpdateCheck = 2600;
 				LastUpgradeCheck = 1640;
 				TargetAttributes = {
+					BE026FAB2E7F618400ADB5D0 = {
+						CreatedOnToolsVersion = 26.0;
+					};
+					BE026FB72E7F618500ADB5D0 = {
+						CreatedOnToolsVersion = 26.0;
+						TestTargetID = BE026FAB2E7F618400ADB5D0;
+					};
+					BE026FC12E7F618500ADB5D0 = {
+						CreatedOnToolsVersion = 26.0;
+						TestTargetID = BE026FAB2E7F618400ADB5D0;
+					};
 					BE2A96F52E52958500736A63 = {
 						CreatedOnToolsVersion = 16.4;
 					};
@@ -313,9 +454,6 @@
 					BE2A970C2E52958600736A63 = {
 						CreatedOnToolsVersion = 16.4;
 						TestTargetID = BE2A96F52E52958500736A63;
-					};
-					BE2A977F2E5325FF00736A63 = {
-						CreatedOnToolsVersion = 16.4;
 					};
 					BE37DECC2E75A03000343AF8 = {
 						CreatedOnToolsVersion = 16.4;
@@ -328,9 +466,14 @@
 			knownRegions = (
 				en,
 				Base,
+				"zh-Hans",
+				ja,
 			);
 			mainGroup = BE2A96ED2E52958500736A63;
 			minimizedProjectReferenceProxies = 1;
+			packageReferences = (
+				BEE35A9F2F014AAE00A7AA69 /* XCRemoteSwiftPackageReference "swift-package-manager-google-mobile-ads" */,
+			);
 			preferredProjectObjectVersion = 77;
 			productRefGroup = BE2A96F72E52958500736A63 /* Products */;
 			projectDirPath = "";
@@ -339,17 +482,41 @@
 				BE2A96F52E52958500736A63 /* quickMemoApp */,
 				BE2A97022E52958600736A63 /* quickMemoAppTests */,
 				BE2A970C2E52958600736A63 /* quickMemoAppUITests */,
-				BE2A977F2E5325FF00736A63 /* quickMemoWatchApp */,
 				BE37DECC2E75A03000343AF8 /* quickMemoWidgetExtension */,
+				BE026FAB2E7F618400ADB5D0 /* quickMemoWatch Watch App */,
+				BE026FB72E7F618500ADB5D0 /* quickMemoWatch Watch AppTests */,
+				BE026FC12E7F618500ADB5D0 /* quickMemoWatch Watch AppUITests */,
 			);
 		};
 /* End PBXProject section */
 
 /* Begin PBXResourcesBuildPhase section */
+		BE026FAA2E7F618400ADB5D0 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		BE026FB62E7F618500ADB5D0 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		BE026FC02E7F618500ADB5D0 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		BE2A96F42E52958500736A63 /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				BE026D8D2E7EAA3200ADB5D0 /* Configuration.storekit in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -367,13 +534,6 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		BE2A977E2E5325FF00736A63 /* Resources */ = {
-			isa = PBXResourcesBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
 		BE37DECB2E75A03000343AF8 /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -384,10 +544,34 @@
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
+		BE026FA82E7F618400ADB5D0 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		BE026FB42E7F618500ADB5D0 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		BE026FBE2E7F618500ADB5D0 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		BE2A96F22E52958500736A63 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				BE026D912E7EAA6200ADB5D0 /* PurchaseView.swift in Sources */,
+				BE026D8F2E7EAA4900ADB5D0 /* PurchaseManager.swift in Sources */,
+				BE026D932E7EAAEB00ADB5D0 /* ProFeatureViews.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -405,13 +589,6 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		BE2A977C2E5325FF00736A63 /* Sources */ = {
-			isa = PBXSourcesBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
 		BE37DEC92E75A03000343AF8 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -422,6 +599,21 @@
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXTargetDependency section */
+		BE026FBA2E7F618500ADB5D0 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = BE026FAB2E7F618400ADB5D0 /* quickMemoWatch Watch App */;
+			targetProxy = BE026FB92E7F618500ADB5D0 /* PBXContainerItemProxy */;
+		};
+		BE026FC42E7F618500ADB5D0 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = BE026FAB2E7F618400ADB5D0 /* quickMemoWatch Watch App */;
+			targetProxy = BE026FC32E7F618500ADB5D0 /* PBXContainerItemProxy */;
+		};
+		BE026FCB2E7F618500ADB5D0 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = BE026FAB2E7F618400ADB5D0 /* quickMemoWatch Watch App */;
+			targetProxy = BE026FCA2E7F618500ADB5D0 /* PBXContainerItemProxy */;
+		};
 		BE2A97052E52958600736A63 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
 			target = BE2A96F52E52958500736A63 /* quickMemoApp */;
@@ -440,6 +632,162 @@
 /* End PBXTargetDependency section */
 
 /* Begin XCBuildConfiguration section */
+		BE026FCE2E7F618500ADB5D0 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = MFQB3583D6;
+				ENABLE_PREVIEWS = YES;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_CFBundleDisplayName = quickMemoWatch;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown";
+				INFOPLIST_KEY_WKCompanionAppBundleIdentifier = yokAppDev.quickMemoApp;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				MARKETING_VERSION = 1.3;
+				PRODUCT_BUNDLE_IDENTIFIER = yokAppDev.quickMemoApp.watchkitapp;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = watchos;
+				SKIP_INSTALL = YES;
+				STRING_CATALOG_GENERATE_SYMBOLS = YES;
+				SWIFT_APPROACHABLE_CONCURRENCY = YES;
+				SWIFT_DEFAULT_ACTOR_ISOLATION = MainActor;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = 4;
+				WATCHOS_DEPLOYMENT_TARGET = 11.0;
+			};
+			name = Debug;
+		};
+		BE026FCF2E7F618500ADB5D0 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = MFQB3583D6;
+				ENABLE_PREVIEWS = YES;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_CFBundleDisplayName = quickMemoWatch;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown";
+				INFOPLIST_KEY_WKCompanionAppBundleIdentifier = yokAppDev.quickMemoApp;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				MARKETING_VERSION = 1.3;
+				PRODUCT_BUNDLE_IDENTIFIER = yokAppDev.quickMemoApp.watchkitapp;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = watchos;
+				SKIP_INSTALL = YES;
+				STRING_CATALOG_GENERATE_SYMBOLS = YES;
+				SWIFT_APPROACHABLE_CONCURRENCY = YES;
+				SWIFT_DEFAULT_ACTOR_ISOLATION = MainActor;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = 4;
+				WATCHOS_DEPLOYMENT_TARGET = 11.0;
+			};
+			name = Release;
+		};
+		BE026FD22E7F618500ADB5D0 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = MFQB3583D6;
+				GENERATE_INFOPLIST_FILE = YES;
+				MARKETING_VERSION = 1.3;
+				PRODUCT_BUNDLE_IDENTIFIER = "yokAppDev.quickMemoWatch-Watch-AppTests";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = watchos;
+				STRING_CATALOG_GENERATE_SYMBOLS = NO;
+				SWIFT_APPROACHABLE_CONCURRENCY = YES;
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = 4;
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/quickMemoWatch Watch App.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/quickMemoWatch Watch App";
+				WATCHOS_DEPLOYMENT_TARGET = 11.0;
+			};
+			name = Debug;
+		};
+		BE026FD32E7F618500ADB5D0 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = MFQB3583D6;
+				GENERATE_INFOPLIST_FILE = YES;
+				MARKETING_VERSION = 1.3;
+				PRODUCT_BUNDLE_IDENTIFIER = "yokAppDev.quickMemoWatch-Watch-AppTests";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = watchos;
+				STRING_CATALOG_GENERATE_SYMBOLS = NO;
+				SWIFT_APPROACHABLE_CONCURRENCY = YES;
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = 4;
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/quickMemoWatch Watch App.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/quickMemoWatch Watch App";
+				WATCHOS_DEPLOYMENT_TARGET = 11.0;
+			};
+			name = Release;
+		};
+		BE026FD52E7F618500ADB5D0 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = MFQB3583D6;
+				GENERATE_INFOPLIST_FILE = YES;
+				MARKETING_VERSION = 1.3;
+				PRODUCT_BUNDLE_IDENTIFIER = "yokAppDev.quickMemoWatch-Watch-AppUITests";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = watchos;
+				STRING_CATALOG_GENERATE_SYMBOLS = NO;
+				SWIFT_APPROACHABLE_CONCURRENCY = YES;
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = 4;
+				TEST_TARGET_NAME = "quickMemoWatch Watch App";
+				WATCHOS_DEPLOYMENT_TARGET = 11.0;
+			};
+			name = Debug;
+		};
+		BE026FD62E7F618500ADB5D0 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = MFQB3583D6;
+				GENERATE_INFOPLIST_FILE = YES;
+				MARKETING_VERSION = 1.3;
+				PRODUCT_BUNDLE_IDENTIFIER = "yokAppDev.quickMemoWatch-Watch-AppUITests";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = watchos;
+				STRING_CATALOG_GENERATE_SYMBOLS = NO;
+				SWIFT_APPROACHABLE_CONCURRENCY = YES;
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = 4;
+				TEST_TARGET_NAME = "quickMemoWatch Watch App";
+				WATCHOS_DEPLOYMENT_TARGET = 11.0;
+			};
+			name = Release;
+		};
 		BE2A97152E52958600736A63 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
@@ -566,14 +914,18 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_ENTITLEMENTS = quickMemoApp/quickMemoApp.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = MFQB3583D6;
 				ENABLE_PREVIEWS = YES;
 				ENABLE_RESOURCE_ACCESS_CALENDARS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = quickMemoApp/AdMobInfo.plist;
 				INFOPLIST_KEY_NSCalendarsFullAccessUsageDescription = "QuickMemoはメモをカレンダーに保存し、時系列で管理するためにカレンダーへの完全なアクセスを必要とします。";
 				INFOPLIST_KEY_NSCalendarsUsageDescription = "QuickMemoはメモをカレンダーに保存し、時系列で管理するためにカレンダーへのアクセスを必要とします。";
+				INFOPLIST_KEY_NSUserNotificationsUsageDescription = "定期的にメモを書くことを思い出させるための通知を送信します。";
+				INFOPLIST_KEY_NSUserTrackingUsageDescription = "パーソナライズされた広告を表示するために、トラッキングの許可をお願いしています。";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
@@ -583,7 +935,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.0;
+				MARKETING_VERSION = 1.4;
 				PRODUCT_BUNDLE_IDENTIFIER = yokAppDev.quickMemoApp;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = YES;
@@ -597,14 +949,18 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_ENTITLEMENTS = quickMemoApp/quickMemoApp.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = MFQB3583D6;
 				ENABLE_PREVIEWS = YES;
 				ENABLE_RESOURCE_ACCESS_CALENDARS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = quickMemoApp/AdMobInfo.plist;
 				INFOPLIST_KEY_NSCalendarsFullAccessUsageDescription = "QuickMemoはメモをカレンダーに保存し、時系列で管理するためにカレンダーへの完全なアクセスを必要とします。";
 				INFOPLIST_KEY_NSCalendarsUsageDescription = "QuickMemoはメモをカレンダーに保存し、時系列で管理するためにカレンダーへのアクセスを必要とします。";
+				INFOPLIST_KEY_NSUserNotificationsUsageDescription = "定期的にメモを書くことを思い出させるための通知を送信します。";
+				INFOPLIST_KEY_NSUserTrackingUsageDescription = "パーソナライズされた広告を表示するために、トラッキングの許可をお願いしています。";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
@@ -614,7 +970,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.0;
+				MARKETING_VERSION = 1.4;
 				PRODUCT_BUNDLE_IDENTIFIER = yokAppDev.quickMemoApp;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = YES;
@@ -632,7 +988,7 @@
 				DEVELOPMENT_TEAM = MFQB3583D6;
 				GENERATE_INFOPLIST_FILE = YES;
 				IPHONEOS_DEPLOYMENT_TARGET = 16.0;
-				MARKETING_VERSION = 1.0;
+				MARKETING_VERSION = 1.3;
 				PRODUCT_BUNDLE_IDENTIFIER = yokAppDev.quickMemoAppTests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = NO;
@@ -651,7 +1007,7 @@
 				DEVELOPMENT_TEAM = MFQB3583D6;
 				GENERATE_INFOPLIST_FILE = YES;
 				IPHONEOS_DEPLOYMENT_TARGET = 16.0;
-				MARKETING_VERSION = 1.0;
+				MARKETING_VERSION = 1.3;
 				PRODUCT_BUNDLE_IDENTIFIER = yokAppDev.quickMemoAppTests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = NO;
@@ -668,7 +1024,7 @@
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = MFQB3583D6;
 				GENERATE_INFOPLIST_FILE = YES;
-				MARKETING_VERSION = 1.0;
+				MARKETING_VERSION = 1.3;
 				PRODUCT_BUNDLE_IDENTIFIER = yokAppDev.quickMemoAppUITests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = NO;
@@ -685,7 +1041,7 @@
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = MFQB3583D6;
 				GENERATE_INFOPLIST_FILE = YES;
-				MARKETING_VERSION = 1.0;
+				MARKETING_VERSION = 1.3;
 				PRODUCT_BUNDLE_IDENTIFIER = yokAppDev.quickMemoAppUITests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = NO;
@@ -695,67 +1051,12 @@
 			};
 			name = Release;
 		};
-		BE2A97872E5325FF00736A63 /* Debug */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = MFQB3583D6;
-				GENERATE_INFOPLIST_FILE = YES;
-				INFOPLIST_FILE = quickMemoWatchApp/Info.plist;
-				INFOPLIST_KEY_CFBundleDisplayName = quickMemoWatchApp;
-				INFOPLIST_KEY_NSHumanReadableCopyright = "";
-				LD_RUNPATH_SEARCH_PATHS = (
-					"$(inherited)",
-					"@executable_path/Frameworks",
-					"@executable_path/../../Frameworks",
-					"@executable_path/../../../../Frameworks",
-				);
-				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = yokAppDev.quickMemoWatchApp;
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				SDKROOT = watchos;
-				SKIP_INSTALL = YES;
-				SWIFT_EMIT_LOC_STRINGS = YES;
-				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = 4;
-				WATCHOS_DEPLOYMENT_TARGET = 11.5;
-			};
-			name = Debug;
-		};
-		BE2A97882E5325FF00736A63 /* Release */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = MFQB3583D6;
-				GENERATE_INFOPLIST_FILE = YES;
-				INFOPLIST_FILE = quickMemoWatchApp/Info.plist;
-				INFOPLIST_KEY_CFBundleDisplayName = quickMemoWatchApp;
-				INFOPLIST_KEY_NSHumanReadableCopyright = "";
-				LD_RUNPATH_SEARCH_PATHS = (
-					"$(inherited)",
-					"@executable_path/Frameworks",
-					"@executable_path/../../Frameworks",
-					"@executable_path/../../../../Frameworks",
-				);
-				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = yokAppDev.quickMemoWatchApp;
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				SDKROOT = watchos;
-				SKIP_INSTALL = YES;
-				SWIFT_EMIT_LOC_STRINGS = YES;
-				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = 4;
-				WATCHOS_DEPLOYMENT_TARGET = 11.5;
-			};
-			name = Release;
-		};
 		BE37DEE62E75A03100343AF8 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				ASSETCATALOG_COMPILER_WIDGET_BACKGROUND_COLOR_NAME = WidgetBackground;
+				CODE_SIGN_ENTITLEMENTS = quickMemoWidget/quickMemoWidget.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = MFQB3583D6;
@@ -769,7 +1070,7 @@
 					"@executable_path/Frameworks",
 					"@executable_path/../../Frameworks",
 				);
-				MARKETING_VERSION = 1.0;
+				MARKETING_VERSION = 1.4;
 				PRODUCT_BUNDLE_IDENTIFIER = yokAppDev.quickMemoApp.quickMemoWidget;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SKIP_INSTALL = YES;
@@ -784,6 +1085,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				ASSETCATALOG_COMPILER_WIDGET_BACKGROUND_COLOR_NAME = WidgetBackground;
+				CODE_SIGN_ENTITLEMENTS = quickMemoWidget/quickMemoWidget.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = MFQB3583D6;
@@ -797,7 +1099,7 @@
 					"@executable_path/Frameworks",
 					"@executable_path/../../Frameworks",
 				);
-				MARKETING_VERSION = 1.0;
+				MARKETING_VERSION = 1.4;
 				PRODUCT_BUNDLE_IDENTIFIER = yokAppDev.quickMemoApp.quickMemoWidget;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SKIP_INSTALL = YES;
@@ -810,6 +1112,33 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
+		BE026FCD2E7F618500ADB5D0 /* Build configuration list for PBXNativeTarget "quickMemoWatch Watch App" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				BE026FCE2E7F618500ADB5D0 /* Debug */,
+				BE026FCF2E7F618500ADB5D0 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		BE026FD12E7F618500ADB5D0 /* Build configuration list for PBXNativeTarget "quickMemoWatch Watch AppTests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				BE026FD22E7F618500ADB5D0 /* Debug */,
+				BE026FD32E7F618500ADB5D0 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		BE026FD42E7F618500ADB5D0 /* Build configuration list for PBXNativeTarget "quickMemoWatch Watch AppUITests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				BE026FD52E7F618500ADB5D0 /* Debug */,
+				BE026FD62E7F618500ADB5D0 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
 		BE2A96F12E52958500736A63 /* Build configuration list for PBXProject "quickMemoApp" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
@@ -846,15 +1175,6 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		BE2A978A2E5325FF00736A63 /* Build configuration list for PBXNativeTarget "quickMemoWatchApp" */ = {
-			isa = XCConfigurationList;
-			buildConfigurations = (
-				BE2A97872E5325FF00736A63 /* Debug */,
-				BE2A97882E5325FF00736A63 /* Release */,
-			);
-			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Release;
-		};
 		BE37DEE52E75A03100343AF8 /* Build configuration list for PBXNativeTarget "quickMemoWidgetExtension" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
@@ -865,6 +1185,25 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCRemoteSwiftPackageReference section */
+		BEE35A9F2F014AAE00A7AA69 /* XCRemoteSwiftPackageReference "swift-package-manager-google-mobile-ads" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/googleads/swift-package-manager-google-mobile-ads";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 12.14.0;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		BEE35AA02F014AAE00A7AA69 /* GoogleMobileAds */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = BEE35A9F2F014AAE00A7AA69 /* XCRemoteSwiftPackageReference "swift-package-manager-google-mobile-ads" */;
+			productName = GoogleMobileAds;
+		};
+/* End XCSwiftPackageProductDependency section */
 	};
 	rootObject = BE2A96EE2E52958500736A63 /* Project object */;
 }

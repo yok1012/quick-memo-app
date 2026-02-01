@@ -1,0 +1,803 @@
+/*
+  Localizable.strings (English)
+  quickMemoApp
+*/
+
+// MARK: - App General
+"app_name" = "Quick Memo";
+"quick_memo" = "Quick Memo";
+
+// MARK: - Tab & Navigation
+"all_memos" = "All";
+"settings" = "Settings";
+"close" = "Close";
+"cancel" = "Cancel";
+"save" = "Save";
+"delete" = "Delete";
+"edit" = "Edit";
+"done" = "Done";
+"ok" = "OK";
+
+// MARK: - Common Buttons
+"add" = "Add";
+"retry" = "Retry";
+
+// MARK: - Main View
+"add_memo" = "Add Memo";
+"no_memos" = "No memos";
+"memos_count" = "%d memos";
+"category_all" = "All";
+"search_placeholder" = "Search memos";
+
+// MARK: - Categories
+"work" = "Work";
+"personal" = "Private";
+"idea" = "Ideas";
+"people" = "People";
+"category_management" = "Category Management";
+"add_category" = "Add Category";
+"category_name" = "Category Name";
+"select_color" = "Select Color";
+"cannot_delete_category" = "Cannot delete this category";
+"category_has_memos" = "This category contains memos";
+"delete_category_confirm" = "Delete this category?";
+
+// MARK: - Category Management
+"category_new" = "New Category";
+"category_edit" = "Edit Category";
+"category_delete_confirm" = "Delete Category";
+"category_basic_info" = "Basic Information";
+"category_icon" = "Icon";
+"category_color" = "Color";
+"category_default_tags" = "Default Tags";
+"category_name_placeholder" = "Category Name";
+"category_exists_error" = "Category with same name already exists";
+"category_limit_error" = "Category limit reached. Watch a reward ad to earn category slots, or upgrade to Pro.";
+"category_pro_required" = "Pro Version Required";
+"category_free_limit_message" = "Free version limited to 5 default categories. Upgrade to Pro to freely add, delete, and rearrange categories.";
+"delete_category_with_memos" = "Delete \"%@\" category?\n\n%d memos will be moved to \"Other\" category.";
+"delete_category_confirm_message" = "Delete \"%@\" category?";
+"comma_separated_tags" = "Enter comma-separated (e.g., meeting, task, deadline)";
+
+// MARK: - Memo Input
+"input_placeholder" = "Enter memo...";
+"save_memo" = "Save Memo";
+"select_category" = "Select Category";
+"add_tags" = "Add Tags";
+"duration_minutes" = "Duration (minutes)";
+"shake_to_open" = "Shake to Open";
+"memo_title_optional" = "Title (Optional)";
+"memo_placeholder" = "Enter memo...";
+"memo_tags_hide" = "Hide Tags";
+"memo_tags_add" = "Add Tags";
+"memo_new_tag" = "Add New Tag";
+"memo_tag_name" = "Tag Name";
+"memo_tag_limit" = "Tag Limit";
+"memo_calendar_duration" = "Calendar Duration";
+"memo_minutes" = "minutes";
+"memo_hours" = "hours";
+"memo_tags_count" = "%d tags";
+
+// FastInputView & EditMemoView Specific
+"discard_draft" = "Discard Draft";
+"ai_extract" = "AI Extract";
+"show_options" = "Show Options";
+"hide_options" = "Hide Options";
+"undo_changes" = "Undo";
+"delete_memo_confirm_title" = "Delete Memo";
+"delete_memo_confirm_message" = "Are you sure you want to delete this memo?";
+
+// MARK: - Settings
+"settings_title" = "Settings";
+"upgrade" = "Upgrade";
+"pro_version" = "Pro Version";
+"pro_version_active" = "Pro Version Active";
+"unlock_all_features" = "Unlock All Features";
+"usage_stats" = "Usage Statistics";
+"apple_watch" = "Apple Watch";
+"notifications" = "Memo Notifications";
+"calendar_sync" = "Calendar Sync";
+"data_export" = "Data Export";
+"widget_settings" = "Widget Settings";
+"watch_settings" = "Watch Settings";
+"language_settings" = "Language Settings";
+"settings_upgrade" = "Upgrade";
+"settings_pro_using" = "Using Pro Version";
+"settings_unlock_all" = "Unlock All Features";
+"settings_unlock_all_features" = "Unlock all features";
+"settings_pro_version" = "Pro Version";
+"settings_pro_active" = "Pro Version Active";
+"settings_quickmemo_pro" = "QuickMemo Pro";
+"settings_usage_stats" = "Usage Statistics";
+"settings_widget" = "Widget Settings";
+"settings_widget_category" = "Widget Categories";
+"settings_widget_categories" = "Widget Categories";
+"settings_widget_footer_pro" = "Choose any categories to show on widgets.";
+"settings_widget_footer_free" = "Free plan shows only the current category on widgets.";
+"settings_watch" = "Apple Watch Settings";
+"settings_watch_footer_pro" = "Select up to four categories to sync with Apple Watch.";
+"settings_watch_footer_free" = "Free plan syncs default categories only.";
+"settings_apple_watch" = "Apple Watch Settings";
+"settings_memo_notifications" = "Memo Notifications";
+"settings_enable_notifications" = "Enable notifications";
+"settings_notification_interval" = "Notification Interval";
+"settings_1_minute" = "1 minute";
+"settings_3_minutes" = "3 minutes";
+"settings_15_minutes" = "15 minutes";
+"settings_30_minutes" = "30 minutes";
+"settings_1_hour" = "1 hour";
+"settings_1_5_hours" = "1.5 hours";
+"settings_2_hours" = "2 hours";
+"settings_3_hours" = "3 hours";
+"settings_4_hours" = "4 hours";
+"settings_quiet_mode" = "Quiet Mode";
+"settings_start_time" = "Start Time";
+"settings_end_time" = "End Time";
+"settings_send_test_notification" = "Send Test Notification";
+"settings_notifications_footer" = "Use quiet hours to pause reminders during specific times.";
+"settings_calendar_integration" = "Calendar Integration";
+"settings_last_error" = "Most Recent Error";
+"settings_calendar_footer" = "When enabled, memos are saved as calendar events automatically.";
+"settings_connection_test" = "Test Connection";
+"settings_connection_test_result" = "Connection Test Result";
+"settings_connection_test_success" = "Calendar connection succeeded.";
+"settings_connection_problem" = "There is a connection issue";
+"settings_connection_test_failed" = "Connection test failed.";
+"settings_reconnect" = "Reconnect";
+"settings_reconnect_success" = "Reconnected successfully.";
+"settings_reconnect_failed" = "Failed to reconnect.";
+"settings_allow_calendar_access" = "Allow Calendar Access";
+"settings_open_system_settings" = "Open System Settings";
+"settings_calendar_access" = "Calendar Access";
+"settings_permitted" = "Allowed";
+"settings_not_permitted" = "Not Allowed";
+"settings_permission_level" = "Access Level";
+"settings_authorized" = "Authorized";
+"settings_full_access" = "Full Access";
+"settings_write_only" = "Write Only";
+"settings_not_determined" = "Not Determined";
+"settings_restricted" = "Restricted";
+"settings_denied" = "Denied";
+"settings_unknown" = "Unknown";
+"settings_quick_memo_calendar" = "Quick Memo Calendar";
+"settings_configured" = "Configured";
+"settings_not_configured" = "Not Configured";
+"settings_ios_version" = "iOS Version";
+"settings_memo_count" = "Memo Count";
+"settings_category_count" = "Category Count";
+"settings_remaining" = "Remaining";
+"settings_items" = "items";
+"settings_unlimited" = "Unlimited";
+"reward_slots" = "Reward slots";
+"settings_pro_features" = "Pro-only Features";
+"settings_pro_features_list" = "Unlock unlimited memos, categories, custom tags, and iCloud sync.";
+"settings_pro_only" = "Pro Only";
+"settings_account" = "Account";
+"settings_sign_in_apple" = "Sign in with Apple";
+"settings_sign_in_apple_desc" = "Access subscription benefits on other devices (optional)";
+"settings_signed_in" = "Signed In";
+"settings_account_sync_enabled" = "Account sync enabled";
+"settings_sign_out" = "Sign Out";
+"settings_account_footer" = "Sign in is optional. Use it to sync purchase status across devices.";
+"settings_restore_footer" = "Restore purchases made with the same Apple ID.";
+"settings_restore_purchases" = "Restore Purchases";
+"settings_force_sync" = "Force Sync";
+"settings_sync_mode" = "Sync Mode";
+"settings_sync_settings" = "Sync Settings";
+"settings_normal" = "Normal";
+"settings_force_sync_now" = "Force Sync Now";
+"settings_force_sync_message" = "Run a forced sync if data looks out of sync. Continue?";
+"settings_force_sync_warning" = "Force sync re-downloads data from iCloud. Use only when necessary.";
+"settings_normal_sync_info" = "Normal sync runs automatically in the background.";
+"settings_start_sync" = "Start Sync";
+"settings_diagnostic" = "Diagnostic Information";
+"settings_diagnostics" = "Diagnostic Information";
+"settings_data_management" = "Data Management";
+"settings_export_memos" = "Export Memos";
+"import_memos" = "Import Memos";
+
+// MARK: - Clipboard Copy
+"copy_text" = "Copy Text";
+"copy_markdown" = "Copy as Markdown";
+"copy_with_metadata" = "Copy with Details";
+"share" = "Share";
+"copied" = "Copied";
+"category" = "Category";
+"duration" = "Duration";
+"created_at" = "Created";
+
+"settings_export_format" = "Export Format";
+"settings_export_select_format" = "Choose a file format";
+"settings_json_format" = "JSON Format";
+"settings_csv_format" = "CSV Format";
+"settings_markdown_format" = "Markdown Format";
+"settings_text_format" = "Text Format";
+"settings_export_footer" = "Exported files can be shared or backed up.";
+"settings_export_error" = "Export Error";
+"settings_app_info" = "App Information";
+"settings_version" = "Version";
+"settings_build" = "Build";
+"settings_connected" = "Connected";
+"settings_disconnected" = "Disconnected";
+"settings_checking" = "Checking...";
+"settings_error" = "Error";
+"settings_status_unknown" = "Status Unknown";
+
+"calendar_event_title_format" = "[%@] %@";
+"calendar_event_default_title" = "Memo";
+"calendar_note_content" = "Content";
+"calendar_note_category" = "Category";
+"calendar_note_tags" = "Tags";
+"calendar_note_tags_none" = "None";
+"calendar_note_created" = "Created";
+"calendar_note_updated" = "Updated";
+
+// MARK: - Notifications
+"enable_notifications" = "Enable Notifications";
+"notification_interval" = "Notification Interval";
+"interval_1min" = "1 minute";
+"interval_3min" = "3 minutes";
+"interval_15min" = "15 minutes";
+"interval_30min" = "30 minutes";
+"interval_1hour" = "1 hour";
+"interval_90min" = "1.5 hours";
+"interval_2hours" = "2 hours";
+"interval_3hours" = "3 hours";
+"interval_4hours" = "4 hours";
+"quiet_mode" = "Quiet Mode";
+"quiet_mode_start" = "Start Time";
+"quiet_mode_end" = "End Time";
+"send_test_notification" = "Send Test Notification";
+"notification_title" = "Time to Take Notes";
+"notification_body" = "Would you like to record your thoughts or ideas?";
+"notification_permission_desc" = "Sends reminders to encourage regular note-taking. Quiet mode stops notifications during specified hours.";
+"notification_enable" = "Enable Memo Notifications";
+"notification_test" = "Send Test Notification";
+"notification_quiet_mode" = "Quiet Mode";
+"notification_start_time" = "Start Time";
+"notification_end_time" = "End Time";
+
+// MARK: - Calendar
+"calendar_permission_title" = "Calendar Access";
+"calendar_permission_message" = "Access needed to save memos to calendar";
+"grant_permission" = "Grant Permission";
+"calendar_sync_enabled" = "Calendar Sync Enabled";
+"calendar_sync_disabled" = "Calendar Sync Disabled";
+"test_connection" = "Test Connection";
+"calendar_integration" = "Calendar Integration";
+"calendar_auto_record" = "Auto Record Memos to Calendar";
+"calendar_timeline" = "Timeline Display";
+"calendar_dedicated" = "Dedicated Calendar";
+"calendar_allow_access" = "Allow Calendar Access";
+"calendar_connected" = "Connected";
+"calendar_disconnected" = "Disconnected";
+"calendar_test_connection" = "Connection Test";
+
+// MARK: - Pro Features
+"pro_features" = "Pro Features";
+"unlimited_memos" = "Unlimited Memos";
+"unlimited_memos_desc" = "Create more than 100 memos";
+"unlimited_categories" = "Unlimited Categories";
+"unlimited_categories_desc" = "Create categories freely";
+"unlimited_tags" = "Unlimited Tags";
+"unlimited_tags_desc" = "More than 15 tags per memo";
+"icloud_sync" = "iCloud Sync";
+"icloud_sync_desc" = "Auto-sync across all devices";
+"widget_customize" = "Widget Customization";
+"widget_customize_desc" = "Customize widget display";
+"watch_pro" = "Apple Watch Pro";
+"watch_pro_desc" = "Category customization";
+"data_export_desc" = "Backup in CSV/JSON format";
+
+// MARK: - Purchase
+"purchase" = "Purchase";
+"purchase_unlock_description" = "Unlock all features to get the most out of QuickMemo";
+"purchase_pro_features" = "Pro Features";
+"purchase_unlimited_memos" = "Unlimited Memos";
+"purchase_unlimited_memos_desc" = "Create more than 100 memos";
+"purchase_unlimited_categories" = "Unlimited Categories";
+"purchase_unlimited_categories_desc" = "Add and edit categories freely";
+"purchase_unlimited_tags" = "Unlimited Tags";
+"purchase_unlimited_tags_desc" = "Add more than 15 tags per memo";
+"purchase_icloud_sync" = "iCloud Sync";
+"purchase_icloud_sync_desc" = "Auto-sync across all devices";
+"purchase_widget_customize" = "Widget Customization";
+"purchase_widget_customize_desc" = "Customize widget appearance";
+"purchase_watch_pro" = "Apple Watch Pro";
+"purchase_watch_pro_desc" = "Customize categories";
+"purchase_data_export" = "Data Export";
+"purchase_data_export_desc" = "Backup in CSV/JSON format";
+"purchase_buy" = "Buy";
+"purchase_one_time" = "One-time purchase for lifetime access";
+"purchase_no_products" = "Unable to fetch product information";
+"purchase_network_error" = "Please check your network connection";
+"purchase_retry" = "Retry";
+"purchase_restore" = "Restore Purchases";
+"purchase_restore_description" = "Restore previous purchases here";
+"purchase_completed" = "Purchased";
+"purchase_status" = "Purchase Status";
+"purchase_success_message" = "Purchase completed! All features are now available.";
+"purchase_cancelled" = "Purchase cancelled";
+"restore_purchases" = "Restore Purchases";
+"purchased" = "Purchased";
+"purchase_failed" = "Purchase Failed";
+"restore_failed" = "Restore Failed";
+"one_time_purchase" = "One-time purchase for permanent access to all features";
+"purchase_other_devices_title" = "Using on Other Devices";
+"purchase_same_apple_id_title" = "Restore with Same Apple ID";
+"purchase_same_apple_id_desc" = "On other devices, restore purchases with the same Apple ID";
+"purchase_sign_in_apple_title" = "Sign in with Apple (Optional)";
+"purchase_sign_in_apple_desc" = "Access across devices with different Apple IDs (Coming soon)";
+"purchase_coming_soon" = "Coming Soon";
+"purchase_restore_subtitle" = "Restore Previous Purchases";
+"purchase_restore_notice" = "Restoration requires signing in with the same Apple ID";
+"purchase_monthly_subscription" = "Monthly Subscription";
+"purchase_onetime" = "One-time Purchase";
+"purchase_period_day" = "day";
+"purchase_period_week" = "week";
+"purchase_period_month" = "month";
+"purchase_period_year" = "year";
+
+// MARK: - Limits
+"memo_limit_reached" = "Memo Limit Reached";
+"category_limit_reached" = "Category Limit Reached";
+"upgrade_to_pro" = "Upgrade to Pro";
+"remaining_memos" = "%d Remaining";
+"remaining_categories" = "%d Remaining";
+"limit_reached" = "Limit Reached";
+"memo_limit_message" = "Free version limited to 100 memos. Upgrade to Pro for unlimited memos.";
+"tag_limit_message" = "Free version limited to 15 tags per memo. Pro version allows unlimited tags.";
+
+// MARK: - Usage Stats
+"usage_memo_count" = "Memo Count";
+"usage_category_count" = "Category Count";
+"usage_remaining" = "%d Remaining";
+"usage_unlimited" = "Unlimited";
+
+// MARK: - Pro Features
+"pro_required" = "Pro Only";
+"pro_purchase" = "Purchase Pro";
+"pro_view" = "View Pro";
+
+// MARK: - Export
+"export_format" = "Export Format";
+"export_select_format" = "Choose a file format";
+"export_json" = "JSON Format";
+"export_csv" = "CSV Format";
+"export_data" = "Export Data";
+"import_data" = "Import Data";
+"export_memos" = "Export Memos";
+"export_error" = "Export Error";
+
+// MARK: - Languages
+"language_japanese" = "日本語";
+"language_english" = "English";
+"language_chinese" = "中文";
+"select_language" = "Select Language";
+"language_change_restart" = "Language change will take effect on next launch";
+"follow_device" = "Follow Device";
+
+// MARK: - Time Intervals
+"time_1min" = "1 minute";
+"time_3min" = "3 minutes";
+"time_15min" = "15 minutes";
+"time_30min" = "30 minutes";
+"time_1hour" = "1 hour";
+"time_90min" = "1.5 hours";
+"time_2hours" = "2 hours";
+"time_3hours" = "3 hours";
+"time_4hours" = "4 hours";
+
+// MARK: - Misc
+"items_count" = "items";
+"version" = "Version";
+"build" = "Build";
+"checking" = "Checking...";
+"error_prefix" = "Error:";
+"status_unknown" = "Unknown Status";
+"authorized" = "Authorized";
+"not_authorized" = "Not Authorized";
+"setup_later" = "Set Up Later";
+"setting_up" = "Setting up...";
+"system_settings" = "Open System Settings";
+
+// MARK: - Additional Keys
+"add_tag_to_category" = "Add new tag to %@ category";
+"tag_management" = "Tag Management";
+"tag_delete" = "Delete Tag";
+"tag_delete_confirm" = "Delete \"%@\"?";
+"no_tags" = "No tags";
+"add_tag" = "Add Tag";
+"tags" = "Tags";
+"search_tags" = "Search Tags";
+"no_tags_yet" = "No tags yet";
+"tags_will_appear_here" = "Add #tags to your memos and they will appear here";
+"delete_tag_title" = "Delete Tag";
+"delete_tag_message" = "Delete tag \"%@\"?";
+"add_tag_to_category" = "Add tag to this category";
+"tag_name" = "Tag Name";
+"tag_add_hint" = "Tags with # in memos will be automatically recognized";
+"shopping" = "Shopping";
+"schedule" = "Schedule";
+"memory" = "Memories";
+"health" = "Health";
+"business" = "Business";
+"creation" = "Creation";
+"improvement" = "Improvements";
+"memo_tag" = "Memo";
+"misc" = "Misc";
+"temp" = "Temporary";
+"pending" = "Pending";
+"hold" = "On Hold";
+"meeting" = "Meeting";
+"task" = "Task";
+"deadline" = "Deadline";
+"idea_tag" = "Idea";
+"contacts" = "Contacts";
+"conversation" = "Conversation";
+"appointment" = "Appointment";
+"relationship" = "Relationship";
+"other" = "Other";
+"voice_input" = "Voice Input";
+"recording" = "Recording...";
+"scribble_input" = "Scribble";
+"scribble_placeholder" = "Write here";
+"preview" = "Preview";
+
+// MARK: - Account Management
+"account_delete" = "Delete Account";
+"account_delete_confirm_title" = "Are you sure you want to delete your account?";
+"account_delete_confirm_message" = "Your account and related data will be deleted and cannot be recovered.";
+"account_delete_confirm_button" = "Confirm Deletion";
+
+// MARK: - Subscription Management
+"subscription_manage" = "Manage Subscriptions";
+
+// MARK: - Legal
+"legal_info" = "Legal Information";
+"privacy_policy" = "Privacy Policy";
+"terms_of_use" = "Terms of Use (EULA)";
+
+// MARK: - Subscription Details
+"subscription_info_title" = "Subscription Information";
+"subscription_info_auto_renew" = "• Subscriptions automatically renew unless canceled at least 24 hours before the end of the current period.";
+"subscription_info_cancel" = "• You can cancel anytime from Settings > Apple ID > Subscriptions.";
+"subscription_info_manage" = "• Payment will be charged to your Apple ID account at confirmation of purchase.";
+"subscription_monthly_details" = "QuickMemo Pro Monthly Subscription";
+"subscription_price_format" = "Price: %@/month";
+"subscription_auto_renew_monthly" = "Automatically renews every month";
+"subscription_notice_detailed" = "Your account will be charged for renewal within 24 hours prior to the end of the current period. Manage your subscription and auto-renewal settings in Account Settings.";
+
+// MARK: - Additional UI Strings
+"edit_memo" = "Edit Memo";
+"update" = "Update";
+"new_category" = "New";
+"select_category_title" = "Select Category";
+"select_category_subtitle" = "Choose a memo type";
+"category_not_found" = "Category not found";
+"new_memo" = "New Memo";
+"category_settings" = "Category Settings";
+"debug_settings" = "Debug Settings";
+"max_categories_reached" = "Maximum reached";
+"widget_display_categories" = "Widget Display Categories";
+"widget_free_version_notice" = "Free version shows only the currently selected category";
+"widget_updated" = "Widget display categories updated";
+"widget_can_select_freely" = "Choose any categories freely";
+"calendar_permission_description" = "Allow access in Settings app to enable automatic event creation.";
+"calendar_auto_save_description" = "Created memos are automatically saved as calendar events and can be viewed chronologically";
+"category_filter" = "Category";
+"tag_filter" = "Tags";
+"date_filter" = "Date";
+"clear_filters" = "Clear Filters";
+
+// MARK: - Smart Filter
+"filter_all" = "All";
+"filter_today" = "Today";
+"filter_this_week" = "This Week";
+"filter_this_month" = "This Month";
+"filter_last_7_days" = "Last 7 Days";
+"filter_last_30_days" = "Last 30 Days";
+"filter_custom" = "Custom";
+"sort_by" = "Sort by:";
+"sort_newest" = "Newest";
+"sort_oldest" = "Oldest";
+"sort_alphabetical" = "A-Z";
+"search" = "Search";
+"clear" = "Clear";
+
+"no_search_results" = "No search results found";
+"change_search_conditions" = "Try changing your search criteria";
+"data_sync_usage" = "Used for data synchronization";
+"export_archive_history" = "Export Archive History";
+"export_all_data" = "Export All Data";
+"delete_memo_title" = "Delete Memo";
+"memo_duration" = "Calendar Duration";
+"no_backup" = "No backup";
+"backup_now" = "Backup Now";
+"data_diagnostic_restore" = "Data Diagnostics & Restore";
+"check_storage_restore" = "Check storage locations and attempt restoration";
+"restore_old_version_data" = "Restore Data from Old Version";
+"if_data_lost_after_update" = "If data disappeared after update";
+"restore_after_update_description" = "If data disappeared after an update, you can attempt restoration from here.";
+"reset_purchase_status" = "Reset Purchase Status";
+"output_debug_info" = "Output Debug Info";
+"debug_features_description" = "Debug features for development. Not visible in production.";
+
+// MARK: - Widget
+"widget_open_app" = "Open App";
+"widget_tap_to_add_memo" = "Tap to add memo";
+"widget_description" = "Quickly add memos";
+
+// MARK: - Reward Ads
+"reward_ad_title" = "Earn Memo Slots";
+"reward_ad_headline" = "Watch a video to earn memo slots!";
+"reward_ad_description" = "Watch a short video to earn additional memo slots. Create memos beyond the 100 memo limit of the free version.";
+"reward_feature_watch" = "Watch Video";
+"reward_feature_watch_desc" = "Earn %d memo slots per video";
+"reward_feature_duration" = "Duration";
+"reward_feature_duration_desc" = "Earned slots are valid for %d days";
+"reward_feature_max" = "Maximum Slots";
+"reward_feature_max_desc" = "Accumulate up to %d memo slots";
+"reward_current_status" = "Current Status";
+"reward_remaining_memos" = "Remaining Slots";
+"reward_daily_remaining" = "Daily Views Left";
+"reward_expires_on" = "Expires: %@";
+"reward_watch_ad_button" = "Watch Video for %d Slots";
+"reward_loading_ad" = "Loading...";
+"reward_ad_not_ready" = "Preparing...";
+"reward_success_title" = "Success!";
+"reward_success_message" = "You earned %d memo slots!";
+"reward_error_title" = "Error";
+"reward_error_unknown" = "An unknown error occurred";
+"reward_max_reached" = "Maximum slots reached";
+"reward_daily_limit_reached" = "Daily view limit reached";
+"reward_ad_loading" = "Loading ad...";
+"reward_pro_suggestion" = "Go Pro for unlimited memos without ads";
+"reward_upgrade_to_pro" = "Upgrade to Pro";
+"reward_compact_title" = "Earn Memo Slots";
+"reward_compact_subtitle" = "Watch video for %d slots";
+"reward_ad_section" = "Reward Ads";
+"reward_ad_footer" = "Watch video ads to create memos beyond the free version limit.";
+"reward_select_type" = "Select reward type";
+"reward_type" = "Reward Type";
+"reward_type_memo" = "Memo Slots";
+"reward_type_category" = "Category Slots";
+"reward_remaining_categories" = "Remaining Categories";
+"reward_category_ad_description" = "Watch a short video to earn additional category slots. Create categories beyond the 5 category limit of the free version.";
+"reward_category_feature_watch" = "Watch Video";
+"reward_category_feature_watch_desc" = "Earn %d category slot per video";
+"reward_watch_ad_button_category" = "Watch Video for %d Slot";
+"reward_category_success_title" = "Success!";
+"reward_category_success_message" = "You earned %d category slot!";
+// MARK: - AI Features
+"ai_settings" = "AI Settings";
+"ai_features" = "AI Features";
+"ai_feature_settings" = "AI Feature Settings";
+
+// Settings View Specific
+"settings_icloud_account" = "iCloud Account";
+"settings_ai_features" = "AI Features";
+"settings_ai_features_settings" = "AI Feature Settings";
+"settings_ai_features_desc" = "Tag extraction, memo arrange, summary";
+"settings_ai_features_footer" = "Set up API keys to use AI features. You pay providers directly.";
+"settings_icloud_backup" = "iCloud Backup";
+"settings_last_backup" = "Last backup: %@";
+"settings_restore_from_icloud" = "Restore from iCloud";
+"settings_icloud_sync" = "iCloud Sync";
+"settings_icloud_sync_footer" = "Pro version automatically backs up data to iCloud. Auto-saves when closing the app.";
+"settings_backup_failed" = "Backup failed.\n\nPlease verify you're signed in to iCloud in the Settings app.";
+
+// MARK: - AI Settings
+"ai_api_key_management" = "API Key Management";
+"ai_api_key_footer" = "API keys are securely stored on your device. You pay providers directly.";
+"ai_gemini_api_key" = "Gemini API Key";
+"ai_claude_api_key" = "Claude API Key";
+"ai_chatgpt_api_key" = "ChatGPT API Key";
+"ai_api_key_input" = "Enter API Key";
+"ai_api_key_save_secure" = "API keys are securely stored in Keychain. Do not share with others.";
+"ai_get_gemini_key" = "Get Gemini API Key";
+"ai_get_claude_key" = "Get Claude API Key";
+"ai_used_for_tag_extraction" = "Used for tag extraction";
+"ai_used_for_arrange_summary" = "Used for memo arrange & summary";
+"ai_used_for_all_features" = "Available for all features";
+
+// MARK: - AI Model Selection
+"ai_model_by_feature" = "Model Settings by Feature";
+"ai_provider" = "AI Provider";
+"ai_model_selection" = "Model Selection";
+"ai_model_count" = "Models: %d";
+"ai_api_key_not_set" = "%s API key not set";
+"ai_input_cost" = "Input: ";
+"ai_output_cost" = " / Output: ";
+"ai_per_1m_tokens" = " (per 1M tokens)";
+
+// MARK: - AI Usage Stats
+"ai_usage_stats" = "Usage Statistics";
+"ai_monthly_requests" = "Requests This Month";
+"ai_remaining_requests" = "Remaining Requests";
+"ai_monthly_limit" = "Monthly Limit";
+"ai_total_tokens" = "Total Tokens";
+"ai_estimated_cost" = "Estimated Cost";
+"ai_last_reset_date" = "Last Reset";
+"ai_usage_by_type" = "Usage by Feature";
+"ai_times_count" = "%d times";
+"ai_usage_history_detail" = "Detailed Usage History";
+"ai_usage_history_footer" = "View and export all request logs";
+"ai_reset_usage_stats" = "Reset Usage Statistics";
+"ai_monthly_usage" = "This month: %d/%d";
+"ai_remaining" = "Remaining: %d";
+
+// MARK: - Tag Extraction
+"ai_tag_extraction" = "Tag Extraction";
+"ai_extracting_tags" = "AI is extracting tags...";
+"ai_extract_tags_from_memo" = "Auto-extract tags from memo";
+"ai_extract_tags_description" = "Gemini AI analyzes your memo and suggests relevant tags";
+"ai_extract_tags_button" = "Extract Tags";
+"ai_extracted_tags_instruction" = "Tags extracted from your memo. Tap to add the ones you want.";
+"ai_suggested_tags" = "Suggested Tags";
+"ai_add_selected_tags" = "Add Selected Tags (%d)";
+"ai_memo_too_short" = "Memo is too short. More detailed content will provide better tag suggestions.";
+
+// MARK: - Memo Arrange
+"ai_memo_arrange" = "Memo Arrange";
+"ai_arranging_memo" = "Processing...";
+"ai_original_memo" = "Original Memo";
+"ai_select_preset" = "Presets";
+"ai_preset_footer" = "Choose from commonly used editing patterns";
+"ai_arrange_memo" = "Arrange Memo";
+"ai_arrange_result" = "Arranged Result";
+"ai_arranged_memo" = "After Arranging";
+"ai_compare_original" = "Compare with Original";
+"ai_hide_original" = "Hide Original";
+"ai_apply_memo" = "Apply This Memo";
+"ai_discard" = "Discard";
+
+// Arrange Presets
+"ai_preset_summarize" = "Summarize";
+"ai_preset_summarize_desc" = "Condense to 3 lines or less";
+"ai_preset_business" = "Business Format";
+"ai_preset_business_desc" = "Convert to formal text";
+"ai_preset_casual" = "Make Casual";
+"ai_preset_casual_desc" = "Make it friendly";
+"ai_preset_expand" = "Expand Details";
+"ai_preset_expand_desc" = "Elaborate more specifically";
+"ai_preset_bullets" = "Bullet Points";
+"ai_preset_bullets_desc" = "Organize for readability";
+"ai_preset_translate_en" = "Translate to English";
+"ai_preset_translate_en_desc" = "Translate to English";
+"ai_preset_translate_ja" = "Translate to Japanese";
+"ai_preset_translate_ja_desc" = "Translate to Japanese";
+
+// Custom Prompts
+"ai_custom_prompts" = "Custom Prompts";
+"ai_custom_prompt_footer" = "Save up to 3. Swipe left to edit/delete";
+"ai_add_custom_prompt" = "Add Custom Prompt";
+"ai_custom_prompt_count" = "%d/3";
+"ai_prompt_hints" = "Prompt Creation Tips";
+"ai_temporary_instruction" = "Temporary Instructions (not saved)";
+"ai_temporary_instruction_footer" = "Enter one-time instructions. Save to custom prompts if you use often";
+
+// Custom Prompt Editor
+"ai_prompt_name" = "Name";
+"ai_prompt_name_placeholder" = "Prompt name (e.g., Meeting Minutes Format)";
+"ai_prompt_name_footer" = "Give it a clear, short name";
+"ai_prompt_icon" = "Icon";
+"ai_prompt_content" = "Prompt Content";
+"ai_prompt_content_footer_hint" = "💡 Tip:";
+"ai_prompt_content_footer_1" = "• Write clear instructions like \"please do...\"";
+"ai_prompt_content_footer_2" = "• Specifying output format gives stable results";
+"ai_prompt_content_footer_3" = "• Example: \"Format as meeting minutes with: Date, Attendees, Topics, Decisions, Next Actions\"";
+"ai_add_prompt" = "Add Prompt";
+"ai_edit_prompt" = "Edit Prompt";
+
+// Prompt Hints
+"ai_hint_basic_principle" = "Basic Principles";
+"ai_hint_basic_desc" = "Effective prompts include these elements:";
+"ai_hint_purpose" = "Purpose: Be clear about what you want";
+"ai_hint_format" = "Format: Specify output format";
+"ai_hint_constraints" = "Constraints: Word count or conditions";
+"ai_hint_tone" = "Tone: Style and nuance";
+"ai_hint_example1" = "Example 1: Meeting Minutes";
+"ai_hint_example2" = "Example 2: Social Media Post";
+"ai_hint_example3" = "Example 3: Code Review Request";
+"ai_hint_notes" = "Notes";
+"ai_hint_note1" = "• Avoid vague instructions (\"make it nice\" → NG)";
+"ai_hint_note2" = "• Specify concrete conditions";
+"ai_hint_note3" = "• Providing examples increases accuracy";
+
+// Claude Code Export
+"ai_claude_code_export" = "Export for Claude Code";
+"ai_claude_code_export_desc" = "Copy as prompt for AI assistant";
+"ai_external_ai_integration" = "External AI Integration";
+"ai_claude_code_export_title" = "Claude Code Export";
+"ai_export_template" = "Template";
+"ai_export_template_footer" = "Select template for your use case";
+"ai_additional_context" = "Additional Context (Optional)";
+"ai_additional_context_footer" = "Add file paths, related info, etc.";
+"ai_generated_prompt" = "Generated Prompt";
+"ai_copy_to_clipboard" = "Copy to Clipboard";
+"ai_copied" = "Copied!";
+
+// Export Templates
+"ai_template_general" = "General";
+"ai_template_general_desc" = "General task request";
+"ai_template_code_review" = "Code Review";
+"ai_template_code_review_desc" = "Code review request";
+"ai_template_bug_fix" = "Bug Fix";
+"ai_template_bug_fix_desc" = "Bug investigation & fix request";
+"ai_template_feature" = "Feature Implementation";
+"ai_template_feature_desc" = "New feature implementation request";
+"ai_template_refactor" = "Refactoring";
+"ai_template_refactor_desc" = "Code improvement request";
+
+// MARK: - Category Summary
+"ai_category_summary" = "Category Summary";
+"ai_analyzing_category" = "AI is analyzing category...";
+"ai_analyzing_memos_count" = "Analyzing %d memos";
+"ai_generate_summary" = "Generate Summary";
+"ai_category_analysis_desc" = "Analyze %d memos to extract summary and key points";
+"ai_memo_count_warning" = "Less than 3 memos. Add more for better analysis accuracy.";
+"ai_overall_summary" = "Overall Summary";
+"ai_key_points" = "Key Points";
+"ai_trends" = "Trends";
+"ai_statistics" = "Statistics";
+"ai_analyzed_memos" = "Analyzed Memos";
+"ai_key_points_count" = "Key Points";
+"ai_trends_count" = "Trends";
+"ai_memos_count_items" = "%d memos";
+"ai_items_count" = "%d items";
+
+// MARK: - AI Usage History
+"ai_usage_history" = "AI Usage History";
+"ai_all_period_stats" = "All-Time Statistics";
+"ai_total_requests" = "Total Requests";
+"ai_total_cost" = "Total Cost";
+"ai_current_month_stats" = "This Month's Statistics";
+"ai_request_count" = "Requests";
+"ai_token_count" = "Tokens";
+"ai_cost" = "Cost";
+"ai_stats_by_feature" = "Statistics by Feature";
+"ai_stats_by_provider" = "Statistics by Provider";
+"ai_recent_history" = "Recent History (Last 50)";
+"ai_export_csv" = "Export as CSV";
+"ai_clear_history" = "Clear History";
+"ai_error_message" = "Error: %@";
+"ai_tokens_display" = "Tokens: %@";
+"ai_in_out_tokens" = "in: %d / out: %d";
+
+// MARK: - AI Errors
+"ai_error" = "Error";
+"ai_api_key_saved" = "%@ API key saved";
+"ai_api_key_deleted" = "%@ API key deleted";
+"ai_stats_reset" = "Usage statistics reset";
+"ai_help" = "Help";
+
+// MARK: - Import View
+"import_error" = "Import Error";
+"import_success" = "Import Complete";
+"import_success_message" = "Imported %d memos";
+"import_supported_formats" = "Supported Formats";
+"import_format_text_desc" = "Plain text files";
+"import_format_markdown_desc" = "Markdown format files";
+"import_format_csv_desc" = "QuickMemo export format";
+"import_format_json_desc" = "QuickMemo export format";
+"import_encoding_detection" = "Auto-detect encoding: UTF-8, Shift-JIS, EUC-JP, etc.";
+"import_select_file" = "Select File";
+"import_preview_count" = "Preview (%d items)";
+"import_more_items" = "And %d more...";
+"import_destination_category" = "Destination Category";
+"import_category_note" = "※ Applied to memos without category information";
+"import_importing" = "Importing...";
+"import_count" = "Import %d items";
+"import_limit_exceeded" = "Memo limit (%d items) reached. Please upgrade to Pro version.";
+"format_text" = "Text";
+"format_markdown" = "Markdown";
+"format_csv" = "CSV";
+"format_json" = "JSON";
+
+// MARK: - Widget Settings View
+"widget_max_selection" = "Up to 8 categories (supports large widgets)";
+"widget_pro_required_message" = "Upgrade to Pro version to customize widget categories";
+"settings_saved" = "Settings Saved";
+"pro_exclusive_feature" = "Pro Exclusive Feature";
+

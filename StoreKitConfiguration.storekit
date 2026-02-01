@@ -1,0 +1,90 @@
+{
+  "identifier" : "8F1C2E3D",
+  "nonRenewingSubscriptions" : [
+
+  ],
+  "products" : [
+    {
+      "displayPrice" : "1200",
+      "familyShareable" : false,
+      "internalID" : "6670858318",
+      "localizations" : [
+        {
+          "description" : "すべての機能をアンロック",
+          "displayName" : "QuickMemo Pro",
+          "locale" : "ja"
+        },
+        {
+          "description" : "Unlock all features",
+          "displayName" : "QuickMemo Pro",
+          "locale" : "en_US"
+        }
+      ],
+      "productID" : "yokAppDev.quickMemoApp.pro",
+      "referenceName" : "QuickMemo Pro",
+      "type" : "NonConsumable"
+    }
+  ],
+  "settings" : {
+    "_applicationInternalID" : "yokAppDev.quickMemoApp",
+    "_developerTeamID" : "AUTO",
+    "_failTransactionsEnabled" : false,
+    "_lastSynchronizedDate" : 745261234.56789,
+    "_locale" : "ja",
+    "_storefront" : "JPN",
+    "_storeKitErrors" : [
+      {
+        "current" : null,
+        "enabled" : false,
+        "name" : "Load Products"
+      },
+      {
+        "current" : null,
+        "enabled" : false,
+        "name" : "Purchase"
+      },
+      {
+        "current" : null,
+        "enabled" : false,
+        "name" : "Verification"
+      },
+      {
+        "current" : null,
+        "enabled" : false,
+        "name" : "App Store Sync"
+      },
+      {
+        "current" : null,
+        "enabled" : false,
+        "name" : "Subscription Status"
+      },
+      {
+        "current" : null,
+        "enabled" : false,
+        "name" : "App Transaction"
+      },
+      {
+        "current" : null,
+        "enabled" : false,
+        "name" : "Manage Subscriptions Sheet"
+      },
+      {
+        "current" : null,
+        "enabled" : false,
+        "name" : "Refund Request Sheet"
+      },
+      {
+        "current" : null,
+        "enabled" : false,
+        "name" : "Offer Code Redeem Sheet"
+      }
+    ]
+  },
+  "subscriptionGroups" : [
+
+  ],
+  "version" : {
+    "major" : 3,
+    "minor" : 0
+  }
+}

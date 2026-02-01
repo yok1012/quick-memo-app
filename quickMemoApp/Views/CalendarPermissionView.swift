@@ -3,8 +3,8 @@ import SwiftUI
 struct CalendarPermissionView: View {
     @StateObject private var calendarService = CalendarService.shared
     @Environment(\.dismiss) private var dismiss
-    @State private var showingSettings = false
     @State private var isRequestingPermission = false
+    @State private var showDeniedAlert = false
     
     var body: some View {
         NavigationStack {
@@ -23,6 +23,16 @@ struct CalendarPermissionView: View {
             }
             .padding(.horizontal, 24)
             .toolbar(.hidden, for: .navigationBar)
+            .alert("カレンダーにアクセスできません", isPresented: $showDeniedAlert) {
+                Button("設定を開く") {
+                    if let url = URL(string: UIApplication.openSettingsURLString) {
+                        UIApplication.shared.open(url)
+                    }
+                }
+                Button("閉じる", role: .cancel) { }
+            } message: {
+                Text("calendar_permission_description".localized)
+            }
         }
     }
     
@@ -32,18 +42,18 @@ struct CalendarPermissionView: View {
                 .font(.system(size: 64, weight: .thin))
                 .foregroundColor(.blue)
             
-            Text("カレンダー連携")
+            Text("calendar_integration".localized)
                 .font(.system(size: 28, weight: .bold))
         }
     }
     
     private var titleSection: some View {
         VStack(spacing: 12) {
-            Text("メモを自動でカレンダーに記録")
+            Text("calendar_auto_record".localized)
                 .font(.system(size: 20, weight: .semibold))
                 .multilineTextAlignment(.center)
             
-            Text("作成したメモが自動的にカレンダーイベントとして保存され、時系列で確認できます")
+            Text("calendar_auto_save_description".localized)
                 .font(.system(size: 16))
                 .foregroundColor(.secondary)
                 .multilineTextAlignment(.center)
@@ -55,13 +65,13 @@ struct CalendarPermissionView: View {
         VStack(spacing: 16) {
             BenefitRow(
                 icon: "clock",
-                title: "タイムライン表示",
+                title: "calendar_timeline".localized,
                 description: "メモを時系列で確認"
             )
             
             BenefitRow(
                 icon: "calendar.circle",
-                title: "専用カレンダー",
+                title: "calendar_dedicated".localized,
                 description: "「Quick Memo」カレンダーを自動作成"
             )
             
@@ -89,8 +99,7 @@ struct CalendarPermissionView: View {
                         Image(systemName: "calendar.badge.checkmark")
                             .font(.system(size: 18, weight: .medium))
                     }
-                    
-                    Text(isRequestingPermission ? "設定中..." : "カレンダーアクセスを許可")
+                    Text(isRequestingPermission ? "設定を準備中…" : "続行")
                         .font(.system(size: 18, weight: .semibold))
                 }
                 .foregroundColor(.white)
@@ -102,44 +111,29 @@ struct CalendarPermissionView: View {
                 )
             }
             .disabled(isRequestingPermission)
-            
-            Button(action: {
-                dismiss()
-            }) {
-                Text("後で設定")
-                    .font(.system(size: 16, weight: .medium))
-                    .foregroundColor(.secondary)
-            }
         }
         .padding(.bottom, 34)
     }
     
     private func requestPermission() {
         guard !isRequestingPermission else { 
-            print("Permission request already in progress")
             return 
         }
         
-        print("Starting permission request...")
         isRequestingPermission = true
         
         Task { @MainActor in
             do {
-                print("Calling requestCalendarAccess...")
                 let granted = await calendarService.requestCalendarAccess()
-                print("Permission result: \(granted)")
                 
                 isRequestingPermission = false
                 
                 if granted {
-                    print("Permission granted, dismissing view")
                     dismiss()
                 } else {
-                    print("Permission denied, showing settings alert")
-                    showingSettings = true
+                    showDeniedAlert = true
                 }
             } catch {
-                print("Error requesting permission: \(error)")
                 isRequestingPermission = false
             }
         }
